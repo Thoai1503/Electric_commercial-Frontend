@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import TopSaleCarousel from "./TopSale";
+import { useState } from "react";
+
 import "./style.css";
 
 const HomeProList = () => {
