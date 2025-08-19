@@ -10,18 +10,18 @@ export const clientRoutes = [
       { path: "", element: <HomeProList /> },
 
       {
-        path: "products",
+        path: "/products",
         element: <p>Product List</p>,
       },
     ],
   },
 
   {
-    path: "login",
+    path: "/login",
     element: <Login />,
   },
   {
-    path: "register",
+    path: "/register",
     element: <p>Register Page</p>,
   },
 ];
