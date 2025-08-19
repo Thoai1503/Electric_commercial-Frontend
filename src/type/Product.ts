@@ -5,3 +5,11 @@ export interface Product {
   price: number;
   img: string;
 }
+
+export interface ProductWithBrandId {
+  id: number;
+  brand: number; // Assuming brand is represented by an ID
+  name: string;
+  price: number;
+  img: string;
+}
