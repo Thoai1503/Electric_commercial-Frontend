@@ -83,9 +83,7 @@ const Login = () => {
 
             <div data-mdb-input-init className="form-outline mb-4">
               <input type="email" id="loginName" className="form-control" />
-              <label className="form-label" for="loginName">
-                Email or username
-              </label>
+              <label className="form-label">Email or username</label>
             </div>
 
             <div data-mdb-input-init className="form-outline mb-4">
@@ -94,9 +92,7 @@ const Login = () => {
                 id="loginPassword"
                 className="form-control"
               />
-              <label className="form-label" for="loginPassword">
-                Password
-              </label>
+              <label className="form-label">Password</label>
             </div>
 
             <div className="row mb-4">
@@ -109,10 +105,7 @@ const Login = () => {
                     id="loginCheck"
                     checked
                   />
-                  <label className="form-check-label" for="loginCheck">
-                    {" "}
-                    Remember me{" "}
-                  </label>
+                  <label className="form-check-label"> Remember me </label>
                 </div>
               </div>
 
@@ -187,9 +180,7 @@ const Login = () => {
 
             <div data-mdb-input-init className="form-outline mb-4">
               <input type="text" id="registerName" className="form-control" />
-              <label className="form-label" for="registerName">
-                Name
-              </label>
+              <label className="form-label">Name</label>
             </div>
 
             <div data-mdb-input-init className="form-outline mb-4">
@@ -198,16 +189,12 @@ const Login = () => {
                 id="registerUsername"
                 className="form-control"
               />
-              <label className="form-label" for="registerUsername">
-                Username
-              </label>
+              <label className="form-label">Username</label>
             </div>
 
             <div data-mdb-input-init className="form-outline mb-4">
               <input type="email" id="registerEmail" className="form-control" />
-              <label className="form-label" for="registerEmail">
-                Email
-              </label>
+              <label className="form-label">Email</label>
             </div>
 
             <div data-mdb-input-init className="form-outline mb-4">
@@ -216,9 +203,7 @@ const Login = () => {
                 id="registerPassword"
                 className="form-control"
               />
-              <label className="form-label" for="registerPassword">
-                Password
-              </label>
+              <label className="form-label">Password</label>
             </div>
 
             <div data-mdb-input-init className="form-outline mb-4">
@@ -227,9 +212,7 @@ const Login = () => {
                 id="registerRepeatPassword"
                 className="form-control"
               />
-              <label className="form-label" for="registerRepeatPassword">
-                Repeat password
-              </label>
+              <label className="form-label">Repeat password</label>
             </div>
 
             <div className="form-check d-flex justify-content-center mb-4">
@@ -241,7 +224,7 @@ const Login = () => {
                 checked
                 aria-describedby="registerCheckHelpText"
               />
-              <label className="form-check-label" for="registerCheck">
+              <label className="form-check-label">
                 I have read and agree to the terms
               </label>
             </div>
