@@ -1,0 +1,12 @@
+.product-filter-item {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.4s ease; /* smooth fade + scale */
+}
+
+.product-filter-item.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none; /* disable clicks while hidden */
+  position: absolute; /* keep layout from breaking */
+}
