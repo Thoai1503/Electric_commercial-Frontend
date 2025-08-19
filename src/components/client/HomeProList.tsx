@@ -1,10 +1,12 @@
 import { useState } from "react";
+import type { Product } from "../../type/Product";
 
 import "./style.css";
 
 const HomeProList = () => {
   const [activeFilter, setActiveFilter] = useState<string>("*");
-  const products = [
+
+  const products: Product[] = [
     {
       id: 1,
       brand: "Apple",
@@ -34,6 +36,7 @@ const HomeProList = () => {
       img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/2.png",
     },
   ];
+
   const filters = ["*", "Apple", "Samsung", "Redmi"];
   return (
     <>
