@@ -1,26 +1,27 @@
-// In your client routes file
 import HomeProList from "../../components/client/HomeProList";
 import Client from "../../layout/Client";
 import Login from "../../page/client/Login";
 
 export const clientRoutes = [
   {
-    path: "", // Changed from "/"
+    path: "/",
     element: <Client />,
     children: [
       { path: "", element: <HomeProList /> },
+
       {
-        path: "products", // Removed leading "/"
+        path: "/products",
         element: <p>Product List</p>,
       },
     ],
   },
+
   {
-    path: "login", // Removed leading "/"
+    path: "/login",
     element: <Login />,
   },
   {
-    path: "register", // Removed leading "/"
+    path: "/register",
     element: <p>Register Page</p>,
   },
 ];
