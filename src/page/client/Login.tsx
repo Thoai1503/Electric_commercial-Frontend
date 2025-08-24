@@ -1,6 +1,6 @@
+import { useLoginPage } from "../../module/client/useLoginPage";
 const Login = () => {
-  const handleSubmit = () => {};
-
+  const { handleChange, loginValue, handleSubmit } = useLoginPage();
   return (
     <div className="container" style={{ width: "400px" }}>
       <ul className="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
@@ -82,7 +82,14 @@ const Login = () => {
             <p className="text-center">or:</p>
 
             <div data-mdb-input-init className="form-outline mb-4">
-              <input type="email" id="loginName" className="form-control" />
+              <input
+                type="email"
+                id="loginName"
+                name="email"
+                value={loginValue.email}
+                onChange={handleChange}
+                className="form-control"
+              />
               <label className="form-label">Email or username</label>
             </div>
 
@@ -90,6 +97,9 @@ const Login = () => {
               <input
                 type="password"
                 id="loginPassword"
+                name="password"
+                value={loginValue.password}
+                onChange={handleChange}
                 className="form-control"
               />
               <label className="form-label">Password</label>
@@ -101,6 +111,7 @@ const Login = () => {
                   <input
                     className="form-check-input"
                     type="checkbox"
+                    name="password"
                     value=""
                     id="loginCheck"
                     checked

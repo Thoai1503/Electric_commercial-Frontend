@@ -1,12 +1,26 @@
 export interface UserDataRespone {
   id: number;
+  success: boolean;
   name: string;
   email: string;
-  role: "admin" | "customer" | null;
+  token: string;
+  user: UserData | null;
 }
 
 export interface UserRespone {
   success: boolean;
   token: string;
   user: UserDataRespone;
+}
+
+export interface UserLogin {
+  email: string;
+  password: string;
+}
+
+export interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  role: "admin" | "customer" | null;
 }
