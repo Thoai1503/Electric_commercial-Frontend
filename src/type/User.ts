@@ -22,5 +22,5 @@ export interface UserData {
   id: number;
   name: string;
   email: string;
-  role: "admin" | "customer" | null;
+  role: 1 | 2 | null;
 }

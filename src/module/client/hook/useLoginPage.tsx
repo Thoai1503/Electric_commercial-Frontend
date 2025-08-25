@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import type { UserLogin } from "../../type/User";
-import { userLoginService } from "../../service/user";
+import type { UserLogin } from "../../../type/User";
+import { userLoginService } from "../../../service/user";
 import { useNavigate } from "react-router-dom";
 export const useLoginPage = () => {
   const navigate = useNavigate();
@@ -16,8 +16,12 @@ export const useLoginPage = () => {
       if (!data || !data.success) {
         alert("Invalid credentails");
       }
-      navigate("/");
+      if (data?.user?.role == 1) {
+        setLoginValue({ email: "", password: "" });
+        return navigate("/admin");
+      }
       setLoginValue({ email: "", password: "" });
+      return navigate("/");
     } catch (error: any) {
       alert("Invalid credentails");
       console.log("Error: " + error.message);
