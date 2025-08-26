@@ -1,15 +1,14 @@
 import axios from "axios";
 
-//const API_URL_BASE = import.meta.env.VITE_API_URL;
+const API_URL_BASE = import.meta.env.VITE_API_URL;
 
 export const Request = axios.create({
-  baseURL: "https://electric-commercial-node-js-backend.vercel.app/",
+  baseURL: API_URL_BASE,
 });
 export const axiosInstance = axios.create({
-  baseURL: "https://electric-commercial-node-js-backend.vercel.app/",
+  baseURL: API_URL_BASE,
   withCredentials: true,
 });
-
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
 
