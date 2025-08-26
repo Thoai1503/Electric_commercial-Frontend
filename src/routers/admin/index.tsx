@@ -1,20 +1,11 @@
+import React from "react";
 import { Navigate } from "react-router-dom";
 
-import AdminLayout from "../../layout/Admin";
-
-import Dashboard from "../../page/admin/Dashboard";
+const Dashboard = React.lazy(() => import("../../page/admin/Dashboard"));
+const Product = React.lazy(() => import("../../page/admin/Product"));
 
 export const adminRoutes = [
-  {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      { path: "dashboard", element: <Navigate to="/admin" /> },
-      { path: "", element: <Dashboard /> },
-      {
-        path: "products",
-        element: <h1>Admin Product List</h1>,
-      },
-    ],
-  },
+  { path: "", element: <Dashboard /> },
+  { path: "products", element: <Product /> },
+  { path: "dashboard", element: <Navigate to="/admin" /> },
 ];

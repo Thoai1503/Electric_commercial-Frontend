@@ -1,23 +1,3 @@
-// import type { RootState } from "../../store/store";
-// import { useSelector, useDispatch } from "react-redux";
-// import { set } from "../../reducers/adminThemeReducer";
-
-// const Dashboard = () => {
-//   const dispatch = useDispatch();
-//   const { theme, sidebarShow } = useSelector((state: RootState) => state.app);
-//   return (
-//     <div>
-//       <h3>SA Dashboard</h3>
-//       <h4>{theme}</h4>
-//       <h4>{sidebarShow ? "a" : "b"}</h4>
-//       <button onClick={() => dispatch(set({ sidebarShow: !sidebarShow }))}>
-//         toggle sidebar
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
 import React from "react";
 import classNames from "classnames";
 
@@ -63,12 +43,13 @@ import {
   cilUserFemale,
 } from "@coreui/icons";
 
-import avatar1 from "../../assets/images/avatars/1.jpg";
-import avatar2 from "../../assets/images/avatars/2.jpg";
-import avatar3 from "../../assets/images/avatars/3.jpg";
-import avatar4 from "../../assets/images/avatars/4.jpg";
-import avatar5 from "../../assets/images/avatars/5.jpg";
-import avatar6 from "../../assets/images/avatars/6.jpg";
+import avatar1 from "src/assets/images/avatars/1.jpg";
+import avatar2 from "src/assets/images/avatars/2.jpg";
+import avatar3 from "src/assets/images/avatars/3.jpg";
+import avatar4 from "src/assets/images/avatars/4.jpg";
+import avatar5 from "src/assets/images/avatars/5.jpg";
+import avatar6 from "src/assets/images/avatars/6.jpg";
+
 import WidgetsBrand from "../../components/admin/widgets/WidgetsBrand";
 import WidgetsDropdown from "../../components/admin/widgets/WidgetsDropdown";
 import MainChart from "../../components/admin/MainChart";

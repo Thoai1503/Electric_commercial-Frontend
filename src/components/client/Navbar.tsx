@@ -1,9 +1,9 @@
 const Navbar = () => {
   return (
     <nav
-      className="navbar bg-body-secondary navbar-expand-lg"
+      className="navbar navbar-expand-lg"
       data-bs-theme="dark"
-      style={{ backgroundColor: "#0d6efd" }}
+      style={{ backgroundColor: "	#5dd0feff" }}
     >
       <a className="navbar-brand" href="#" style={{ margin: "5px" }}>
         <img
