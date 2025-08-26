@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import type { UserLogin } from "../../../type/User";
 import { userLoginService } from "../../../service/user";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 export const useLoginPage = () => {
   const navigate = useNavigate();
+
   const [loginValue, setLoginValue] = useState<UserLogin>({
     email: "",
     password: "",
@@ -13,6 +14,7 @@ export const useLoginPage = () => {
     try {
       const data = await userLoginService(loginValue);
       console.log("Data :" + JSON.stringify(data));
+      console.log("Token :" + data?.token);
       if (!data || !data.success) {
         alert("Invalid credentails");
       }
@@ -20,6 +22,7 @@ export const useLoginPage = () => {
         setLoginValue({ email: "", password: "" });
         return navigate("/admin");
       }
+
       setLoginValue({ email: "", password: "" });
       return navigate("/");
     } catch (error: any) {
