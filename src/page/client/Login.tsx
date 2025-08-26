@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLoginPage } from "../../module/client/hook/useLoginPage";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -271,7 +271,7 @@ const Login = () => {
 
       <Modal show={showError} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading for phone</Modal.Title>
+          <Modal.Title>Modal heading for phone {show}</Modal.Title>
         </Modal.Header>
         <Modal.Body>Woohoo,</Modal.Body>
         <Modal.Footer>
