@@ -19,6 +19,25 @@ import { sygnet } from "../../assets/brand/sygnet";
 // sidebar nav config
 import navigation from "../../_nav";
 
+export interface Badge {
+  color: string;
+  text: string;
+}
+
+export interface Item {
+  component: React.ElementType;
+  name?: string | React.ReactNode; // cho phép JSX
+  icon?: React.ReactNode;
+  badge?: Badge;
+  to?: string;
+  href?: string;
+  items?: Item[];
+  [key: string]: any; // giữ cho các props khác của CoreUI
+}
+export interface AppSidebarNavProps {
+  items: Item[];
+}
+
 const AppSidebar = () => {
   const dispatch = useDispatch();
   const unfoldable = useSelector((state: any) => state.sidebarUnfoldable);

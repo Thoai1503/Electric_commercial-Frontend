@@ -6,30 +6,15 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 
 import { CBadge, CNavLink, CSidebarNav } from "@coreui/react";
-
-interface Badge {
-  color: string;
-  text: string;
-}
-
-interface Item {
-  component: React.ElementType;
-  name?: string;
-  icon?: React.ReactNode;
-  badge?: Badge;
-  to?: string;
-  href?: string;
-  items?: Item[];
-  [key: string]: any;
-}
-
-interface AppSidebarNavProps {
-  items: Item[];
-}
+import type {
+  NavigationItem,
+  Badge,
+  AppSidebarNavProps,
+} from "../../type/navigation";
 
 export const AppSidebarNav: React.FC<AppSidebarNavProps> = ({ items }) => {
   const navLink = (
-    name?: string,
+    name?: string | React.ReactNode,
     icon?: React.ReactNode,
     badge?: Badge,
     indent: boolean = false
@@ -51,9 +36,41 @@ export const AppSidebarNav: React.FC<AppSidebarNavProps> = ({ items }) => {
     </>
   );
 
-  const navItem = (item: Item, index: number, indent = false) => {
+  const renderNavigationItem = (
+    item: NavigationItem,
+    index: number,
+    indent = false
+  ): React.ReactElement => {
     const { component, name, badge, icon, ...rest } = item;
     const Component = component;
+
+    // Handle CNavTitle (dividers)
+    if (
+      "items" in item === false &&
+      "to" in item === false &&
+      "href" in item === false
+    ) {
+      return <Component key={index}>{name}</Component>;
+    }
+
+    // Handle CNavGroup (with nested items)
+    if ("items" in item && item.items) {
+      return (
+        <Component
+          compact
+          as="div"
+          key={index}
+          toggler={navLink(name, icon)}
+          {...rest}
+        >
+          {item.items.map((subItem, subIndex) =>
+            renderNavigationItem(subItem, subIndex, true)
+          )}
+        </Component>
+      );
+    }
+
+    // Handle CNavItem (leaf items)
     return (
       <Component as="div" key={index}>
         {rest.to || rest.href ? (
@@ -71,31 +88,9 @@ export const AppSidebarNav: React.FC<AppSidebarNavProps> = ({ items }) => {
     );
   };
 
-  const navGroup = (item: Item, index: number) => {
-    const { component, name, icon, items: subItems, ...rest } = item;
-    const Component = component;
-    return (
-      <Component
-        compact
-        as="div"
-        key={index}
-        toggler={navLink(name, icon)}
-        {...rest}
-      >
-        {subItems?.map((subItem, subIndex) =>
-          subItem.items
-            ? navGroup(subItem, subIndex)
-            : navItem(subItem, subIndex, true)
-        )}
-      </Component>
-    );
-  };
-
   return (
     <CSidebarNav as={SimpleBar}>
-      {items?.map((item, index) =>
-        item.items ? navGroup(item, index) : navItem(item, index)
-      )}
+      {items?.map((item, index) => renderNavigationItem(item, index))}
     </CSidebarNav>
   );
 };
