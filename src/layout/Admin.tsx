@@ -1,13 +1,15 @@
 import { Outlet } from "react-router-dom";
-
-const Admin = () => {
+import AppSideBar from "../components/admin/AppSideBar";
+import "../scss/style.scss";
+import styled from "styled-components";
+const AdminLayout = () => {
   return (
     <div>
-      <h1>Admin Layout</h1>
-      <div>Navbar</div>
+      <AppSideBar />
+      <h3>Header of AdminLayout</h3>
       <Outlet />
     </div>
   );
 };
 
-export default Admin;
+export default AdminLayout;
