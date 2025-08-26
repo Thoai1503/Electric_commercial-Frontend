@@ -6,7 +6,7 @@ import { Chart } from "chart.js";
 const MainChart: React.FC = () => {
   // Khai báo ref type Chart<'line'>
   const chartRef = useRef<Chart<"line"> | null>(null);
-  const [loading, setLoading] = useState(false);
+  //  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handler = () => {
@@ -83,7 +83,7 @@ const MainChart: React.FC = () => {
       >
         {loading ? "Loading..." : "Change Dataset"}
       </button> */}
-      {loading && <div>Loading data, please wait...</div>}
+      {/* {loading && <div>Loading data, please wait...</div>} */}
       <CChartLine
         ref={chartRef}
         style={{ height: "300px", marginTop: "40px" }}
