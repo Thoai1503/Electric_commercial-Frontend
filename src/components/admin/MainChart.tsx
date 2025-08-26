@@ -40,19 +40,19 @@ const MainChart: React.FC = () => {
 
   const random = () => Math.round(Math.random() * 200);
 
-  const fetchData = async (): Promise<number[]> => {
-    setLoading(true);
-    try {
-      const response = await fetch("https://fakestoreapi.com/products");
-      const data: any[] = await response.json();
-      return data.map(() => random());
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return [];
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchData = async (): Promise<number[]> => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch("https://fakestoreapi.com/products");
+  //     const data: any[] = await response.json();
+  //     return data.map(() => random());
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     return [];
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const changeDataset = async () => {
     setLoading(true);
