@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 import AdminLayout from "../../layout/Admin";
-import { element } from "prop-types";
+
 import Dashboard from "../../page/admin/Dashboard";
 
 export const adminRoutes = [

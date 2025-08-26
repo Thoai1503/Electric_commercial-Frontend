@@ -1,4 +1,4 @@
-import type { RootState } from "../../store";
+import type { RootState } from "../../store/store";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "../../reducers/adminThemeReducer";
 
