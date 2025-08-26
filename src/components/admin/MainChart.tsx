@@ -54,35 +54,35 @@ const MainChart: React.FC = () => {
   //   }
   // };
 
-  const changeDataset = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("https://fakestoreapi.com/products");
-      const data: any[] = await response.json();
+  // const changeDataset = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch("https://fakestoreapi.com/products");
+  //     const data: any[] = await response.json();
 
-      if (data.length > 0 && chartRef.current) {
-        const datasets = chartRef.current.data.datasets;
-        datasets.forEach((dataset) => {
-          dataset.data = dataset.data.map(() => random());
-        });
-        chartRef.current.update();
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (data.length > 0 && chartRef.current) {
+  //       const datasets = chartRef.current.data.datasets;
+  //       datasets.forEach((dataset) => {
+  //         dataset.data = dataset.data.map(() => random());
+  //       });
+  //       chartRef.current.update();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <>
-      <button
+      {/* <button
         onClick={changeDataset}
         style={{ marginBottom: "16px" }}
         disabled={loading}
       >
         {loading ? "Loading..." : "Change Dataset"}
-      </button>
+      </button> */}
       {loading && <div>Loading data, please wait...</div>}
       <CChartLine
         ref={chartRef}

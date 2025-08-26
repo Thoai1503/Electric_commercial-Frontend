@@ -9,50 +9,51 @@ import {
   CWidgetStatsA,
 } from "@coreui/react";
 import { getStyle } from "@coreui/utils";
-import { CChartLine } from "@coreui/react-chartjs";
+import { CChartBar, CChartLine } from "@coreui/react-chartjs";
 import CIcon from "@coreui/icons-react";
-import { cilArrowBottom, cilOptions } from "@coreui/icons";
-import { Chart } from "chart.js";
+import { cilArrowBottom, cilArrowTop, cilOptions } from "@coreui/icons";
 
+// ✅ Props type thay cho PropTypes
 interface WidgetsDropdownProps {
   className?: string;
   withCharts?: boolean;
 }
 
 const WidgetsDropdown: React.FC<WidgetsDropdownProps> = ({ className }) => {
-  // Thêm type Chart | null cho useRef
-  const widgetChartRef1 = useRef<Chart<"line", number[], string> | null>(null);
-  const widgetChartRef2 = useRef<Chart<"line", number[], string> | null>(null);
+  const widgetChartRef1 = useRef<any>(null);
+  const widgetChartRef2 = useRef<any>(null);
 
   useEffect(() => {
     const handler = () => {
       if (widgetChartRef1.current) {
         setTimeout(() => {
-          widgetChartRef1.current!.data.datasets[0].pointBackgroundColor =
+          widgetChartRef1.current.data.datasets[0].pointBackgroundColor =
             getStyle("--cui-primary");
-          widgetChartRef1.current!.update();
+          widgetChartRef1.current.update();
         });
       }
 
       if (widgetChartRef2.current) {
         setTimeout(() => {
-          widgetChartRef2.current!.data.datasets[0].pointBackgroundColor =
+          widgetChartRef2.current.data.datasets[0].pointBackgroundColor =
             getStyle("--cui-info");
-          widgetChartRef2.current!.update();
+          widgetChartRef2.current.update();
         });
       }
     };
 
     document.documentElement.addEventListener("ColorSchemeChange", handler);
-    return () =>
+    return () => {
       document.documentElement.removeEventListener(
         "ColorSchemeChange",
         handler
       );
+    };
   }, []);
 
   return (
     <CRow className={className} xs={{ gutter: 4 }}>
+      {/* === 1. Users === */}
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="primary"
@@ -108,16 +109,17 @@ const WidgetsDropdown: React.FC<WidgetsDropdownProps> = ({ className }) => {
                 ],
               }}
               options={{
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                },
                 maintainAspectRatio: false,
                 scales: {
                   x: {
                     grid: {
                       display: false,
-                    },
-                    border: {
-                      display: false, // ✅ thay cho drawBorder
-                    },
+                      drawBorder: false, // lỗi ở đây
+                      drawTicks: false, // lỗi ở đây
+                    } as any, // ép kiểu tránh TS check
                     ticks: {
                       display: false,
                     },
@@ -140,8 +142,200 @@ const WidgetsDropdown: React.FC<WidgetsDropdownProps> = ({ className }) => {
         />
       </CCol>
 
-      {/* Tương tự cho các widget khác, ref type đã được thêm */}
-      {/* ...Widget Income, Conversion Rate, Sessions... */}
+      {/* === 2. Income === */}
+      <CCol sm={6} xl={4} xxl={3}>
+        <CWidgetStatsA
+          color="info"
+          value={
+            <>
+              $6.200{" "}
+              <span className="fs-6 fw-normal">
+                (40.9% <CIcon icon={cilArrowTop} />)
+              </span>
+            </>
+          }
+          title="Income"
+          action={
+            <CDropdown alignment="end">
+              <CDropdownToggle
+                color="transparent"
+                caret={false}
+                className="text-white p-0"
+              >
+                <CIcon icon={cilOptions} />
+              </CDropdownToggle>
+              <CDropdownMenu>
+                <CDropdownItem>Action</CDropdownItem>
+                <CDropdownItem>Another action</CDropdownItem>
+                <CDropdownItem>Something else here...</CDropdownItem>
+                <CDropdownItem disabled>Disabled action</CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          }
+          chart={
+            <CChartLine
+              ref={widgetChartRef2}
+              className="mt-3 mx-3"
+              style={{ height: "70px" }}
+              data={{
+                labels: [
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                ],
+                datasets: [
+                  {
+                    label: "My First dataset",
+                    backgroundColor: "transparent",
+                    borderColor: "rgba(255,255,255,.55)",
+                    pointBackgroundColor: getStyle("--cui-info"),
+                    data: [1, 18, 9, 17, 34, 22, 11],
+                  },
+                ],
+              }}
+              options={{
+                plugins: { legend: { display: false } },
+                maintainAspectRatio: false,
+                scales: {
+                  x: { grid: { display: false }, ticks: { display: false } },
+                  y: { min: -9, max: 39, display: false },
+                },
+                elements: {
+                  line: { borderWidth: 1 },
+                  point: { radius: 4, hitRadius: 10, hoverRadius: 4 },
+                },
+              }}
+            />
+          }
+        />
+      </CCol>
+
+      {/* === 3. Conversion Rate === */}
+      <CCol sm={6} xl={4} xxl={3}>
+        <CWidgetStatsA
+          color="warning"
+          value={
+            <>
+              2.49%{" "}
+              <span className="fs-6 fw-normal">
+                (84.7% <CIcon icon={cilArrowTop} />)
+              </span>
+            </>
+          }
+          title="Conversion Rate"
+          chart={
+            <CChartLine
+              className="mt-3"
+              style={{ height: "70px" }}
+              data={{
+                labels: [
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                ],
+                datasets: [
+                  {
+                    label: "My First dataset",
+                    backgroundColor: "rgba(255,255,255,.2)",
+                    borderColor: "rgba(255,255,255,.55)",
+                    data: [78, 81, 80, 45, 34, 12, 40],
+                    fill: true,
+                  },
+                ],
+              }}
+              options={{
+                plugins: { legend: { display: false } },
+                maintainAspectRatio: false,
+                scales: { x: { display: false }, y: { display: false } },
+                elements: {
+                  line: { borderWidth: 2, tension: 0.4 },
+                  point: { radius: 0, hitRadius: 10, hoverRadius: 4 },
+                },
+              }}
+            />
+          }
+        />
+      </CCol>
+
+      {/* === 4. Sessions === */}
+      <CCol sm={6} xl={4} xxl={3}>
+        <CWidgetStatsA
+          color="danger"
+          value={
+            <>
+              44K{" "}
+              <span className="fs-6 fw-normal">
+                (-23.6% <CIcon icon={cilArrowBottom} />)
+              </span>
+            </>
+          }
+          title="Sessions"
+          chart={
+            <CChartBar
+              className="mt-3 mx-3"
+              style={{ height: "70px" }}
+              data={{
+                labels: [
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                  "August",
+                  "September",
+                  "October",
+                  "November",
+                  "December",
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                ],
+                datasets: [
+                  {
+                    label: "My First dataset",
+                    backgroundColor: "rgba(255,255,255,.2)",
+                    borderColor: "rgba(255,255,255,.55)",
+                    data: [
+                      78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84,
+                      67, 82,
+                    ],
+                    barPercentage: 0.6,
+                  },
+                ],
+              }}
+              options={{
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: {
+                    grid: { display: false, drawTicks: false },
+                    ticks: { display: false },
+                  },
+                  y: {
+                    grid: {
+                      display: false,
+                      drawBorder: false,
+                      drawTicks: false,
+                    } as any,
+                    ticks: { display: false },
+                  },
+                },
+              }}
+            />
+          }
+        />
+      </CCol>
     </CRow>
   );
 };

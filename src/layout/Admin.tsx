@@ -12,7 +12,10 @@ const AdminLayout = () => {
       <AppSideBar />
       <div className="wrapper d-flex flex-column min-vh-100">
         <AppHeader />
-        <div className="body flex-grow-1" style={{ paddingLeft: "25px" }}>
+        <div
+          className="body flex-grow-1"
+          style={{ paddingLeft: "25px", paddingRight: "25px" }}
+        >
           <Suspense fallback={<CSpinner color="primary" />}>
             <Outlet />
           </Suspense>
