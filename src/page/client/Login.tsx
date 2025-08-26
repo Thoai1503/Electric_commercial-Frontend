@@ -1,8 +1,22 @@
+import { useEffect, useState } from "react";
 import { useLoginPage } from "../../module/client/hook/useLoginPage";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+
 const Login = () => {
-  const { handleChange, loginValue, handleSubmit } = useLoginPage();
+  const { handleChange, loginValue, handleSubmit, isPending, showError } =
+    useLoginPage();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  console.log(showError);
+
   return (
-    <div className="container" style={{ width: "400px" }}>
+    <div className="container" style={{ width: "400px", marginTop: "100px" }}>
+      {isPending && <h1>Login..</h1>}
+      {showError && <h1 style={{ color: "red" }}>Error</h1>}
       <ul className="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
         <li className="nav-item" role="presentation">
           <a
@@ -251,6 +265,24 @@ const Login = () => {
           </form>
         </div>
       </div>
+      <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+      <Modal show={showError} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading for phone</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo,</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

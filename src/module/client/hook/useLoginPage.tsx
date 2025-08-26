@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import type { UserLogin } from "../../../type/User";
 import { userLoginService } from "../../../service/user";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 export const useLoginPage = () => {
   const navigate = useNavigate();
 
@@ -9,12 +10,19 @@ export const useLoginPage = () => {
     email: "",
     password: "",
   });
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      const data = await userLoginService(loginValue);
-      console.log("Data :" + JSON.stringify(data));
-      console.log("Token :" + data?.token);
+  const [showError, setShowError] = useState(false);
+
+  const login = async () => {
+    const data = await userLoginService(loginValue);
+    return data;
+  };
+  const {
+    isPending,
+    isError,
+    mutate: loginProcess,
+  } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
       if (!data || !data.success) {
         alert("Invalid credentails");
       }
@@ -25,11 +33,23 @@ export const useLoginPage = () => {
 
       setLoginValue({ email: "", password: "" });
       return navigate("/");
-    } catch (error: any) {
-      alert("Invalid credentails");
-      console.log("Error: " + error.message);
-    }
+    },
+    onError: (error) => {
+      console.error("Login error:", error);
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 2000);
+    },
+  });
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    console.log("Registering user:", loginValue);
+    console.log("Pending: " + isPending);
+    loginProcess();
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -42,5 +62,8 @@ export const useLoginPage = () => {
     handleChange,
     loginValue,
     handleSubmit,
+    isPending,
+    isError,
+    showError,
   };
 };
