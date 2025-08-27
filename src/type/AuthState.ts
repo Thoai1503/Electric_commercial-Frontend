@@ -1,7 +1,7 @@
-interface AuthState {
-  isAuthenticated: boolean;
-  user: UserAuthenData | null;
-}
+// interface AuthState {
+//   isAuthenticated: boolean;
+//   user: UserAuthenData | null;
+// }
 
 interface UserAuthenData {
   id: number;
