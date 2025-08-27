@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLoginPage } from "../../module/client/hook/useLoginPage";
+import { useLoginPage } from "../../hook/useLoginPage";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 

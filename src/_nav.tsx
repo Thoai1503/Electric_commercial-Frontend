@@ -20,7 +20,7 @@ const _nav = [
   {
     component: CNavItem,
     name: "Dashboard",
-    to: "/dashboard",
+    to: "./dashboard",
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: "info",
@@ -46,6 +46,19 @@ const _nav = [
   {
     component: CNavTitle,
     name: "Components",
+  },
+  {
+    component: CNavGroup,
+    name: "Category",
+    to: "./category",
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Accordion",
+        to: "./category/accordion",
+      },
+    ],
   },
   {
     component: CNavGroup,

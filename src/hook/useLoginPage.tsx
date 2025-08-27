@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import type { UserLogin } from "../../../type/User";
-import { userLoginService } from "../../../service/user";
+import type { UserLogin } from "../type/User";
+import { userLoginService } from "../service/user";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 export const useLoginPage = () => {
