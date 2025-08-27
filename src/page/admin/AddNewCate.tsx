@@ -8,14 +8,22 @@ import {
   CFormInput,
   CInputGroup,
 } from "@coreui/react";
+import { useState } from "react";
 
 export const AddNewCate = () => {
+  const [value, setValue] = useState("");
+
+  const handleChange = (e: any) => {
+    setValue(e.target.value);
+    console.log("Input value:", e.target.value);
+  };
+
   return (
     <>
       <CInputGroup className="mb-3">
         <CDropdown variant="input-group">
           <CButton type="button" color="secondary" variant="outline">
-            Action
+            Chọn loại cha
           </CButton>
           <CDropdownToggle color="secondary" variant="outline" split />
           <CDropdownMenu>
@@ -26,7 +34,12 @@ export const AddNewCate = () => {
             <CDropdownItem href="#">Separated link</CDropdownItem>
           </CDropdownMenu>
         </CDropdown>
-        <CFormInput aria-label="Text input with segmented dropdown button" />
+        <CFormInput
+          aria-label="Text input with segmented dropdown button"
+          value={value}
+          onChange={handleChange}
+          placeholder="Nhập tên danh mục..."
+        />
       </CInputGroup>
 
       <CInputGroup>
