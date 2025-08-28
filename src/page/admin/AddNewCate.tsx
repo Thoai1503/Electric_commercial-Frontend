@@ -9,6 +9,7 @@ import {
   CInputGroup,
 } from "@coreui/react";
 import { useState } from "react";
+import CateNodeTree from "../../components/admin/category/CateNodeTree";
 
 export const AddNewCate = () => {
   const [value, setValue] = useState("");
@@ -58,6 +59,7 @@ export const AddNewCate = () => {
           </CDropdownMenu>
         </CDropdown>
       </CInputGroup>
+      <CateNodeTree />
     </>
   );
 };
