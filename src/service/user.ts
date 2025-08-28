@@ -1,5 +1,5 @@
 import { Request } from "../api/http";
-import type { UserDataRespone, UserLogin, UserRespone } from "../type/User";
+import type { UserLogin, UserRespone } from "../type/User";
 
 export const userLoginService = async (loginState: UserLogin) => {
   try {
@@ -9,7 +9,8 @@ export const userLoginService = async (loginState: UserLogin) => {
     );
 
     if (!data.success) {
-      return alert("Invalid credentials");
+      alert("Invalid credentials");
+      return data;
     }
     console.log("User:" + JSON.stringify(data));
     return data;

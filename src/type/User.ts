@@ -11,7 +11,7 @@ export interface UserDataRespone {
 export interface UserRespone {
   success: boolean;
   token: string;
-  user: UserDataRespone;
+  user: UserDataRespone | null;
 }
 
 export interface UserLogin {
