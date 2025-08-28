@@ -4,6 +4,7 @@ export interface UserDataRespone {
   name: string;
   email: string;
   token: string;
+  role: 1 | 2;
   user: UserData | null;
 }
 

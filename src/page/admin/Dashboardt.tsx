@@ -51,7 +51,7 @@ import avatar6 from "src/assets/images/avatars/6.jpg";
 
 import WidgetsBrand from "../../components/admin/widgets/WidgetsBrand";
 import WidgetsDropdown from "../../components/admin/widgets/WidgetsDropdown";
-import MainChart from "../../components/admin/MainChart";
+import MainChart from "../../components/admin/dashboard/MainChart";
 
 const Dashboard = () => {
   const progressExample = [

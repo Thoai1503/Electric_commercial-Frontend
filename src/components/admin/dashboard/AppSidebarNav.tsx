@@ -10,7 +10,7 @@ import type {
   NavigationItem,
   Badge,
   AppSidebarNavProps,
-} from "../../type/navigation";
+} from "../../../type/navigation";
 
 export const AppSidebarNav: React.FC<AppSidebarNavProps> = ({ items }) => {
   const navLink = (

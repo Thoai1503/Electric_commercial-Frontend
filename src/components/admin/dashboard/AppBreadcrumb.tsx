@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-import { adminRoutes } from "../../routers/admin";
+import { adminRoutes } from "../../../routers/admin";
 
 import { CBreadcrumb, CBreadcrumbItem } from "@coreui/react";
 

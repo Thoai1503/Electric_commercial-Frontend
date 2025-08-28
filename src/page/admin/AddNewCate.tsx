@@ -8,11 +8,27 @@ import {
   CFormInput,
   CInputGroup,
 } from "@coreui/react";
+import type { DropOptions, NodeModel } from "@minoru/react-dnd-treeview";
 import { useState } from "react";
-import CateNodeTree from "../../components/admin/category/CateNodeTree";
+import MyTree from "../../components/admin/addCategoryPage/CateNodeTree";
 
 export const AddNewCate = () => {
   const [value, setValue] = useState("");
+
+  const [nodes, setNodes] = useState<NodeModel[]>([
+    { id: 1, parent: 0, droppable: true, text: "Root" },
+    { id: 2, parent: 1, droppable: true, text: "Child A" },
+    { id: 3, parent: 1, droppable: true, text: "Child B" },
+    { id: 4, parent: 3, droppable: false, text: "Child B-1" },
+  ]);
+
+  const handleMove = (newTree: NodeModel[], _options: DropOptions) => {
+    // Cập nhật state local
+    setNodes(newTree);
+
+    // Gọi API backend để lưu ParentId mới (nếu cần)
+    console.log("Updated Tree:", newTree, _options);
+  };
 
   const handleChange = (e: any) => {
     setValue(e.target.value);
@@ -59,7 +75,7 @@ export const AddNewCate = () => {
           </CDropdownMenu>
         </CDropdown>
       </CInputGroup>
-      <CateNodeTree />
+      <MyTree nodes={nodes} onMove={handleMove} />
     </>
   );
 };

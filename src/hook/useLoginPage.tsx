@@ -3,8 +3,12 @@ import type { UserLogin } from "../type/User";
 import { userLoginService } from "../service/user";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { setAuthenState } from "../reducers/authenReducer";
+import { number } from "prop-types";
 export const useLoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [loginValue, setLoginValue] = useState<UserLogin>({
     email: "",
@@ -26,6 +30,7 @@ export const useLoginPage = () => {
       if (!data || !data.success) {
         alert("Invalid credentails");
       }
+      console.log(JSON.parse(JSON.stringify(data)));
       if (data?.user?.role == 1) {
         setLoginValue({ email: "", password: "" });
         return navigate("/admin");
