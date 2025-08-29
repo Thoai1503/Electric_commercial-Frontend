@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/catalog/:path*",
       "destination": "http://electricstorecatalogapi1234.somee.com/api/:path*"
     },
     {
