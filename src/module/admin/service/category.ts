@@ -23,8 +23,7 @@ export const addCategoryService = async (category: Category) => {
 };
 export const getCategoryTree = async () => {
   try {
-    const { data } =
-      await catalogRequest.get<CategoryReponse[]>("/api/category");
+    const { data } = await catalogRequest.get<CategoryReponse[]>("/category");
     if (!data) {
       return [];
     }
