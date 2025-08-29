@@ -3,6 +3,7 @@ import type { Category } from "../../../type/Category";
 
 export const userCategoryPage = () => {
   const [cate, setCate] = useState<Category>({
+    id: 0,
     name: "",
     parent_id: 0,
   });

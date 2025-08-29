@@ -9,18 +9,17 @@ import {
   CInputGroup,
 } from "@coreui/react";
 import type { DropOptions, NodeModel } from "@minoru/react-dnd-treeview";
-import { useState } from "react";
-import MyTree from "../../components/admin/addCategoryPage/CateNodeTree";
+import { useEffect, useState } from "react";
+
+import { useQuery } from "@tanstack/react-query";
+import categoriesTreeQuery from "../../module/admin/query/category";
+import CategoryTree from "../../components/admin/addCategoryPage/CateNodeTree";
 
 export const AddNewCate = () => {
   const [value, setValue] = useState("");
 
-  const [nodes, setNodes] = useState<NodeModel[]>([
-    { id: 1, parent: 0, droppable: true, text: "Root" },
-    { id: 2, parent: 1, droppable: true, text: "Child A" },
-    { id: 3, parent: 1, droppable: true, text: "Child B" },
-    { id: 4, parent: 3, droppable: false, text: "Child B-1" },
-  ]);
+  const [nodes, setNodes] = useState<NodeModel[] | undefined>();
+  const { data: categories, isPending } = useQuery(categoriesTreeQuery.list);
 
   const handleMove = (newTree: NodeModel[], _options: DropOptions) => {
     // Cập nhật state local
@@ -34,48 +33,52 @@ export const AddNewCate = () => {
     setValue(e.target.value);
     console.log("Input value:", e.target.value);
   };
+  useEffect(() => {
+    setNodes(categories);
+  });
 
   return (
     <>
-      <CInputGroup className="mb-3">
-        <CDropdown variant="input-group">
-          <CButton type="button" color="secondary" variant="outline">
-            Chọn loại cha
-          </CButton>
-          <CDropdownToggle color="secondary" variant="outline" split />
-          <CDropdownMenu>
-            <CDropdownItem href="#">Action</CDropdownItem>
-            <CDropdownItem href="#">Another action</CDropdownItem>
-            <CDropdownItem href="#">Something else here</CDropdownItem>
-            <CDropdownDivider />
-            <CDropdownItem href="#">Separated link</CDropdownItem>
-          </CDropdownMenu>
-        </CDropdown>
-        <CFormInput
-          aria-label="Text input with segmented dropdown button"
-          value={value}
-          onChange={handleChange}
-          placeholder="Nhập tên danh mục..."
-        />
-      </CInputGroup>
-
-      <CInputGroup>
-        <CFormInput aria-label="Text input with segmented dropdown button" />
-        <CDropdown alignment="end" variant="input-group">
-          <CButton type="button" color="secondary" variant="outline">
-            Action
-          </CButton>
-          <CDropdownToggle color="secondary" variant="outline" split />
-          <CDropdownMenu>
-            <CDropdownItem href="#">Action</CDropdownItem>
-            <CDropdownItem href="#">Another action</CDropdownItem>
-            <CDropdownItem href="#">Something else here</CDropdownItem>
-            <CDropdownDivider />
-            <CDropdownItem href="#">Separated link</CDropdownItem>
-          </CDropdownMenu>
-        </CDropdown>
-      </CInputGroup>
-      <MyTree nodes={nodes} onMove={handleMove} />
+      <div className="row">
+        <div className="col-md-6">
+          <h3>Thêm danh mục</h3>
+          <CInputGroup className="mb-3">
+            <CDropdown variant="input-group">
+              <CButton type="button" color="secondary" variant="outline">
+                Chọn loại cha
+              </CButton>
+              <CDropdownToggle color="secondary" variant="outline" split />
+              <CDropdownMenu>
+                <CDropdownItem href="#">Action</CDropdownItem>
+                <CDropdownItem href="#">Another action</CDropdownItem>
+                <CDropdownItem href="#">Something else here</CDropdownItem>
+                <CDropdownDivider />
+                <CDropdownItem href="#">Separated link</CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+            <CFormInput
+              aria-label="Text input with segmented dropdown button"
+              value={value}
+              onChange={handleChange}
+              placeholder="Nhập tên danh mục..."
+            />
+          </CInputGroup>
+          <button className="btn btn-success " style={{ color: "white" }}>
+            Thêm
+          </button>
+        </div>
+        <div className="col-md-6">
+          {isPending ? (
+            <h3 style={{ color: "black" }}>..Loading</h3>
+          ) : (
+            <>
+              {" "}
+              <h3>Cây thư mục</h3>
+              <CategoryTree nodes={nodes ?? []} onMove={handleMove} />
+            </>
+          )}
+        </div>
+      </div>
     </>
   );
 };

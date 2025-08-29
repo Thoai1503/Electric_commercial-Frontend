@@ -1,9 +1,13 @@
 import axios from "axios";
 
 const API_URL_BASE = import.meta.env.VITE_API_URL;
+const VITE_CATOLOG_API = import.meta.env.VITE_CATOLOG_API;
 
 export const Request = axios.create({
   baseURL: API_URL_BASE,
+});
+export const catalogRequest = axios.create({
+  baseURL: VITE_CATOLOG_API,
 });
 export const axiosInstance = axios.create({
   baseURL: API_URL_BASE,
