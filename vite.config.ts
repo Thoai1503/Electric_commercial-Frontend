@@ -5,11 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api/catalog/api": {
+      "/api/catalog": {
         target: "http://electricstorecatalogapi1234.somee.com",
         changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api\/catalog/, ""),
+        rewrite: (path) => path.replace(/^\/api\/catalog/, "/api"),
       },
     },
   },
