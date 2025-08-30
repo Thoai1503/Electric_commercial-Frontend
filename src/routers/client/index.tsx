@@ -1,8 +1,6 @@
-import { element } from "prop-types";
 import HomeProList from "../../components/client/HomeProList";
 import Client from "../../layout/Client";
 import Login from "../../page/client/Login";
-import Logout from "../../components/auth/logout";
 
 export const clientRoutes = [
   {
