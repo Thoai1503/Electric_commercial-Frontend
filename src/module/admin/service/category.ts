@@ -10,7 +10,7 @@ export const addCategoryService = async (
     const res = await Request.post<Category>("/api/v1/category", category);
     return res.data;
   } catch (error) {
-    console.error("Lỗi khi thêm category:", error);
+    console.log("Lỗi khi thêm category:", error);
     throw error; // đẩy lỗi ra cho react-query xử lý (onError)
   }
 };
