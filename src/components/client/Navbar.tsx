@@ -1,4 +1,14 @@
+import { useNavigate } from "react-router-dom";
+
 const Navbar = () => {
+  const navigate = useNavigate();
+  const logout = () => {
+    setTimeout(() => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/");
+    }, 1500);
+  };
   return (
     <nav
       className="navbar navbar-expand-lg"
@@ -59,7 +69,7 @@ const Navbar = () => {
               Cart
             </a>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" onClick={logout}>
             <a className="nav-link" href="#">
               Coming Soon
             </a>

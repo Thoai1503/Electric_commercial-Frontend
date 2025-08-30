@@ -49,14 +49,14 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: "Category",
+    name: "Quản lý danh mục",
     to: "./category",
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: "Accordion",
-        to: "./category/accordion",
+        name: "Tạo mới",
+        to: "./category/create",
       },
     ],
   },
