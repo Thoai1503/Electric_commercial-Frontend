@@ -1,5 +1,5 @@
 import type { NodeModel } from "@minoru/react-dnd-treeview";
-import { axiosInstance, catalogRequest } from "../../../api/http";
+import { catalogRequest, Request } from "../../../api/http";
 import type { Category, CategoryReponse } from "../../../type/Category";
 import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
 
@@ -7,10 +7,7 @@ export const addCategoryService = async (
   category: Category
 ): Promise<Category> => {
   try {
-    const res = await axiosInstance.post<Category>(
-      "/api/v1/category",
-      category
-    );
+    const res = await Request.post<Category>("/api/v1/category", category);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi thêm category:", error);
