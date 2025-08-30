@@ -1,40 +1,30 @@
+import type { NodeModel } from "@minoru/react-dnd-treeview";
 import { axiosInstance, catalogRequest } from "../../../api/http";
 import type { Category, CategoryReponse } from "../../../type/Category";
 import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
 
-export const addCategoryService = async (category: Category) => {
+export const addCategoryService = async (
+  category: Category
+): Promise<Category> => {
   try {
-    const { data } = await axiosInstance.post<boolean>(
+    const res = await axiosInstance.post<Category>(
       "/api/v1/category",
       category
     );
-    if (!data) {
-      return data;
-    }
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Details Error:", error.message);
-    } else {
-      console.error("Details Null:", error);
-    }
-    throw new Error("Error connect server.");
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi khi thêm category:", error);
+    throw error; // đẩy lỗi ra cho react-query xử lý (onError)
   }
 };
-export const getCategoryTree = async () => {
-  try {
-    const { data } = await catalogRequest.get<CategoryReponse[]>("/category");
-    if (!data) {
-      return [];
-    }
-    console.log("category:" + data);
-    return categoryTreeMapping(data);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Details Error:", error.message);
-    } else {
-      console.error("Details Null:", error);
-    }
-    throw new Error("Error fetching category tree.");
-  }
+
+export const getCategoryTree = async (): Promise<NodeModel[]> => {
+  return catalogRequest.get<CategoryReponse[]>("/category").then((res) => {
+    console.log("category:" + res.data);
+    return categoryTreeMapping(res.data);
+  });
+};
+
+export const getPost = () => {
+  return new Promise((res) => res([]));
 };

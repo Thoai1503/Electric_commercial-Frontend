@@ -34,6 +34,8 @@ export const useLoginPage = () => {
       }
       const { user: userData } = data;
       console.log(JSON.parse(JSON.stringify(data)));
+
+      // set authenticated state after successfull login
       dispatch(
         setAuthenState({
           id: userData?.id ?? 0,
