@@ -7,7 +7,9 @@ export const addCategoryService = async (
   category: Category
 ): Promise<Category> => {
   try {
+    console.log("Data 1:" + JSON.stringify(category));
     const res = await Request.post<Category>("/api/v1/category", category);
+    console.log("Data:" + JSON.stringify(res.data));
     return res.data;
   } catch (error) {
     console.log("Lỗi khi thêm category:", error);
