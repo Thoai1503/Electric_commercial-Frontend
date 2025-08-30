@@ -22,6 +22,9 @@ export const useCategoryPage = () => {
 
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
+    onError: (error) => {
+      console.log("Lỗi :" + error.message);
+    },
   });
 
   console.log("pending: " + isP);
