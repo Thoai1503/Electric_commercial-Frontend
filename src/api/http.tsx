@@ -1,71 +1,92 @@
-import axios from "axios";
-
+import axios, { AxiosError } from "axios";
+import type { AxiosResponse } from "axios";
 const API_URL_BASE = import.meta.env.VITE_API_URL;
 const VITE_CATOLOG_API = import.meta.env.VITE_CATOLOG_API;
 
+// Create axios instances
 export const Request = axios.create({
   baseURL: API_URL_BASE,
 });
+
 export const catalogRequest = axios.create({
   baseURL: VITE_CATOLOG_API,
 });
-export const axiosInstance = axios.create({
+
+export const http = axios.create({
   baseURL: API_URL_BASE,
   withCredentials: true,
+  timeout: 10000, // 10 seconds timeout
 });
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
 
-  if (token) {
-    config.headers["token"] = `Bearer ${token}`;
+// Request interceptor
+http.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config;
-//     if (error.response?.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true;
-//       console.log("⚠️ Token lỗi rồi, đang refresh token...");
-//       try {
-//         const refreshToken = localStorage.getItem("refreshToken");
+// Response interceptor with automatic token refresh
+http.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  async (error: AxiosError) => {
+    const originalRequest = error.config as any;
 
-//         if (!refreshToken) throw new Error("Không tìm thấy refresh token");
-//         const res = await axios.post(`${API_URL_BASE}user/refresh-token`, {
-//           refreshToken,
-//         });
+    // Check if error is 401 and we haven't retried yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-//         const newAccessToken = res.data.accessToken;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
 
-//         const user = store.getState().auth.user;
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
 
-//         if (user) {
-//           store.dispatch(
-//             LoginSuccess({
-//               success: true,
-//               message: "Token refreshed",
-//               accessToken: newAccessToken,
-//               data: { ...user, accessToken: newAccessToken },
-//               refreshToken: "",
-//             })
-//           );
+        // Call refresh token endpoint
+        const response = await axios.post(`${API_URL_BASE}auth/refresh-token`, {
+          refreshToken,
+        });
 
-//           localStorage.setItem("accessToken", newAccessToken);
+        if (response.data.success) {
+          const { accessToken, refreshToken: newRefreshToken } = response.data;
 
-//           originalRequest.headers["token"] = `Bearer ${newAccessToken}`;
+          // Update stored tokens
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", newRefreshToken);
 
-//           console.log("✅ Refresh thành công, đang gửi lại request...");
-//           console.log("🎟️ New Access Token được cấp lại: ", newAccessToken);
-//           return axiosInstance(originalRequest);
-//         }
-//       } catch (err) {
-//         store.dispatch(logout());
-//         return Promise.reject(err);
-//       }
-//     }
-//     console.log("token khongo cos");
-//     return Promise.reject(error);
-//   }
-// );
+          // Update authorization header
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+          // Retry the original request
+          return http(originalRequest);
+        }
+      } catch (refreshError) {
+        // If refresh fails, clear tokens and redirect to login
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+
+        // Redirect to login page
+        window.location.href = "/login";
+
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// Legacy axiosInstance for backward compatibility
+export const axiosInstance = http;

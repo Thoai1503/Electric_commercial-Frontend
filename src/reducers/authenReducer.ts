@@ -18,7 +18,15 @@ const authenSlice = createSlice({
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
+    setUser(state, action: PayloadAction<UserAuthenData>) {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+    },
+    clearUser(state) {
+      state.user = null;
+      state.isAuthenticated = false;
+    },
   },
 });
-export const { setAuthenState } = authenSlice.actions;
+export const { setAuthenState, setUser, clearUser } = authenSlice.actions;
 export default authenSlice.reducer;
