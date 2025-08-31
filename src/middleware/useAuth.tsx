@@ -1,7 +1,7 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router-dom';
-import type { RootState } from '../store/store';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
+import type { RootState } from "../store/store";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -19,9 +19,11 @@ interface AuthGuardProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
-  redirectTo = '/login'
+  redirectTo = "/login",
 }) => {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.authen);
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.authen
+  );
   const location = useLocation();
 
   // Check if user is authenticated
@@ -33,8 +35,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Check role requirements if specified
   if (requiredRole) {
     const userRole = user.rule;
-    const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-    
+    const allowedRoles = Array.isArray(requiredRole)
+      ? requiredRole
+      : [requiredRole];
+
     if (userRole === null || !allowedRoles.includes(userRole)) {
       return <Navigate to="/unauthorized" replace />;
     }
@@ -44,7 +48,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 // Admin Route Component
-export const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AdminRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <ProtectedRoute requiredRole={1} redirectTo="/login">
       {children}
@@ -53,7 +59,9 @@ export const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }
 };
 
 // User Route Component (Admin or Regular User)
-export const UserRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UserRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   return (
     <ProtectedRoute requiredRole={[1, 2]} redirectTo="/login">
       {children}
@@ -63,11 +71,13 @@ export const UserRoute: React.FC<{ children: React.ReactNode }> = ({ children })
 
 // Auth Guard Hook
 export const useAuthGuard = () => {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.authen);
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.authen
+  );
 
   const hasRole = (role: number | number[]): boolean => {
     if (!user) return false;
-    
+
     const allowedRoles = Array.isArray(role) ? role : [role];
     return user.rule !== null && allowedRoles.includes(user.rule);
   };
@@ -85,7 +95,7 @@ export const useAuthGuard = () => {
     user,
     hasRole,
     isAdmin,
-    isUser
+    isUser,
   };
 };
 
@@ -93,7 +103,7 @@ export const useAuthGuard = () => {
 export const AuthGuard: React.FC<AuthGuardProps> = ({
   children,
   roles,
-  redirectTo = '/login'
+  redirectTo = "/login",
 }) => {
   const { isAuthenticated, user } = useAuthGuard();
   const location = useLocation();
@@ -110,22 +120,25 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
 };
 
 // Optional Auth Component (for pages that work with or without auth)
-export const OptionalAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuthGuard();
-  
+export const OptionalAuth: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   // This component doesn't redirect, just renders children
   return <>{children}</>;
 };
 
 // Login Redirect Component (redirects authenticated users away from login page)
-export const LoginRedirect: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const LoginRedirect: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { isAuthenticated, user } = useAuthGuard();
   const location = useLocation();
 
   if (isAuthenticated && user) {
     // Redirect to the page they were trying to access, or dashboard
-    const from = (location.state as any)?.from?.pathname || 
-                 (user.rule === 1 ? '/admin/dashboard' : '/');
+    const from =
+      (location.state as any)?.from?.pathname ||
+      (user.rule === 1 ? "/admin/dashboard" : "/");
     return <Navigate to={from} replace />;
   }
 
