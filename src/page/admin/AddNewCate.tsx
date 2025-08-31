@@ -7,6 +7,7 @@ import {
   CDropdownToggle,
   CFormInput,
   CInputGroup,
+  CSpinner,
 } from "@coreui/react";
 import type { DropOptions, NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect, useState } from "react";
@@ -66,14 +67,22 @@ export const AddNewCate = () => {
               placeholder="Nhập tên danh mục..."
             />
           </CInputGroup>
-          <button
-            className="btn btn-success"
-            onClick={handleSubmit}
-            style={{ color: "white" }}
-            disabled={isP}
-          >
-            Thêm
-          </button>
+
+          <CButton color="success" disabled={isP} onClick={handleSubmit}>
+            {isP ? (
+              <>
+                <CSpinner
+                  as="span"
+                  className="me-2"
+                  size="sm"
+                  aria-hidden="true"
+                />
+                <span role="status">Loading...</span>
+              </>
+            ) : (
+              <span style={{ color: "white" }}>Thêm</span>
+            )}
+          </CButton>
         </div>
         <div className="col-md-6">
           {isPending ? (

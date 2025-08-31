@@ -40,47 +40,14 @@ const HomeProList = () => {
   const filters = ["*", "Apple", "Samsung", "Redmi"];
   return (
     <>
-      <div className="row">
+      <div className="row mt-5">
         <section>
           <div
             className="container py-5"
             style={{ backgroundColor: "#ffffffff" }}
           >
             <div className="row">
-              <div className="col-md-2">
-                <ul className="list-group list-group-light">
-                  <li className="list-group-item d-flex justify-content-between align-items-center text-primary">
-                    A list item
-                    <span className="badge text-bg-info">14</span>
-                  </li>
-                  <li className="list-group-item d-flex justify-content-between align-items-center text-primary">
-                    A second list item
-                    <span
-                      className="badge text-bg-info"
-                      style={{ color: "white" }}
-                    >
-                      2
-                    </span>
-                  </li>
-                  <li className="list-group-item d-flex justify-content-between align-items-center text-primary">
-                    A third list item
-                    <span className="badge text-bg-info">1</span>
-                  </li>
-                  <li className="list-group-item d-flex justify-content-between align-items-center text-primary">
-                    A list item
-                    <span className="badge text-bg-info">14</span>
-                  </li>
-                  <li className="list-group-item d-flex justify-content-between align-items-center text-primary">
-                    A second list item
-                    <span className="badge text-bg-info">2</span>
-                  </li>
-                  <li className="list-group-item d-flex justify-content-between align-items-center  text-primary">
-                    A third list item
-                    <span className="badge text-bg-info">1</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-md-10">
+              <div className="col-md-12">
                 <div className="row justify-content-center">
                   <div
                     className="col-md-3 col-lg-6 col-xl-4"
