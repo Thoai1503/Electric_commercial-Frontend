@@ -1,14 +1,14 @@
 .menu-container {
   display: flex;
   position: relative;
-  height: 300px;
+  height: auto;
 }
 
 .sidebar-menu {
   margin-top: 50px;
   width: 250px;
   border: 1px solid #ddd;
-  height: calc(80vh - 50px);
+  height: auto;
 }
 
 .menu-list {
@@ -27,14 +27,14 @@
   position: absolute;
   top: 50px;
   left: 230px;
-  width: 700px;
-  height: calc(100vh - 50px);
+  width: 800px;
+  height: 400px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: 20px;
-  z-index: 1100;
+  z-index: 4;
   overflow-y: auto;
 }
 

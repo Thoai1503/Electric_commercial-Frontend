@@ -77,6 +77,39 @@ const Menu = () => {
         { name: "Tai nghe", icon: <FaHeadphones /> },
       ],
     },
+    {
+      id: 7,
+      name: "Laptop",
+      count: 8,
+      icon: <FaLaptop />,
+      children: [
+        { name: "MacBook", icon: <FaApple /> },
+        { name: "Dell", icon: <FaWindows /> },
+        { name: "Asus", icon: <FaWindows /> },
+      ],
+    },
+    {
+      id: 8,
+      name: "Phụ kiện",
+      count: 20,
+      icon: <FaHeadphones />,
+      children: [
+        { name: "Chuột", icon: <FaKeyboard /> },
+        { name: "Bàn phím", icon: <FaKeyboard /> },
+        { name: "Tai nghe", icon: <FaHeadphones /> },
+      ],
+    },
+    {
+      id: 9,
+      name: "Laptop",
+      count: 8,
+      icon: <FaLaptop />,
+      children: [
+        { name: "MacBook", icon: <FaApple /> },
+        { name: "Dell", icon: <FaWindows /> },
+        { name: "Asus", icon: <FaWindows /> },
+      ],
+    },
   ];
 
   const [hoveredId, setHoveredId] = useState<number | null>(null);
@@ -89,6 +122,7 @@ const Menu = () => {
     >
       {/* Sidebar */}
       <ul className="list-group list-group-light sidebar-menu">
+        {/* <strong>Danh mục </strong> */}
         {categories.map((cat) => (
           <li
             key={cat.id}
@@ -97,8 +131,11 @@ const Menu = () => {
             }`}
             onMouseEnter={() => setHoveredId(cat.id)} // hover vào item thì hiện panel
           >
-            <span className="d-flex align-items-center gap-2">
-              {cat.icon} {cat.name}
+            <span
+              className="d-flex align-items-center gap-2"
+              style={{ color: "black" }}
+            >
+              <span style={{ color: "#06b6d4" }}> {cat.icon}</span> {cat.name}
             </span>
           </li>
         ))}

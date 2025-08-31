@@ -16,7 +16,11 @@ const Navbar = () => {
       style={{ backgroundColor: "	#000000ff" }}
     >
       <div className="container">
-        <a className="navbar-brand d-flex align-items-center" href="#">
+        <a
+          className="navbar-brand d-flex align-items-center"
+          href="#"
+          style={{ color: "#06b6d4" }}
+        >
           <img src="../../assets/logo.png" alt="" width="40" height="40" />
           <span className="text-white fw-bold" style={{ color: "#06b6d4" }}>
             TechStore
@@ -99,6 +103,16 @@ const Navbar = () => {
                 Coming Soon
               </a>
             </li>
+
+            <input
+              type="text"
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                borderRadius: "7px",
+              }}
+              placeholder="Bạn muốn.."
+            ></input>
           </ul>
           <form action="#" className="font-size-12">
             <a

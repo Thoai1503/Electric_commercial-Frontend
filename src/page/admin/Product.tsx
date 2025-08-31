@@ -1,6 +1,7 @@
 import type { RootState } from "../../store/store";
 import { useSelector, useDispatch } from "react-redux";
 import { set } from "../../reducers/adminThemeReducer";
+import { ProductList } from "../../components/admin/productManagement/ProductsList";
 
 const Product = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const Product = () => {
       <button onClick={() => dispatch(set({ sidebarShow: !sidebarShow }))}>
         toggle sidebar
       </button>
+      <ProductList />
     </div>
   );
 };

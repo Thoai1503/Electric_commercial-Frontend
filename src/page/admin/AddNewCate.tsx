@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import categoriesTreeQuery from "../../module/admin/query/category";
 import CategoryTree from "../../components/admin/addCategoryPage/CateNodeTree";
 import { useCategoryPage } from "../../module/admin/hook/useCategoryPage";
+import { ProductList } from "../../components/admin/productManagement/ProductsList";
 
 export const AddNewCate = () => {
   const [nodes, setNodes] = useState<NodeModel[] | undefined>();
@@ -94,6 +95,7 @@ export const AddNewCate = () => {
             </>
           )}
         </div>
+        <ProductList />
       </div>
     </>
   );
