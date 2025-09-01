@@ -200,6 +200,7 @@ export const ProductList = () => {
 
   return (
     <CSmartTable
+      style={{ marginTop: "20px" }}
       activePage={2}
       cleaner
       clickableRows

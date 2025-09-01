@@ -19,3 +19,7 @@ export interface CategoryTree {
   text: string;
   droppable: boolean;
 }
+export interface UpdatedCategory {
+  name: string;
+  parent_id: number;
+}

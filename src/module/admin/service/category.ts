@@ -1,6 +1,10 @@
 import type { NodeModel } from "@minoru/react-dnd-treeview";
 import { catalogRequest, Request } from "../../../api/http";
-import type { Category, CategoryReponse } from "../../../type/Category";
+import type {
+  Category,
+  CategoryReponse,
+  UpdatedCategory,
+} from "../../../type/Category";
 import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
 
 export const addCategoryService = async (
@@ -22,6 +26,19 @@ export const getCategoryTree = async (): Promise<NodeModel[]> => {
     console.log("category:" + res.data);
     return categoryTreeMapping(res.data);
   });
+};
+export const updateCategory = async (
+  id: number,
+  cate: UpdatedCategory | null
+): Promise<boolean> => {
+  if (!cate) {
+    alert("");
+    return false;
+  }
+
+  return Request.put(`/api/v1/category/${id}`, cate).then(
+    (res) => res.data?.success
+  );
 };
 
 export const getPost = () => {

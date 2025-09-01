@@ -19,7 +19,7 @@ export const useCategoryPage = () => {
     mutationFn: (cate: Category) => addCategoryService(cate),
     onSuccess: (newCategory: Category) => {
       console.log("Success:" + JSON.stringify(newCategory));
-
+      alert("Thêm mục " + newCategory.name + " thành công");
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: (error) => {
@@ -48,6 +48,7 @@ export const useCategoryPage = () => {
 
     setCate((pre) => ({ ...pre, [name]: value }));
     console.log("Input result:" + cate.name);
+    console.log("Cate :" + JSON.stringify(cate));
   };
   return {
     handleChange,
