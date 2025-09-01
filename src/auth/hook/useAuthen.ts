@@ -39,7 +39,7 @@ const useAuthen = () => {
 
   // Initialize authentication state from localStorage
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
     const user = localStorage.getItem('user');
     
     if (token && user) {
@@ -78,9 +78,21 @@ const useAuthen = () => {
         // Store tokens and user data
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Store user data with both 'role' and 'rule' for compatibility
+        const userData = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          rule: user.role, // Add 'rule' property for AdminAuth compatibility
+          status: user.status
+        };
+        localStorage.setItem('user', JSON.stringify(userData));
         
         console.log("Login - Tokens stored in localStorage");
+        console.log("Login - User data stored:", userData);
         
         // Set authorization header
         http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -124,7 +136,18 @@ const useAuthen = () => {
         // Store tokens and user data
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Store user data with both 'role' and 'rule' for compatibility
+        const userDataToStore = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          rule: user.role, // Add 'rule' property for AdminAuth compatibility
+          status: user.status
+        };
+        localStorage.setItem('user', JSON.stringify(userDataToStore));
         
         // Set authorization header
         http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
@@ -162,6 +185,7 @@ const useAuthen = () => {
     } finally {
       // Clear local storage
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('token'); // Also clear old token key
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       
@@ -215,11 +239,20 @@ const useAuthen = () => {
       if (response.data.success) {
         const user = response.data.user;
         
-        // Update stored user data
-        localStorage.setItem('user', JSON.stringify(user));
+        // Store user data with both 'role' and 'rule' for compatibility
+        const userDataToStore = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          rule: user.role, // Add 'rule' property for AdminAuth compatibility
+          status: user.status
+        };
+        localStorage.setItem('user', JSON.stringify(userDataToStore));
         
         // Update Redux state
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('accessToken') || localStorage.getItem('token');
         dispatch(setUser({
           id: user.id,
           name: user.name,
@@ -240,7 +273,7 @@ const useAuthen = () => {
 
   // Check if user is authenticated
   const isAuthenticated = useCallback((): boolean => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
     return !!token;
   }, []);
 
@@ -250,7 +283,8 @@ const useAuthen = () => {
     if (user) {
       try {
         const userData = JSON.parse(user);
-        return userData.role === 1; // Assuming role 1 is admin
+        // Check both 'role' and 'rule' properties
+        return (userData.role === 1) || (userData.rule === 1);
       } catch (error) {
         return false;
       }
