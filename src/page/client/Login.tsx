@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { useLoginPage } from "../../hook/useLoginPage";
-import Button from "react-bootstrap/Button";
 
 import { CAlert } from "@coreui/react";
 
