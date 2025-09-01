@@ -22,9 +22,17 @@ export const http = axios.create({
 http.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
+    
+    // Debug logging
+    console.log("HTTP Interceptor - Token from localStorage:", token ? "EXISTS" : "MISSING");
+    console.log("HTTP Interceptor - Request URL:", config.url);
+    console.log("HTTP Interceptor - Request method:", config.method);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log("HTTP Interceptor - Authorization header set:", `Bearer ${token.substring(0, 20)}...`);
+    } else {
+      console.log("HTTP Interceptor - No token found in localStorage");
     }
 
     return config;

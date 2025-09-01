@@ -25,6 +25,7 @@ export const AddNewCate = () => {
     useCategoryPage();
   const { data: categories, isPending } = useQuery(categoriesTreeQuery.list);
 
+  //  console.log("Is fetching:" + isFetching);
   const handleMove = (newTree: NodeModel[], _options: DropOptions) => {
     // Cập nhật state local
     setNodes(newTree);
@@ -87,7 +88,7 @@ export const AddNewCate = () => {
         </div>
         <div className="col-md-6">
           {isPending ? (
-            <h3 style={{ color: "black" }}>..Loading</h3>
+            <CSpinner color="primary" />
           ) : (
             <>
               <h3>Cây thư mục</h3>

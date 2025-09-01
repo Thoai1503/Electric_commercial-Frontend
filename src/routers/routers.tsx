@@ -3,13 +3,15 @@ import { clientRoutes } from "./client";
 import { adminRoutes } from "./admin";
 import AdminLayout from "../layout/Admin";
 import AdminAuth from "../components/auth/adminAuth";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 // const ROLES = {
 //   User: 2,
 
 //   Admin: 1,
 // };
-
+//
 export const routerRoot = createBrowserRouter([
   ...clientRoutes,
   //...adminRoutes,

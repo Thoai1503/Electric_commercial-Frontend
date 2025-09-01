@@ -25,6 +25,7 @@ export const useLoginPage = () => {
   const {
     isPending,
     isError,
+    error,
     mutate: loginProcess,
   } = useMutation({
     mutationFn: login,
@@ -32,7 +33,7 @@ export const useLoginPage = () => {
       if (!data || !data.success) {
         alert("Invalid credentails");
       }
-      const { user: userData } = data;
+      const { user: userData, accessToken } = data;
       console.log(JSON.parse(JSON.stringify(data)));
 
       // set authenticated state after successfull login
@@ -41,12 +42,12 @@ export const useLoginPage = () => {
           id: userData?.id ?? 0,
           email: userData?.email ?? "",
           name: userData?.name ?? "",
-          token: data?.token,
+          token: accessToken,
           rule: userData?.role ?? null,
         })
       );
 
-      console.log("Authen state: " + authState);
+      console.log("Authen state: " + JSON.stringify(authState));
       if (data?.user?.role == 1) {
         setLoginValue({ email: "", password: "" });
         return navigate("/admin");
@@ -85,6 +86,7 @@ export const useLoginPage = () => {
     handleSubmit,
     isPending,
     isError,
+    error,
     showError,
   };
 };

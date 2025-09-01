@@ -20,6 +20,7 @@ export const userLoginService = async (loginState: UserLogin) => {
     } else {
       console.error("Details Null:", error);
     }
-    throw new Error("Error connect server.");
+
+    throw new Error(`${error}`);
   }
 };

@@ -1,8 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/client/Navbar";
 import Menu from "../components/client/home/Menu";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 const Client = () => {
+  const authState = useSelector((state: RootState) => state.authen);
+
+  console.log("Trạng thái xác thực:" + JSON.stringify(authState));
   return (
     <div>
       <Navbar />

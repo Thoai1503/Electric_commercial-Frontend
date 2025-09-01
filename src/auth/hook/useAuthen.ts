@@ -64,16 +64,28 @@ const useAuthen = () => {
     try {
       const response = await http.post<AuthResponse>('/auth/login', credentials);
       
+      console.log("Login response:", response.data);
+      
       if (response.data.success) {
         const { accessToken, refreshToken, user } = response.data;
+        
+        console.log("Login - Tokens received:", {
+          accessToken: accessToken ? "EXISTS" : "MISSING",
+          refreshToken: refreshToken ? "EXISTS" : "MISSING",
+          user: user ? "EXISTS" : "MISSING"
+        });
         
         // Store tokens and user data
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('user', JSON.stringify(user));
         
+        console.log("Login - Tokens stored in localStorage");
+        
         // Set authorization header
         http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        
+        console.log("Login - Authorization header set");
         
         // Update Redux state
         dispatch(setUser({

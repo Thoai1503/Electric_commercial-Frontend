@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { useLoginPage } from "../../hook/useLoginPage";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+
+import { CAlert } from "@coreui/react";
 
 const Login = () => {
-  const { handleChange, loginValue, handleSubmit, isPending, showError } =
-    useLoginPage();
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const {
+    handleChange,
+    loginValue,
+    handleSubmit,
+    isPending,
+    showError,
+    error,
+  } = useLoginPage();
 
   console.log(showError);
 
   return (
     <div className="container" style={{ width: "400px", marginTop: "100px" }}>
       {isPending && <h1>Login..</h1>}
-      {showError && <h1 style={{ color: "red" }}>Error</h1>}
+
       <ul className="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
         <li className="nav-item" role="presentation">
           <a
@@ -94,7 +97,13 @@ const Login = () => {
             </div>
 
             <p className="text-center">or:</p>
-
+            {showError && (
+              <h4 style={{ color: "red" }}>
+                <CAlert color="danger" style={{ fontSize: "15px" }}>
+                  {error?.message}
+                </CAlert>
+              </h4>
+            )}
             <div data-mdb-input-init className="form-outline mb-4">
               <input
                 type="email"
@@ -265,13 +274,10 @@ const Login = () => {
           </form>
         </div>
       </div>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
 
-      <Modal show={showError} onHide={handleClose}>
+      {/* <Modal show={showError} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading for phone {show}</Modal.Title>
+          <Modal.Title>Modal heading for phone </Modal.Title>
         </Modal.Header>
         <Modal.Body>Woohoo,</Modal.Body>
         <Modal.Footer>
@@ -282,7 +288,7 @@ const Login = () => {
             Save Changes
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
