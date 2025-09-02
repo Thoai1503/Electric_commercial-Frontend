@@ -11,9 +11,8 @@ export const addCategoryService = async (
   category: Category
 ): Promise<Category> => {
   try {
-    console.log("Data 1:" + JSON.stringify(category));
     const res = await Request.post<Category>("/api/v1/category", category);
-    console.log("Data:" + JSON.stringify(res.data));
+
     return res.data;
   } catch (error) {
     console.log("Lỗi khi thêm category:", error);
@@ -36,9 +35,14 @@ export const updateCategory = async (
     return false;
   }
 
-  return Request.put(`/api/v1/category/${id}`, cate).then(
-    (res) => res.data?.success
-  );
+  try {
+    const res = await Request.post(`/api/v1/category/${id}`, cate);
+    console.log("Update res:" + JSON.stringify(res.data));
+    return res.data?.success;
+  } catch (error) {
+    console.log("Lỗi khi cập nhật category:", error);
+    throw error; // đẩy lỗi ra cho reactQuery xử lý
+  }
 };
 
 export const getPost = () => {

@@ -12,10 +12,13 @@ import {
 
 import type { Category } from "../../../type/Category";
 import { useEffect } from "react";
+import type { NodeModel } from "@minoru/react-dnd-treeview";
 
 interface AddNewCateFormProps {
+  categoryList: NodeModel[];
   category: Category;
   isPending: boolean;
+  setCate: (cate: Category) => void;
   handleSubmit: () => void;
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,9 +26,11 @@ interface AddNewCateFormProps {
 }
 
 const AddNewCateForm = ({
+  categoryList,
   category,
-  handleChange,
   isPending,
+  setCate,
+  handleChange,
   handleSubmit,
 }: AddNewCateFormProps) => {
   console.log("Cate change:" + JSON.stringify(category));
@@ -37,13 +42,30 @@ const AddNewCateForm = ({
       <CInputGroup className="mb-3">
         <CDropdown variant="input-group">
           <CButton type="button" color="secondary" variant="outline">
-            Chọn loại cha
+            {category.parent_id !== 0
+              ? categoryList.find((cate) => cate.id === category.parent_id)
+                  ?.text
+              : "Chọn danh mục cha (mặc định là gốc)"}
           </CButton>
           <CDropdownToggle color="secondary" variant="outline" split />
+
           <CDropdownMenu>
-            <CDropdownItem href="#">Action</CDropdownItem>
-            <CDropdownItem href="#">Another action</CDropdownItem>
-            <CDropdownItem href="#">Something else here</CDropdownItem>
+            <CDropdownItem
+              onClick={() => setCate({ ...category, parent_id: 0 })}
+            >
+              Danh mục gốc
+            </CDropdownItem>
+            {categoryList.map((cate) => (
+              <CDropdownItem
+                key={cate.id}
+                onClick={() =>
+                  setCate({ ...category, parent_id: Number(cate.id) })
+                }
+              >
+                {cate.text}
+              </CDropdownItem>
+            ))}
+
             <CDropdownDivider />
             <CDropdownItem href="#">Separated link</CDropdownItem>
           </CDropdownMenu>

@@ -53,6 +53,7 @@ export const useCategoryPage = () => {
   return {
     handleChange,
     handleSubmit,
+    setCate,
     isP,
     isSuccess,
     cate,

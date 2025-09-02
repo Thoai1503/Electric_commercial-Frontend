@@ -6,30 +6,30 @@ import { useQuery } from "@tanstack/react-query";
 import categoriesTreeQuery from "../../module/admin/query/category";
 import CategoryTree from "../../components/admin/addCategoryPage/CateNodeTree";
 import { useCategoryPage } from "../../module/admin/hook/useCategoryPage";
-import { ProductList } from "../../components/admin/productManagement/ProductsList";
+import { CategoryList } from "../../components/admin/addCategoryPage/CategoryList";
 import AddNewCateForm from "../../components/admin/addCategoryPage/AddNewCateForm";
 export const AddNewCatePage = () => {
   const [nodes, setNodes] = useState<NodeModel[] | undefined>();
 
-  const { handleSubmit, handleChange, cate, isP, isSuccess } =
+  const { handleSubmit, handleChange, setCate, cate, isP, isSuccess } =
     useCategoryPage();
   const { data: categories, isPending } = useQuery(categoriesTreeQuery.list);
 
-  //  console.log("Is fetching:" + isFetching);
   const handleMove = (newTree: NodeModel[], _options: DropOptions) => {
     // Cập nhật state local
     setNodes(newTree);
-
-    // Gọi API backend để lưu ParentId mớ i (nếu cần)
+    // Gọi API backend để lưu ParentId mới (nếu cần)
     console.log("Updated Tree:", newTree, _options);
   };
+
+  console.log("Nodes:", nodes);
 
   useEffect(() => {
     if (isSuccess) setNodes(categories);
   }, [isSuccess]);
-  useEffect(() => {
-    setNodes(categories);
-  }, [categories]);
+  // useEffect(() => {
+  //   setNodes(categories);
+  // }, [categories]);
 
   return (
     <>
@@ -38,6 +38,8 @@ export const AddNewCatePage = () => {
           <div className="card">
             <div className="card-body">
               <AddNewCateForm
+                setCate={setCate}
+                categoryList={categories ?? []}
                 category={cate}
                 handleChange={handleChange}
                 isPending={isP}
@@ -51,11 +53,11 @@ export const AddNewCatePage = () => {
             <CSpinner color="primary" />
           ) : (
             <>
-              <CategoryTree nodes={nodes ?? []} onMove={handleMove} />
+              <CategoryTree nodes={categories ?? []} onMove={handleMove} />
             </>
           )}
         </div>
-        <ProductList />
+        <CategoryList />
       </div>
     </>
   );

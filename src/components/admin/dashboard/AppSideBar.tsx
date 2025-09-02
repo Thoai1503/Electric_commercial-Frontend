@@ -41,7 +41,7 @@ export interface AppSidebarNavProps {
 const AppSidebar = () => {
   const dispatch = useDispatch();
   const unfoldable = useSelector((state: any) => state.sidebarUnfoldable);
-  const sidebarShow = useSelector((state: any) => state.sidebarShow);
+  const sidebarShow = useSelector((state: any) => state.app.sidebarShow);
 
   return (
     <CSidebar

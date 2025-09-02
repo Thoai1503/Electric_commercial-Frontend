@@ -62,14 +62,14 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: "Base",
-    to: "/base",
+    name: "Quản lý sản phẩm",
+    to: "/products",
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: "Accordion",
-        to: "/base/accordion",
+        name: "Sản phẩm",
+        to: "./products",
       },
       {
         component: CNavItem,

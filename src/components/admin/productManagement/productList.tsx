@@ -6,6 +6,7 @@ import {
   CCollapse,
   CSmartTable,
 } from "@coreui/react-pro";
+
 const getBadge = (status: string) => {
   switch (status) {
     case "Active": {
@@ -26,7 +27,7 @@ const getBadge = (status: string) => {
   }
 };
 
-export const ProductList = () => {
+export const SmartTableExample = () => {
   const [details, setDetails] = useState<number[]>([]);
   const columns = [
     {
@@ -36,15 +37,14 @@ export const ProductList = () => {
       sorter: false,
     },
     {
-      key: "Tên",
+      key: "name",
       _style: { width: "20%" },
     },
-
     {
       key: "registered",
       sorter: (item1: any, item2: any) => {
-        const a = new Date(item1?.registered);
-        const b = new Date(item2?.registered);
+        const a = new Date(item1.registered);
+        const b = new Date(item2.registered);
         return a > b ? 1 : b > a ? -1 : 0;
       },
     },
@@ -64,7 +64,7 @@ export const ProductList = () => {
   const items = [
     {
       id: 1,
-      Tên: "Samppa Nori",
+      name: "Samppa Nori",
       avatar: "1.jpg",
       registered: "2021/03/01",
       role: "Member",
@@ -72,7 +72,7 @@ export const ProductList = () => {
     },
     {
       id: 2,
-      Tên: "Estavan Lykos",
+      name: "Estavan Lykos",
       avatar: "2.jpg",
       registered: "2018/02/07",
       role: "Staff",
@@ -80,7 +80,7 @@ export const ProductList = () => {
     },
     {
       id: 3,
-      Tên: "Chetan Mohamed",
+      name: "Chetan Mohamed",
       avatar: "3.jpg",
       registered: "2020/01/15",
       role: "Admin",
@@ -89,7 +89,7 @@ export const ProductList = () => {
     },
     {
       id: 4,
-      Tên: "Derick Maximinus",
+      name: "Derick Maximinus",
       avatar: "4.jpg",
       registered: "2019/04/05",
       role: "Member",
@@ -97,7 +97,7 @@ export const ProductList = () => {
     },
     {
       id: 5,
-      Tên: "Friderik Dávid",
+      name: "Friderik Dávid",
       avatar: "5.jpg",
       registered: "2022/03/25",
       role: "Staff",
@@ -105,7 +105,7 @@ export const ProductList = () => {
     },
     {
       id: 6,
-      Tên: "Yiorgos Avraamu",
+      name: "Yiorgos Avraamu",
       avatar: "6.jpg",
       registered: "2017/01/01",
       role: "Member",
@@ -113,7 +113,7 @@ export const ProductList = () => {
     },
     {
       id: 7,
-      Tên: "Avram Tarasios",
+      name: "Avram Tarasios",
       avatar: "7.jpg",
       registered: "2016/02/12",
       role: "Staff",
@@ -122,7 +122,7 @@ export const ProductList = () => {
     },
     {
       id: 8,
-      Tên: "Quintin Ed",
+      name: "Quintin Ed",
       avatar: "8.jpg",
       registered: "2023/01/21",
       role: "Admin",
@@ -130,7 +130,7 @@ export const ProductList = () => {
     },
     {
       id: 9,
-      Tên: "Enéas Kwadwo",
+      name: "Enéas Kwadwo",
       avatar: "9.jpg",
       registered: "2024/03/10",
       role: "Member",
@@ -138,7 +138,7 @@ export const ProductList = () => {
     },
     {
       id: 10,
-      Tên: "Agapetus Tadeáš",
+      name: "Agapetus Tadeáš",
       avatar: "10.jpg",
       registered: "2015/01/10",
       role: "Staff",
@@ -146,7 +146,7 @@ export const ProductList = () => {
     },
     {
       id: 11,
-      Tên: "Carwyn Fachtna",
+      name: "Carwyn Fachtna",
       avatar: "11.jpg",
       registered: "2014/04/01",
       role: "Member",
@@ -154,7 +154,7 @@ export const ProductList = () => {
     },
     {
       id: 12,
-      Tên: "Nehemiah Tatius",
+      name: "Nehemiah Tatius",
       avatar: "12.jpg",
       registered: "2013/01/05",
       role: "Staff",
@@ -163,7 +163,7 @@ export const ProductList = () => {
     },
     {
       id: 13,
-      Tên: "Ebbe Gemariah",
+      name: "Ebbe Gemariah",
       avatar: "13.jpg",
       registered: "2012/02/25",
       role: "Admin",
@@ -171,7 +171,7 @@ export const ProductList = () => {
     },
     {
       id: 14,
-      Tên: "Eustorgios Amulius",
+      name: "Eustorgios Amulius",
       avatar: "14.jpg",
       registered: "2011/03/19",
       role: "Member",
@@ -179,7 +179,7 @@ export const ProductList = () => {
     },
     {
       id: 15,
-      Tên: "Leopold Gáspár",
+      name: "Leopold Gáspár",
       avatar: "15.jpg",
       registered: "2010/02/01",
       role: "Staff",
@@ -200,7 +200,6 @@ export const ProductList = () => {
 
   return (
     <CSmartTable
-      style={{ marginTop: "20px" }}
       activePage={2}
       cleaner
       clickableRows
@@ -223,11 +222,11 @@ export const ProductList = () => {
       scopedColumns={{
         avatar: (item: any) => (
           <td>
-            <CAvatar src={`../../images/avatars/${item?.avatar}`} />
+            <CAvatar src={`../../images/avatars/${item.avatar}`} />
           </td>
         ),
         registered: (item: any) => {
-          const date = new Date(item?.registered);
+          const date = new Date(item.registered);
           const options: Intl.DateTimeFormatOptions = {
             year: "numeric",
             month: "long",
@@ -237,7 +236,7 @@ export const ProductList = () => {
         },
         status: (item: any) => (
           <td>
-            <CBadge color={getBadge(item?.status)}>{item?.status}</CBadge>
+            <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
           </td>
         ),
         show_details: (item: any) => {
@@ -249,21 +248,21 @@ export const ProductList = () => {
                 shape="square"
                 size="sm"
                 onClick={() => {
-                  toggleDetails(item?.id);
+                  toggleDetails(item.id);
                 }}
               >
-                {details.includes(item?.id) ? "Hide" : "Show"}
+                {details.includes(item.id) ? "Hide" : "Show"}
               </CButton>
             </td>
           );
         },
         details: (item) => {
           return (
-            <CCollapse visible={details.includes(item?.id)}>
+            <CCollapse visible={details.includes(item.id)}>
               <div className="p-3">
-                <h4>{item?.Tên}</h4>
+                <h4>{item.name}</h4>
                 <p className="text-body-secondary">
-                  User since: {item?.registered}
+                  User since: {item.registered}
                 </p>
                 <CButton size="sm" color="info">
                   User Settings

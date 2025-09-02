@@ -38,7 +38,7 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
     setCateValue({
       id: Number(_options.dragSourceId ?? 0),
       cate: {
-        name: _options.dropTarget?.text ?? "",
+        name: _options.dragSource?.text ?? "",
         parent_id:
           typeof _options.dropTargetId === "number" ? _options.dropTargetId : 0,
       },
