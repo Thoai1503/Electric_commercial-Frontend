@@ -38,7 +38,7 @@ interface CategoryListProps {
 export const CategoryList = ({ category }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
   const [categories, setCategories] = useState<NodeModel[]>([]);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  //const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   useEffect(() => {
     // const mappedCategories = category.map((cat) => ({
@@ -47,6 +47,7 @@ export const CategoryList = ({ category }: CategoryListProps) => {
     //   parent_id: (cat.parent as number) || 0,
     //   status: "Active" as Category["status"], // Default status, adjust as needed
     // }));
+    console.log(categories);
     setCategories(category);
   }, [category]);
   console.log("Category prop:" + JSON.stringify(category));
@@ -108,7 +109,7 @@ export const CategoryList = ({ category }: CategoryListProps) => {
         scopedColumns={{
           status: (item: Category) => (
             <td>
-              <CBadge color={getBadge("Active")}>Active</CBadge>
+              <CBadge color={getBadge(item.status)}>Active</CBadge>
             </td>
           ),
 
@@ -167,10 +168,6 @@ export const CategoryList = ({ category }: CategoryListProps) => {
           className: "align-middle",
         }}
       />
-
-      <div className="mt-3">
-        <strong>Selected IDs:</strong> {JSON.stringify(selectedIds)}
-      </div>
     </>
   );
 };

@@ -6,7 +6,7 @@ import type {
   UpdatedCategory,
 } from "../../../type/Category";
 import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
-import CategoryTree from "../../../components/admin/addCategoryPage/CateNodeTree";
+//import CategoryTree from "../../../components/admin/addCategoryPage/CateNodeTree";
 
 export const addCategoryService = async (
   category: Category
