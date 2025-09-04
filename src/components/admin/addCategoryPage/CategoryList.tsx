@@ -6,13 +6,13 @@ import {
   CSmartTable,
   CFormCheck,
 } from "@coreui/react-pro";
+import type { NodeModel } from "@minoru/react-dnd-treeview";
 
 interface Category {
   id: number;
   name: string;
   parent_id: number;
-  description: string;
-  createdAt: string;
+
   status: "Active" | "Inactive" | "Pending" | "Archived";
 }
 
@@ -31,42 +31,25 @@ const getBadge = (status: string) => {
   }
 };
 
-export const CategoryList = () => {
+interface CategoryListProps {
+  category: NodeModel[];
+}
+
+export const CategoryList = ({ category }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<NodeModel[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   useEffect(() => {
-    // Simulate API call
-    const data: Category[] = [
-      {
-        id: 1,
-        name: "Electronics",
-        parent_id: 0,
-        description: "Devices, gadgets, and accessories",
-        createdAt: "2024-08-01",
-        status: "Active",
-      },
-      {
-        id: 2,
-        name: "Furniture",
-        parent_id: 0,
-        description: "Home and office furniture",
-        createdAt: "2023-06-15",
-        status: "Inactive",
-      },
-      {
-        id: 3,
-        name: "Books",
-        parent_id: 0,
-        description: "Educational and entertainment books",
-        createdAt: "2022-12-10",
-        status: "Pending",
-      },
-    ];
-    setCategories(data);
-  }, []);
-
+    // const mappedCategories = category.map((cat) => ({
+    //   id: cat.id as number,
+    //   name: cat.text,
+    //   parent_id: (cat.parent as number) || 0,
+    //   status: "Active" as Category["status"], // Default status, adjust as needed
+    // }));
+    setCategories(category);
+  }, [category]);
+  console.log("Category prop:" + JSON.stringify(category));
   const toggleDetails = (id: number) => {
     const position = details.indexOf(id);
     let newDetails = [...details];
@@ -78,41 +61,16 @@ export const CategoryList = () => {
     setDetails(newDetails);
   };
 
-  const handleSelect = (id: number) => {
-    let newSelected = [...selectedIds];
-    if (newSelected.includes(id)) {
-      newSelected = newSelected.filter((x) => x !== id);
-    } else {
-      newSelected.push(id);
-    }
-    setSelectedIds(newSelected);
-  };
-
   const columns = [
+    { key: "text", label: "Category Name", _style: { width: "25%" } },
     {
-      key: "select",
-      label: "Select",
-      _style: { width: "1%" },
-      filter: false,
-      sorter: false,
-    },
-    { key: "name", label: "Category Name", _style: { width: "25%" } },
-    { key: "description", label: "Description" },
-
-    {
-      key: "parent_id",
+      key: "parent",
       label: "Parent ID",
       sorter: (a: Category, b: Category) =>
         (a.parent_id || 0) - (b.parent_id || 0),
       _style: { width: "10%" },
     },
-    {
-      key: "createdAt",
-      label: "Created At",
-      sorter: (a: Category, b: Category) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-    },
-    { key: "status", label: "Status" },
+    { key: "status", _style: { width: "10%" }, label: "Status" },
     {
       key: "show_details",
       label: "",
@@ -127,9 +85,12 @@ export const CategoryList = () => {
       <CSmartTable
         style={{ marginTop: "20px" }}
         columns={columns}
-        items={categories}
+        activePage={2}
+        items={category}
+        cleaner
         columnFilter
         columnSorter
+        itemsPerPageSelect
         onFilteredItemsChange={(items) => {
           console.log("onFilteredItemsChange");
           console.table(items);
@@ -145,18 +106,9 @@ export const CategoryList = () => {
           responsive: true,
         }}
         scopedColumns={{
-          select: (item: Category) => (
-            <td>
-              <CFormCheck
-                checked={selectedIds.includes(item.id)}
-                onChange={() => handleSelect(item.id)}
-              />
-            </td>
-          ),
-
           status: (item: Category) => (
             <td>
-              <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+              <CBadge color={getBadge("Active")}>Active</CBadge>
             </td>
           ),
 
@@ -173,31 +125,46 @@ export const CategoryList = () => {
             </td>
           ),
           details: (item: any) => (
-            <CCollapse visible={details.includes(item.id)}>
-              <div className="p-3">
-                <h5>{item.name}</h5>
-                <p>{item.description}</p>
-                <p>Created at: {new Date(item.createdAt).toDateString()}</p>
-                <CButton size="sm" color="info">
-                  Edit
-                </CButton>
-                <CButton size="sm" color="danger" className="ms-2">
-                  Delete
-                </CButton>
-              </div>
-              <div className="p-3">
-                <h5>{item.name}</h5>
-                <p>{item.description}</p>
-                <p>Created at: {new Date(item.createdAt).toDateString()}</p>
-                <CButton size="sm" color="info">
-                  Edit
-                </CButton>
-                <CButton size="sm" color="danger" className="ms-2">
-                  Delete
-                </CButton>
-              </div>
-            </CCollapse>
+            <>
+              <CCollapse visible={details.includes(item.id)}>
+                <div className="p-3">
+                  <CFormCheck
+                    id="flexCheckDefault"
+                    label="Default checkbox"
+                    onChange={() => console.log("Change:" + item.id)}
+                  />
+                  <CFormCheck id="flexCheckDefault" label="Default checkbox" />
+                  <CFormCheck id="flexCheckDefault" label="Default checkbox" />
+                  <CFormCheck id="flexCheckDefault" label="Default checkbox" />
+                  {/* <h5>{item.text}</h5>
+                  <p>{item.description}</p>
+                  <p>Created at: {new Date(item.createdAt).toDateString()}</p>
+                  <CButton size="sm" color="info">
+                    Edit
+                  </CButton>
+                  <CButton size="sm" color="danger" className="ms-2">
+                    Delete
+                  </CButton>
+                </div>
+                <div className="p-3">
+                  <h5>{item.name}</h5>
+                  <p>{item.description}</p>
+                  <p>Created at: {new Date(item.createdAt).toDateString()}</p>
+                  <CButton size="sm" color="info">
+                    Edit
+                  </CButton>
+                  <CButton size="sm" color="danger" className="ms-2">
+                    Delete
+                  </CButton> */}
+                </div>
+              </CCollapse>
+            </>
           ),
+        }}
+        sorterValue={{ column: "status", state: "asc" }}
+        tableFilter
+        tableBodyProps={{
+          className: "align-middle",
         }}
       />
 

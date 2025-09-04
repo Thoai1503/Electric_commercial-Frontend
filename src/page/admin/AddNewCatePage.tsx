@@ -57,7 +57,7 @@ export const AddNewCatePage = () => {
             </>
           )}
         </div>
-        <CategoryList />
+        <CategoryList category={categories ?? []} />
       </div>
     </>
   );

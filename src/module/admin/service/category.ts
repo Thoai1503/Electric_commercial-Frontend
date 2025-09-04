@@ -6,6 +6,7 @@ import type {
   UpdatedCategory,
 } from "../../../type/Category";
 import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
+import CategoryTree from "../../../components/admin/addCategoryPage/CateNodeTree";
 
 export const addCategoryService = async (
   category: Category
@@ -22,7 +23,7 @@ export const addCategoryService = async (
 
 export const getCategoryTree = async (): Promise<NodeModel[]> => {
   return catalogRequest.get<CategoryReponse[]>("/category").then((res) => {
-    console.log("category:" + res.data);
+    console.log("category:" + JSON.stringify(res.data));
     return categoryTreeMapping(res.data);
   });
 };
