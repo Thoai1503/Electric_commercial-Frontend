@@ -7,6 +7,7 @@ import {
   CFormCheck,
 } from "@coreui/react-pro";
 import type { NodeModel } from "@minoru/react-dnd-treeview";
+import type { Attribute } from "../../../type/Attribute";
 
 interface Category {
   id: number;
@@ -33,9 +34,10 @@ const getBadge = (status: string) => {
 
 interface CategoryListProps {
   category: NodeModel[];
+  attribute: any;
 }
 
-export const CategoryList = ({ category }: CategoryListProps) => {
+export const CategoryList = ({ category, attribute }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
   const [categories, setCategories] = useState<NodeModel[]>([]);
   //const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -129,34 +131,22 @@ export const CategoryList = ({ category }: CategoryListProps) => {
             <>
               <CCollapse visible={details.includes(item.id)}>
                 <div className="p-3">
-                  <CFormCheck
-                    id="flexCheckDefault"
-                    label="Default checkbox"
-                    onChange={() => console.log("Change:" + item.id)}
-                  />
-                  <CFormCheck id="flexCheckDefault" label="Default checkbox" />
-                  <CFormCheck id="flexCheckDefault" label="Default checkbox" />
-                  <CFormCheck id="flexCheckDefault" label="Default checkbox" />
-                  {/* <h5>{item.text}</h5>
-                  <p>{item.description}</p>
-                  <p>Created at: {new Date(item.createdAt).toDateString()}</p>
-                  <CButton size="sm" color="info">
-                    Edit
-                  </CButton>
-                  <CButton size="sm" color="danger" className="ms-2">
-                    Delete
-                  </CButton>
-                </div>
-                <div className="p-3">
-                  <h5>{item.name}</h5>
-                  <p>{item.description}</p>
-                  <p>Created at: {new Date(item.createdAt).toDateString()}</p>
-                  <CButton size="sm" color="info">
-                    Edit
-                  </CButton>
-                  <CButton size="sm" color="danger" className="ms-2">
-                    Delete
-                  </CButton> */}
+                  <h5 className="text-primary">{item.text}</h5>
+                  <p>Chọn thuộc tính cho danh mục</p>
+                  <hr />
+                  <h6>Thuộc tính</h6>
+                  <div className="row">
+                    <div className="col-3">
+                      {attribute.map((attr: Attribute, index: number) => (
+                        <CFormCheck
+                          key={index}
+                          id={`attr-${attr.id}`}
+                          label={attr.name}
+                          onChange={() => console.log("Change:" + item.id)}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </CCollapse>
             </>

@@ -5,7 +5,7 @@ import { CategoryList } from "../../components/admin/addCategoryPage/CategoryLis
 const Product = () => {
   return (
     <div>
-      <CategoryList category={[]} />
+      <CategoryList category={[]} attribute={[]} />
     </div>
   );
 };

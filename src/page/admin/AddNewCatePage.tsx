@@ -8,12 +8,17 @@ import CategoryTree from "../../components/admin/addCategoryPage/CateNodeTree";
 import { useCategoryPage } from "../../module/admin/hook/useCategoryPage";
 import { CategoryList } from "../../components/admin/addCategoryPage/CategoryList";
 import AddNewCateForm from "../../components/admin/addCategoryPage/AddNewCateForm";
+import attributeQuery from "../../module/admin/query/attribute";
 export const AddNewCatePage = () => {
   const [nodes, setNodes] = useState<NodeModel[] | undefined>();
 
   const { handleSubmit, handleChange, setCate, cate, isP, isSuccess } =
     useCategoryPage();
   const { data: categories, isPending } = useQuery(categoriesTreeQuery.list);
+  const { data: attributes, isPending: isPendingAttr } = useQuery(
+    attributeQuery.list
+  );
+  console.log("Attributes:" + JSON.stringify(attributes));
 
   const handleMove = (newTree: NodeModel[], _options: DropOptions) => {
     // Cập nhật state local
@@ -57,7 +62,9 @@ export const AddNewCatePage = () => {
             </>
           )}
         </div>
-        <CategoryList category={categories ?? []} />
+        {!isPending && !isPendingAttr && (
+          <CategoryList category={categories ?? []} attribute={attributes} />
+        )}
       </div>
     </>
   );
