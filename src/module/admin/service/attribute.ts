@@ -5,7 +5,6 @@ export const getAllAttribute = async (): Promise<Attribute[]> => {
   return catalogRequest
     .get("/attribute")
     .then((res) => {
-      console.log("Attr" + res.data);
       return res.data;
     })
     .catch((error) => {

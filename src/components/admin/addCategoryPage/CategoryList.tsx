@@ -52,7 +52,7 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
     console.log(categories);
     setCategories(category);
   }, [category]);
-  console.log("Category prop:" + JSON.stringify(category));
+
   const toggleDetails = (id: number) => {
     const position = details.indexOf(id);
     let newDetails = [...details];

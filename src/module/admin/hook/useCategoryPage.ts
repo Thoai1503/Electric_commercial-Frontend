@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import type { Category } from "../../../type/Category";
 import { addCategoryService } from "../service/category";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,8 +27,6 @@ export const useCategoryPage = () => {
     },
   });
 
-  console.log("pending: " + isP);
-
   const handleSubmit = () => {
     if (cate.name == "") {
       alert("Vui lòng nhập tên thư mục");
@@ -40,16 +38,17 @@ export const useCategoryPage = () => {
     addNew(cate);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    e.preventDefault();
-    const { name, value } = e.target;
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      e.preventDefault();
+      const { name, value } = e.target;
 
-    setCate((pre) => ({ ...pre, [name]: value }));
-    console.log("Input result:" + cate.name);
-    console.log("Cate :" + JSON.stringify(cate));
-  };
+      setCate((pre) => ({ ...pre, [name]: value }));
+      console.log("Input result:" + cate.name);
+      console.log("Cate :" + JSON.stringify(cate));
+    },
+    [cate]
+  );
   return {
     handleChange,
     handleSubmit,

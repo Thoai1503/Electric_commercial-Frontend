@@ -1,9 +1,9 @@
-import { Request } from "../api/http";
+import { http } from "../api/http";
 import type { UserLogin, UserRespone } from "../type/User";
 
 export const userLoginService = async (loginState: UserLogin) => {
   try {
-    const { data } = await Request.post<UserRespone>(
+    const { data } = await http.post<UserRespone>(
       "/api/v1/auth/login",
       loginState
     );

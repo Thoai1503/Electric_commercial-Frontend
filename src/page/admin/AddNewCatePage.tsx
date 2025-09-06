@@ -18,16 +18,16 @@ export const AddNewCatePage = () => {
   const { data: attributes, isPending: isPendingAttr } = useQuery(
     attributeQuery.list
   );
-  console.log("Attributes:" + JSON.stringify(attributes));
+  //console.log("Attributes:" + JSON.stringify(attributes));
 
+  console.log(nodes);
   const handleMove = (newTree: NodeModel[], _options: DropOptions) => {
     // Cập nhật state local
     setNodes(newTree);
+
     // Gọi API backend để lưu ParentId mới (nếu cần)
     console.log("Updated Tree:", newTree, _options);
   };
-
-  console.log("Nodes:", nodes);
 
   useEffect(() => {
     if (isSuccess) setNodes(categories);

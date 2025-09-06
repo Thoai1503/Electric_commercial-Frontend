@@ -11,8 +11,9 @@ import {
 } from "@coreui/react";
 
 import type { Category } from "../../../type/Category";
-import { useEffect } from "react";
+
 import type { NodeModel } from "@minoru/react-dnd-treeview";
+import { memo } from "react";
 
 interface AddNewCateFormProps {
   categoryList: NodeModel[];
@@ -33,8 +34,7 @@ const AddNewCateForm = ({
   handleChange,
   handleSubmit,
 }: AddNewCateFormProps) => {
-  console.log("Cate change:" + JSON.stringify(category));
-  useEffect(() => console.log("re-render"), []);
+  console.log("re-render");
   return (
     <>
       <h3>Thêm danh mục</h3>
@@ -91,4 +91,4 @@ const AddNewCateForm = ({
     </>
   );
 };
-export default AddNewCateForm;
+export default memo(AddNewCateForm);

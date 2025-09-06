@@ -49,7 +49,7 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
     updateProcess();
     onMove(newTree, _options);
   };
-  console.log("Onchange  2: " + JSON.stringify(cateValue));
+
   return (
     <>
       <h3>Cây thư mục</h3>
