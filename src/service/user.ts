@@ -12,7 +12,7 @@ export const userLoginService = async (loginState: UserLogin) => {
       alert("Invalid credentials");
       return data;
     }
-    console.log("User:" + JSON.stringify(data));
+
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {

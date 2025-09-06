@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { setUser, clearUser } from '../../reducers/authenReducer';
-import { http } from '../../api/http';
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { setUser, clearUser } from "../../reducers/authenReducer";
+import { http } from "../../api/http";
 
 interface User {
   id: number;
@@ -39,159 +39,181 @@ const useAuthen = () => {
 
   // Initialize authentication state from localStorage
   useEffect(() => {
-    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    
+    const token =
+      localStorage.getItem("accessToken") || localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
     if (token && user) {
       try {
         const userData = JSON.parse(user);
         dispatch(setUser(userData));
-        
+
         // Set default authorization header
-        http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       } catch (error) {
-        console.error('Error parsing stored user data:', error);
+        console.error("Error parsing stored user data:", error);
         logout();
       }
     }
   }, [dispatch]);
 
   // Login function
-  const login = useCallback(async (credentials: LoginCredentials): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
+  const login = useCallback(
+    async (credentials: LoginCredentials): Promise<boolean> => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const response = await http.post<AuthResponse>('/auth/login', credentials);
-      
-      console.log("Login response:", response.data);
-      
-      if (response.data.success) {
-        const { accessToken, refreshToken, user } = response.data;
-        
-        console.log("Login - Tokens received:", {
-          accessToken: accessToken ? "EXISTS" : "MISSING",
-          refreshToken: refreshToken ? "EXISTS" : "MISSING",
-          user: user ? "EXISTS" : "MISSING"
-        });
-        
-        // Store tokens and user data
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        
-        // Store user data with both 'role' and 'rule' for compatibility
-        const userData = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role,
-          rule: user.role, // Add 'rule' property for AdminAuth compatibility
-          status: user.status
-        };
-        localStorage.setItem('user', JSON.stringify(userData));
-        
-        console.log("Login - Tokens stored in localStorage");
-        console.log("Login - User data stored:", userData);
-        
-        // Set authorization header
-        http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        
-        console.log("Login - Authorization header set");
-        
-        // Update Redux state
-        dispatch(setUser({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          token: accessToken,
-          rule: user.role as 1 | 2
-        }));
-        
-        return true;
-      } else {
-        setError('Login failed');
+      try {
+        const response = await http.post<AuthResponse>(
+          "/auth/login",
+          credentials
+        );
+
+        console.log("Login response:", response.data);
+
+        if (response.data.success) {
+          const { accessToken, refreshToken, user } = response.data;
+
+          console.log("Login - Tokens received:", {
+            accessToken: accessToken ? "EXISTS" : "MISSING",
+            refreshToken: refreshToken ? "EXISTS" : "MISSING",
+            user: user ? "EXISTS" : "MISSING",
+          });
+
+          // Store tokens and user data
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+
+          // Store user data with both 'role' and 'rule' for compatibility
+          const userData = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            rule: user.role, // Add 'rule' property for AdminAuth compatibility
+            status: user.status,
+          };
+          localStorage.setItem("user", JSON.stringify(userData));
+
+          console.log("Login - Tokens stored in localStorage");
+          console.log("Login - User data stored:", userData);
+
+          // Set authorization header
+          http.defaults.headers.common["Authorization"] =
+            `Bearer ${accessToken}`;
+
+          console.log("Login - Authorization header set");
+
+          // Update Redux state
+          dispatch(
+            setUser({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              rule: user.role as 1 | 2,
+            })
+          );
+
+          return true;
+        } else {
+          setError("Login failed");
+          return false;
+        }
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.message || "Login failed";
+        setError(errorMessage);
         return false;
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Login failed';
-      setError(errorMessage);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
   // Register function
-  const register = useCallback(async (userData: RegisterData): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
+  const register = useCallback(
+    async (userData: RegisterData): Promise<boolean> => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const response = await http.post<AuthResponse>('/auth/register', userData);
-      
-      if (response.data.success) {
-        const { accessToken, refreshToken, user } = response.data;
-        
-        // Store tokens and user data
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        
-        // Store user data with both 'role' and 'rule' for compatibility
-        const userDataToStore = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role,
-          rule: user.role, // Add 'rule' property for AdminAuth compatibility
-          status: user.status
-        };
-        localStorage.setItem('user', JSON.stringify(userDataToStore));
-        
-        // Set authorization header
-        http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        
-        // Update Redux state
-        dispatch(setUser({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          token: accessToken,
-          rule: user.role as 1 | 2
-        }));
-        
-        return true;
-      } else {
-        setError('Registration failed');
+      try {
+        const response = await http.post<AuthResponse>(
+          "/auth/register",
+          userData
+        );
+
+        if (response.data.success) {
+          const { accessToken, refreshToken, user } = response.data;
+
+          // Store tokens and user data
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+
+          // Store user data with both 'role' and 'rule' for compatibility
+          const userDataToStore = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            rule: user.role, // Add 'rule' property for AdminAuth compatibility
+            status: user.status,
+          };
+          localStorage.setItem("user", JSON.stringify(userDataToStore));
+
+          // Set authorization header
+          http.defaults.headers.common["Authorization"] =
+            `Bearer ${accessToken}`;
+
+          // Update Redux state
+          dispatch(
+            setUser({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              rule: user.role as 1 | 2,
+            })
+          );
+
+          return true;
+        } else {
+          setError("Registration failed");
+          return false;
+        }
+      } catch (error: any) {
+        const errorMessage =
+          error.response?.data?.message || "Registration failed";
+        setError(errorMessage);
         return false;
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Registration failed';
-      setError(errorMessage);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
   // Logout function
   const logout = useCallback(async (): Promise<void> => {
     try {
       // Call logout endpoint to invalidate tokens on server
-      await http.post('/auth/logout');
+      await http.post("/auth/logout");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       // Clear local storage
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('token'); // Also clear old token key
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("token"); // Also clear old token key
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+
       // Clear authorization header
-      delete http.defaults.headers.common['Authorization'];
-      
+      delete http.defaults.headers.common["Authorization"];
+
       // Update Redux state
       dispatch(clearUser());
     }
@@ -200,32 +222,32 @@ const useAuthen = () => {
   // Refresh token function
   const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
-      
+      const refreshToken = localStorage.getItem("refreshToken");
+
       if (!refreshToken) {
-        throw new Error('No refresh token available');
+        throw new Error("No refresh token available");
       }
 
-      const response = await http.post<AuthResponse>('/auth/refresh-token', {
-        refreshToken
+      const response = await http.post<AuthResponse>("/auth/refresh-token", {
+        refreshToken,
       });
 
       if (response.data.success) {
         const { accessToken, refreshToken: newRefreshToken } = response.data;
-        
+
         // Update stored tokens
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', newRefreshToken);
-        
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", newRefreshToken);
+
         // Update authorization header
-        http.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        
+        http.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
         return true;
       }
-      
+
       return false;
     } catch (error) {
-      console.error('Token refresh failed:', error);
+      console.error("Token refresh failed:", error);
       logout();
       return false;
     }
@@ -234,11 +256,13 @@ const useAuthen = () => {
   // Get current user profile
   const getProfile = useCallback(async (): Promise<User | null> => {
     try {
-      const response = await http.get<{ success: boolean; user: User }>('/auth/profile');
-      
+      const response = await http.get<{ success: boolean; user: User }>(
+        "/auth/profile"
+      );
+
       if (response.data.success) {
         const user = response.data.user;
-        
+
         // Store user data with both 'role' and 'rule' for compatibility
         const userDataToStore = {
           id: user.id,
@@ -247,44 +271,49 @@ const useAuthen = () => {
           phone: user.phone,
           role: user.role,
           rule: user.role, // Add 'rule' property for AdminAuth compatibility
-          status: user.status
+          status: user.status,
         };
-        localStorage.setItem('user', JSON.stringify(userDataToStore));
-        
+        localStorage.setItem("user", JSON.stringify(userDataToStore));
+
         // Update Redux state
-        const accessToken = localStorage.getItem('accessToken') || localStorage.getItem('token');
-        dispatch(setUser({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          token: accessToken || '',
-          rule: user.role as 1 | 2
-        }));
-        
+        const accessToken =
+          localStorage.getItem("accessToken") || localStorage.getItem("token");
+        dispatch(
+          setUser({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            accessToken: accessToken || "",
+            refreshToken: localStorage.getItem("refreshToken") || "",
+            rule: user.role as 1 | 2,
+          })
+        );
+
         return user;
       }
-      
+
       return null;
     } catch (error) {
-      console.error('Get profile failed:', error);
+      console.error("Get profile failed:", error);
       return null;
     }
   }, [dispatch]);
 
   // Check if user is authenticated
   const isAuthenticated = useCallback((): boolean => {
-    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
+    const token =
+      localStorage.getItem("accessToken") || localStorage.getItem("token");
     return !!token;
   }, []);
 
   // Check if user is admin
   const isAdmin = useCallback((): boolean => {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     if (user) {
       try {
         const userData = JSON.parse(user);
         // Check both 'role' and 'rule' properties
-        return (userData.role === 1) || (userData.rule === 1);
+        return userData.role === 1 || userData.rule === 1;
       } catch (error) {
         return false;
       }
@@ -307,7 +336,7 @@ const useAuthen = () => {
     isAdmin,
     isLoading,
     error,
-    clearError
+    clearError,
   };
 };
 

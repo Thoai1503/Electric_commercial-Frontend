@@ -42,7 +42,8 @@ export const useLoginPage = () => {
           id: userData?.id ?? 0,
           email: userData?.email ?? "",
           name: userData?.name ?? "",
-          token: accessToken,
+          accessToken: accessToken,
+          refreshToken: data.refreshToken,
           rule: userData?.role ?? null,
         })
       );

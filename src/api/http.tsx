@@ -22,15 +22,21 @@ export const http = axios.create({
 http.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
-    
+
     // Debug logging
-    console.log("HTTP Interceptor - Token from localStorage:", token ? "EXISTS" : "MISSING");
+    console.log(
+      "HTTP Interceptor - Token from localStorage:",
+      token ? "EXISTS" : "MISSING"
+    );
     console.log("HTTP Interceptor - Request URL:", config.url);
     console.log("HTTP Interceptor - Request method:", config.method);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log("HTTP Interceptor - Authorization header set:", `Bearer ${token.substring(0, 20)}...`);
+      console.log(
+        "HTTP Interceptor - Authorization header set:",
+        `Bearer ${token.substring(0, 20)}...`
+      );
     } else {
       console.log("HTTP Interceptor - No token found in localStorage");
     }
@@ -51,8 +57,12 @@ http.interceptors.response.use(
     const originalRequest = error.config as any;
 
     // Check if error is 401 and we haven't retried yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      (error.response?.status === 401 || error.response?.status === 500) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
+      console.log("Attempting to refresh token...");
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
@@ -61,10 +71,13 @@ http.interceptors.response.use(
           throw new Error("No refresh token available");
         }
 
-        // Call refresh token endpoint
-        const response = await axios.post(`${API_URL_BASE}auth/refresh-token`, {
-          refreshToken,
-        });
+        // Call refresh token endpoint  /api/v1/auth/login
+        const response = await axios.post(
+          `${API_URL_BASE}api/v1/auth/refresh-token`,
+          {
+            refreshToken,
+          }
+        );
 
         if (response.data.success) {
           const { accessToken, refreshToken: newRefreshToken } = response.data;
@@ -76,6 +89,7 @@ http.interceptors.response.use(
           // Update authorization header
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
+          console.log("Token refreshed successfully");
           // Retry the original request
           return http(originalRequest);
         }
@@ -85,6 +99,7 @@ http.interceptors.response.use(
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
 
+        console.error("Token refresh failed:", refreshError);
         // Redirect to login page
         window.location.href = "/login";
 

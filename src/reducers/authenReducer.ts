@@ -15,8 +15,9 @@ const authenSlice = createSlice({
     setAuthenState(state, action: PayloadAction<UserAuthenData>) {
       state.user = action.payload;
       state.isAuthenticated = true;
-      localStorage.setItem("accessToken", action.payload.token);
+      localStorage.setItem("accessToken", action.payload.accessToken);
       localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("refreshToken", action.payload.refreshToken || "");
     },
     setUser(state, action: PayloadAction<UserAuthenData>) {
       state.user = action.payload;

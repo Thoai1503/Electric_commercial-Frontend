@@ -7,6 +7,7 @@ export interface UserAuthenData {
   id: number;
   email: string;
   name: string;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   rule: 1 | 2 | null;
 }
