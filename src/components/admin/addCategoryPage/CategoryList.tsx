@@ -136,16 +136,16 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
                   <hr />
                   <h6>Thuộc tính</h6>
                   <div className="row">
-                    <div className="col-3">
-                      {attribute.map((attr: Attribute, index: number) => (
+                    {attribute.map((attr: Attribute, index: number) => (
+                      <div className="col-3">
                         <CFormCheck
                           key={index}
                           id={`attr-${attr.id}`}
                           label={attr.name}
                           onChange={() => console.log("Change:" + item.id)}
                         />
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </CCollapse>
