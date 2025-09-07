@@ -10,6 +10,7 @@ export const useCategoryPage = () => {
     name: "",
     parent_id: 0,
   });
+  const [toggleSection, setToggleSection] = useState(true);
 
   const {
     isPending: isP,
@@ -53,8 +54,10 @@ export const useCategoryPage = () => {
     handleChange,
     handleSubmit,
     setCate,
+    setToggleSection,
     isP,
     isSuccess,
     cate,
+    toggleSection,
   };
 };

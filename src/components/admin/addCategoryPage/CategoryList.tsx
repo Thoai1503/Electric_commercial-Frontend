@@ -65,7 +65,7 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
   };
 
   const columns = [
-    { key: "text", label: "Category Name", _style: { width: "25%" } },
+    { key: "text", label: "Category Name", _style: { width: "20%" } },
     {
       key: "parent",
       label: "Parent ID",
@@ -77,7 +77,7 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
     {
       key: "show_details",
       label: "",
-      _style: { width: "1%" },
+      _style: { width: "10%" },
       filter: false,
       sorter: false,
     },
@@ -125,6 +125,10 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
               >
                 {details.includes(item.id) ? "Hide" : "Chọn "}
               </CButton>
+              {/* <CButton color="info" variant="outline" size="sm" className="m-2">
+                Chọn thuộc tính
+              </CButton> */}
+              <button className="btn btn-sm btn-info ">Chọn thuộc tính</button>
             </td>
           ),
           details: (item: any) => (

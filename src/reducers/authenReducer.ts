@@ -1,12 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import type { AuthState, UserAuthenData } from "../type/AuthState";
+import axios from "axios";
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
+  accessToken: "",
+  refreshToken: "",
+  loading: false,
 };
+
+export const refreshToken = createAsyncThunk("auth/refreshToken", async () => {
+  console.log("Refreshing token...");
+  const res = await axios.post("/refresh_token", {}, { withCredentials: true });
+  return res.data.accessToken as string;
+});
 
 const authenSlice = createSlice({
   name: "authen",
@@ -27,6 +37,23 @@ const authenSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(refreshToken.fulfilled, (state, action) => {
+      state.accessToken = action.payload || null;
+      state.loading = false;
+      state.isAuthenticated = true;
+      state.user = state.user
+        ? { ...state.user, accessToken: action.payload }
+        : null;
+    });
+    builder.addCase(refreshToken.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(refreshToken.rejected, (state) => {
+      state.accessToken = null;
+      state.loading = false;
+    });
   },
 });
 export const { setAuthenState, setUser, clearUser } = authenSlice.actions;

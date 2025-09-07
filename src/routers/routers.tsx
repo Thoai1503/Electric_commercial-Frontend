@@ -15,7 +15,7 @@ export const routerRoot = createBrowserRouter([
   //...adminRoutes,
   {
     path: "admin",
-    element: <AdminAuth />, // 🔒 protect admin
+    element: <AdminAuth />,
     children: [
       {
         element: <AdminLayout />, // admin layout

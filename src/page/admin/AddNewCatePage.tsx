@@ -18,12 +18,21 @@ import CategoryTree from "../../components/admin/addCategoryPage/CateNodeTree";
 import { useCategoryPage } from "../../module/admin/hook/useCategoryPage";
 import { CategoryList } from "../../components/admin/addCategoryPage/CategoryList";
 import AddNewCateForm from "../../components/admin/addCategoryPage/AddNewCateForm";
+import AttributeList from "../../components/admin/addCategoryPage/AttributeList";
 
 export const AddNewCatePage = () => {
   const [nodes, setNodes] = useState<NodeModel[] | undefined>();
 
-  const { handleSubmit, handleChange, setCate, cate, isP, isSuccess } =
-    useCategoryPage();
+  const {
+    handleSubmit,
+    handleChange,
+    setCate,
+    cate,
+    isP,
+    isSuccess,
+    toggleSection,
+    setToggleSection,
+  } = useCategoryPage();
 
   const {
     data: categories,
@@ -77,7 +86,7 @@ export const AddNewCatePage = () => {
               <CButton
                 color="primary"
                 size="sm"
-                onClick={handleSubmit}
+                onClick={() => setToggleSection(!toggleSection)}
                 disabled={isP}
               >
                 {isP ? (
@@ -117,6 +126,26 @@ export const AddNewCatePage = () => {
                 </li>
               </ul>
             </div>
+            {/* <h4>Quản lý thuộc tính:</h4>
+            <div className="d-flex">
+              <CButton
+                color="info"
+                size="sm"
+                style={{ color: "white" }}
+                className=""
+              >
+                Danh sách thuộc tính
+              </CButton>
+              <CButton
+                color="primary"
+                size="sm"
+                style={{ color: "white" }}
+                className="ms-4"
+                onClick={() => {}}
+              >
+                Thêm mới
+              </CButton>
+            </div> */}
           </CCardBody>
         </CCard>
       </CCol>
@@ -124,38 +153,48 @@ export const AddNewCatePage = () => {
       <CCol xs={12} lg={9}>
         <CCard className="mb-3" style={{ height: "50%" }}>
           <CCardHeader>
-            <strong>Danh sách & Trình xem cây</strong>
+            <strong>
+              {toggleSection
+                ? "Danh sách & Trình xem cây"
+                : "Danh sách thuộc tính"}
+            </strong>
           </CCardHeader>
-          <CCardBody>
-            {loading ? (
-              <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ minHeight: 200 }}
-              >
-                <CSpinner color="primary" />
-              </div>
-            ) : error ? (
-              <CAlert color="danger">
-                Không thể tải dữ liệu danh mục / thuộc tính.
-              </CAlert>
-            ) : (
-              <>
-                <div style={{ marginBottom: 16 }}>
-                  <CategoryTree
-                    nodes={nodes ?? memoCategories}
-                    onMove={handleMove}
-                  />
+          {toggleSection ? (
+            <CCardBody>
+              {loading ? (
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ minHeight: 200 }}
+                >
+                  <CSpinner color="primary" />
                 </div>
-
-                <div style={{ marginTop: 12 }}>
-                  <CategoryList
-                    category={memoCategories}
-                    attribute={memoAttributes}
-                  />
-                </div>
-              </>
-            )}
-          </CCardBody>
+              ) : error ? (
+                <CAlert color="danger">
+                  Không thể tải dữ liệu danh mục / thuộc tính.
+                </CAlert>
+              ) : (
+                <>
+                  <div style={{ marginBottom: 25 }}>
+                    <CategoryTree
+                      nodes={nodes ?? memoCategories}
+                      onMove={handleMove}
+                    />
+                  </div>
+                  <hr></hr>
+                  <div style={{ marginTop: 12 }}>
+                    <CategoryList
+                      category={memoCategories}
+                      attribute={memoAttributes}
+                    />
+                  </div>
+                </>
+              )}
+            </CCardBody>
+          ) : (
+            <CCardBody>
+              <AttributeList attributes={attributes || []} />
+            </CCardBody>
+          )}
         </CCard>
       </CCol>
     </CRow>

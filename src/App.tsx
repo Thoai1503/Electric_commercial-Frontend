@@ -5,6 +5,7 @@ import { routerRoot } from "./routers/routers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useSelector } from "react-redux";
 import type { RootState } from "./store/store";
+
 //import "./scss/style.scss";
 const queryClient = new QueryClient();
 function App() {
