@@ -25,7 +25,7 @@ export const refreshToken = createAsyncThunk<
     const { refreshToken } = getState().authen;
 
     const res = await axios.post(
-      "http://localhost:5000/api/v1/auth/refresh_token",
+      import.meta.env.VITE_CATOLOG_API + "/api/v1/auth/refresh_token",
       { refreshToken },
       { withCredentials: true }
     );
