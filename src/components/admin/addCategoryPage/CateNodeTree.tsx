@@ -69,7 +69,9 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
         </svg>{" "}
         Cây thư mục
       </h3>
-      <p className="text-danger mb-1">* Kéo thả để thay đổi cấu trúc cây</p>
+      <p className="text-danger mb-1">
+        * Kéo thả để cập nhật thay đổi cấu trúc cây
+      </p>
       {isPending && <CSpinner color="primary" />}
       <Tree
         tree={nodes}

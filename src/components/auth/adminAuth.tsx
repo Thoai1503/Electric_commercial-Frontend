@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import type { AppDispatch } from "../../store/store";
-import { useDispatch } from "react-redux";
+import type { AppDispatch, RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
 import { refreshToken } from "../../reducers/authenReducer";
 
 const ROLES = {
@@ -14,16 +14,16 @@ export interface UserData {
   name: string;
   email: string;
   rule?: 1 | 2 | null;
-  role?: number; // API might return 'role' instead of 'rule'
+  role?: number;
 }
 
 const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  // const { accessToken, loading } = useSelector(
-  //   (state: RootState) => state.authen
-  // );
+  const { accessToken, loading, error } = useSelector(
+    (state: RootState) => state.authen
+  );
 
   // Check for both possible token keys
   const token =
@@ -32,30 +32,33 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
     ? JSON.parse(localStorage.getItem("user") as string)
     : null;
 
+  console.log(
+    "AuthApp - Loading:",
+    loading,
+    "AccessToken:",
+    accessToken,
+    "Error:",
+    error
+  );
+
   useEffect(() => {
     console.log("AdminAuth - Token:", token ? "EXISTS" : "MISSING");
     console.log("AdminAuth - User:", user);
     console.log("AdminAuth - User role/rule:", user?.role || user?.rule);
 
     dispatch(refreshToken());
-    if (!token) {
-      console.log("AdminAuth - No token found, redirecting to login");
-      // not logged in → redirect to login
-      navigate("/", {
-        replace: true,
-        state: { from: location.pathname },
-      });
-      return;
-    }
+    // if (!token) {
+    //   console.log("AdminAuth - No token found, redirecting to login");
+    //   // not logged in → redirect to login
+    //   navigate("/", {
+    //     replace: true,
+    //     state: { from: location.pathname },
+    //   });
+    //   return;
+    // }
 
     // Check for admin role - handle both 'role' and 'rule' properties
     const userRole = user?.role || user?.rule;
-    console.log(
-      "AdminAuth - User role:",
-      userRole,
-      "Expected admin role:",
-      ROLES.Admin
-    );
 
     if (userRole !== ROLES.Admin) {
       console.log("AdminAuth - User is not admin, redirecting to homepage");
@@ -65,7 +68,7 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
     }
 
     console.log("AdminAuth - User is admin, allowing access");
-  }, [token, user, location, navigate, dispatch]);
+  }, [dispatch]);
 
   // Check for admin role - handle both 'role' and 'rule' properties
   const userRole = user?.role || user?.rule;
@@ -78,6 +81,10 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
       userRole
     );
     return null; // prevent flicker
+  }
+  if (error) {
+    navigate("/", { replace: true });
+    return null;
   }
 
   console.log("AdminAuth - Rendering admin content");

@@ -182,7 +182,7 @@ import { Outlet } from "react-router-dom";
 
 const AuthApp: React.FC = ({ children }: PropsWithChildren) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { accessToken, loading } = useSelector(
+  const { accessToken, loading, error } = useSelector(
     (state: RootState) => state.authen
   );
 
@@ -193,6 +193,15 @@ const AuthApp: React.FC = ({ children }: PropsWithChildren) => {
     }
     dispatch(refreshToken());
   }, [dispatch]);
+
+  console.log(
+    "AuthApp - Loading:",
+    loading,
+    "AccessToken:",
+    accessToken,
+    "Error:",
+    error
+  );
 
   if (loading) return <p>Loading...</p>;
 

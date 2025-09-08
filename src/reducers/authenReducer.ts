@@ -10,12 +10,38 @@ const initialState: AuthState = {
   accessToken: "",
   refreshToken: "",
   loading: false,
+  error: null,
 };
 
-export const refreshToken = createAsyncThunk("auth/refreshToken", async () => {
-  console.log("Refreshing token...");
-  const res = await axios.post("/refresh_token", {}, { withCredentials: true });
-  return res.data.accessToken as string;
+export const refreshToken = createAsyncThunk<
+  string, // return type
+  void, // argument type
+  { state: { authen: AuthState }; rejectValue: string } // add state type
+>("auth/refreshToken", async (_, { rejectWithValue, getState }) => {
+  try {
+    console.log("Refreshing token...");
+
+    // ✅ safely read from Redux state
+    const { refreshToken } = getState().authen;
+
+    const res = await axios.post(
+      "http://localhost:5000/api/v1/auth/refresh_token",
+      { refreshToken },
+      { withCredentials: true }
+    );
+
+    console.log("Token refreshed:", res.data);
+    return res.data.accessToken as string;
+  } catch (err: any) {
+    if (axios.isAxiosError(err)) {
+      console.log("Error refreshing token:", err.response?.data);
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to refresh token"
+      );
+    }
+    console.log("Unexpected error:", err);
+    return rejectWithValue("Unexpected error occurred");
+  }
 });
 
 const authenSlice = createSlice({
@@ -23,7 +49,10 @@ const authenSlice = createSlice({
   initialState,
   reducers: {
     setAuthenState(state, action: PayloadAction<UserAuthenData>) {
+      console.log("Setting authen state:", action.payload);
       state.user = action.payload;
+      state.refreshToken = action.payload.refreshToken || null;
+      state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
       localStorage.setItem("accessToken", action.payload.accessToken);
       localStorage.setItem("user", JSON.stringify(action.payload));
@@ -43,6 +72,8 @@ const authenSlice = createSlice({
       state.accessToken = action.payload || null;
       state.loading = false;
       state.isAuthenticated = true;
+      state.error = null;
+
       state.user = state.user
         ? { ...state.user, accessToken: action.payload }
         : null;
@@ -50,9 +81,11 @@ const authenSlice = createSlice({
     builder.addCase(refreshToken.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(refreshToken.rejected, (state) => {
+    builder.addCase(refreshToken.rejected, (state, action) => {
       state.accessToken = null;
       state.loading = false;
+      state.isAuthenticated = false;
+      state.error = action.payload || "Refresh failed";
     });
   },
 });

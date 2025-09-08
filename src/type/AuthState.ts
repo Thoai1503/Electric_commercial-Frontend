@@ -4,6 +4,7 @@ export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
+  error: any | null;
 }
 
 export interface UserAuthenData {

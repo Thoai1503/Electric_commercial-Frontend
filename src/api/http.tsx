@@ -15,7 +15,7 @@ export const catalogRequest = axios.create({
 export const http = axios.create({
   baseURL: API_URL_BASE,
   withCredentials: true,
-  timeout: 10000, // 10 seconds timeout
+  //  timeout: 10000, // 10 seconds timeout
 });
 
 // Request interceptor
