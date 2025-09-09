@@ -7,7 +7,11 @@ import {
   CFormCheck,
 } from "@coreui/react-pro";
 import type { NodeModel } from "@minoru/react-dnd-treeview";
-import type { Attribute } from "../../../type/Attribute";
+
+import AttributeSelectModal from "./AttributeSelectModal";
+import { useQuery } from "@tanstack/react-query";
+import categoryAttributeQuery from "../../../module/admin/query/categoryAttribute";
+import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
 interface Category {
   id: number;
@@ -41,6 +45,14 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
   const [categories, setCategories] = useState<NodeModel[]>([]);
   //const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [show, setShow] = useState(false);
+  const [id, setId] = useState(0);
+  const { data: categoryAttribute } = useQuery(categoryAttributeQuery.list);
+  const handleClose = () => setShow(false);
+  const handleShow = (id = 0) => {
+    setShow(true);
+    setId(id);
+  };
 
   useEffect(() => {
     // const mappedCategories = category.map((cat) => ({
@@ -82,6 +94,7 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
       sorter: false,
     },
   ];
+  console.log("categoryAttribute", JSON.stringify(categoryAttribute));
 
   return (
     <>
@@ -128,7 +141,12 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
               {/* <CButton color="info" variant="outline" size="sm" className="m-2">
                 Chọn thuộc tính
               </CButton> */}
-              <button className="btn btn-sm btn-info ">Chọn thuộc tính</button>
+              <button
+                className="btn btn-sm btn-info "
+                onClick={() => handleShow(item.id)}
+              >
+                Chọn thuộc tính
+              </button>
             </td>
           ),
           details: (item: any) => (
@@ -140,16 +158,27 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
                   <hr />
                   <h6>Thuộc tính</h6>
                   <div className="row">
-                    {attribute.map((attr: Attribute, index: number) => (
-                      <div className="col-3">
-                        <CFormCheck
-                          key={index}
-                          id={`attr-${attr.id}`}
-                          label={attr.name}
-                          onChange={() => console.log("Change:" + item.id)}
-                        />
-                      </div>
-                    ))}
+                    {Array.isArray(categoryAttribute)
+                      ? categoryAttribute
+                          .filter(
+                            (attr: CategoryAttribute) =>
+                              attr.category_id === item.id
+                          )
+                          .map((attr: CategoryAttribute) => (
+                            <div
+                              className="col-md-3 d-flex align-items-center mb-2"
+                              key={attr.id}
+                            >
+                              <CFormCheck
+                                type="checkbox"
+                                id={`attr-${attr.id}`}
+                                label={attr.attribute.name}
+                                defaultChecked={true}
+                              />
+                            </div>
+                          ))
+                      : null}
+                    <div></div>
                   </div>
                 </div>
               </CCollapse>
@@ -161,6 +190,12 @@ export const CategoryList = ({ category, attribute }: CategoryListProps) => {
         tableBodyProps={{
           className: "align-middle",
         }}
+      />
+      <AttributeSelectModal
+        handleClose={handleClose}
+        handleShow={handleShow}
+        show={show}
+        id={id}
       />
     </>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Attribute } from "../../../type/Attribute";
 import AddAttributeModal from "./AddAtributeModal";
 
+
 interface AttributeListProps {
   attributes: Attribute[];
 }
@@ -14,6 +15,7 @@ const AttributeList = ({ attributes }: AttributeListProps) => {
   return (
     <div>
       <h4 className="text-start">Danh sách thuộc tính cho danh mục</h4>
+
       <button
         className="btn btn-sm btn-success mb-3 text-end"
         style={{ display: "inline", color: "white" }}

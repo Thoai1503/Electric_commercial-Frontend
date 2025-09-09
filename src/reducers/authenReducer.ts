@@ -14,7 +14,7 @@ const initialState: AuthState = {
 };
 
 export const refreshToken = createAsyncThunk<
-  string, // return type
+  UserAuthenData, // return type should match the expected payload shape
   void, // argument type
   { state: { authen: AuthState }; rejectValue: string } // add state type
 >("auth/refreshToken", async (_, { rejectWithValue, getState }) => {
@@ -31,7 +31,7 @@ export const refreshToken = createAsyncThunk<
     );
 
     console.log("Token refreshed:", res.data);
-    return res.data.accessToken as string;
+    return res.data as UserAuthenData;
   } catch (err: any) {
     if (axios.isAxiosError(err)) {
       console.log("Error refreshing token:", err.response?.data);
@@ -68,15 +68,14 @@ const authenSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    console.log("Builder :", builder);
     builder.addCase(refreshToken.fulfilled, (state, action) => {
-      state.accessToken = action.payload || null;
+      state.accessToken = action.payload.accessToken || null;
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
-
-      state.user = state.user
-        ? { ...state.user, accessToken: action.payload }
-        : null;
+      state.refreshToken = action.payload.refreshToken;
+      state.user = action.payload;
     });
     builder.addCase(refreshToken.pending, (state) => {
       state.loading = true;

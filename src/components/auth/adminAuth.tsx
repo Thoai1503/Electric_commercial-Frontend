@@ -84,6 +84,7 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
   }
   if (error) {
     navigate("/", { replace: true, state: { from: location.pathname } });
+
     return null;
   }
 

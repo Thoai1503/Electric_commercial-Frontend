@@ -13,5 +13,5 @@ export interface UserAuthenData {
   name: string;
   accessToken: string;
   refreshToken: string;
-  rule: 1 | 2 | null;
+  role: 1 | 2 | null;
 }
