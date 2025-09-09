@@ -113,7 +113,7 @@ const useAuthen = () => {
               email: user.email,
               accessToken: accessToken,
               refreshToken: refreshToken,
-              rule: user.role as 1 | 2,
+              role: user.role as 1 | 2,
             })
           );
 
@@ -176,7 +176,7 @@ const useAuthen = () => {
               email: user.email,
               accessToken: accessToken,
               refreshToken: refreshToken,
-              rule: user.role as 1 | 2,
+              role: user.role as 1 | 2,
             })
           );
 
@@ -285,7 +285,7 @@ const useAuthen = () => {
             email: user.email,
             accessToken: accessToken || "",
             refreshToken: localStorage.getItem("refreshToken") || "",
-            rule: user.role as 1 | 2,
+            role: user.role as 1 | 2,
           })
         );
 

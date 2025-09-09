@@ -44,7 +44,7 @@ export const useLoginPage = () => {
           name: userData?.name ?? "",
           accessToken: accessToken,
           refreshToken: data.refreshToken,
-          rule: userData?.role ?? null,
+          role: userData?.role ?? null,
         })
       );
 
