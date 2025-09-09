@@ -41,7 +41,7 @@ interface CategoryListProps {
   attribute: any;
 }
 
-export const CategoryList = ({ category, attribute }: CategoryListProps) => {
+export const CategoryList = ({ category }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
   const [categories, setCategories] = useState<NodeModel[]>([]);
   //const [selectedIds, setSelectedIds] = useState<number[]>([]);
