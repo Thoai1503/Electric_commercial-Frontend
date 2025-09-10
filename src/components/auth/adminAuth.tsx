@@ -46,7 +46,7 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
     console.log("AdminAuth - User:", user);
     console.log("AdminAuth - User role/rule:", user?.role || user?.rule);
 
-      dispatch(refreshToken());
+    dispatch(refreshToken());
     // if (!token) {
     //   console.log("AdminAuth - No token found, redirecting to login");
     //   // not logged in → redirect to login
@@ -82,11 +82,11 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
     );
     return null; // prevent flicker
   }
-  // if (error) {
-  //   navigate("/", { replace: true, state: { from: location.pathname } });
+  if (error) {
+    navigate("/", { replace: true, state: { from: location.pathname } });
 
-  //   return null;
-  // }
+    return null;
+  }
 
   console.log("AdminAuth - Rendering admin content");
   return <>{children || <Outlet />}</>;
