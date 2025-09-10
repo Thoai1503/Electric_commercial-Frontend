@@ -1,17 +1,12 @@
 import { useState, useEffect } from "react";
-import {
-  CBadge,
-  CButton,
-  CCollapse,
-  CSmartTable,
-  CFormCheck,
-} from "@coreui/react-pro";
+import { CBadge, CButton, CCollapse, CSmartTable } from "@coreui/react-pro";
 import type { NodeModel } from "@minoru/react-dnd-treeview";
 
 import AttributeSelectModal from "./AttributeSelectModal";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import categoryAttributeQuery from "../../../module/admin/query/categoryAttribute";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
+import { updateCategoryAttributeService } from "../../../module/admin/service/categoryAttribute";
 
 interface Category {
   id: number;
@@ -42,11 +37,13 @@ interface CategoryListProps {
 }
 
 export const CategoryList = ({ category }: CategoryListProps) => {
+  const queryClient = useQueryClient();
   const [details, setDetails] = useState<number[]>([]);
   const [categories, setCategories] = useState<NodeModel[]>([]);
-  //const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
   const [show, setShow] = useState(false);
   const [id, setId] = useState(0);
+
   const { data: categoryAttribute } = useQuery(categoryAttributeQuery.list);
   const handleClose = () => setShow(false);
   const handleShow = (id = 0) => {
@@ -55,12 +52,6 @@ export const CategoryList = ({ category }: CategoryListProps) => {
   };
 
   useEffect(() => {
-    // const mappedCategories = category.map((cat) => ({
-    //   id: cat.id as number,
-    //   name: cat.text,
-    //   parent_id: (cat.parent as number) || 0,
-    //   status: "Active" as Category["status"], // Default status, adjust as needed
-    // }));
     console.log(categories);
     setCategories(category);
   }, [category]);
@@ -74,6 +65,37 @@ export const CategoryList = ({ category }: CategoryListProps) => {
       newDetails.splice(position, 1);
     }
     setDetails(newDetails);
+  };
+
+  const handleChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    const { name, checked } = e.target;
+
+    const item = categoryAttribute?.find(
+      (attr: CategoryAttribute) => attr.id === id
+    );
+    if (!item) {
+      console.error("Attribute item not found for id:", id);
+      return;
+    }
+
+    const updatedAttr: CategoryAttribute = {
+      ...item,
+      [name]: !!checked, // ensure boolean
+    };
+
+    try {
+      const result = await updateCategoryAttributeService(id, updatedAttr);
+      console.log("Update result:", result);
+      alert("Cập nhật thành công");
+
+      queryClient.invalidateQueries({ queryKey: ["category-attributes"] });
+    } catch (error) {
+      console.error("Error updating category attribute:", error);
+      alert("Có lỗi xảy ra:" + error);
+    }
   };
 
   const columns = [
@@ -94,14 +116,13 @@ export const CategoryList = ({ category }: CategoryListProps) => {
       sorter: false,
     },
   ];
-  console.log("categoryAttribute", JSON.stringify(categoryAttribute));
 
   return (
     <>
       <CSmartTable
         style={{ marginTop: "20px" }}
         columns={columns}
-        activePage={2}
+        activePage={1}
         items={category}
         cleaner
         columnFilter
@@ -154,32 +175,97 @@ export const CategoryList = ({ category }: CategoryListProps) => {
               <CCollapse visible={details.includes(item.id)}>
                 <div className="p-3">
                   <h5 className="text-primary">{item.text}</h5>
-                  <p>Chọn thuộc tính cho danh mục</p>
+                  <p className="text-primary">
+                    Cấu hình thuộc tính cho danh mục
+                  </p>
                   <hr />
                   <h6>Thuộc tính</h6>
-                  <div className="row">
-                    {Array.isArray(categoryAttribute)
-                      ? categoryAttribute
-                          .filter(
-                            (attr: CategoryAttribute) =>
-                              attr.category_id === item.id
-                          )
-                          .map((attr: CategoryAttribute) => (
-                            <div
-                              className="col-md-3 d-flex align-items-center mb-2"
-                              key={attr.id}
-                            >
-                              <CFormCheck
-                                type="checkbox"
-                                id={`attr-${attr.id}`}
-                                label={attr.attribute.name}
-                                defaultChecked={true}
-                              />
-                            </div>
-                          ))
-                      : null}
-                    <div></div>
-                  </div>
+
+                  <table className="table table-bordered mt-4 ">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Tên Thuộc Tính</th>
+                        <th>Slug</th>
+                        <th>Lọc (bặt/tắt)</th>
+                        <th>Cấp biến thể (có/ko)</th>
+                        <th>Bắt buộc</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Array.isArray(categoryAttribute)
+                        ? categoryAttribute
+                            .filter(
+                              (attr: CategoryAttribute) =>
+                                attr.category_id === item.id
+                            )
+                            .map((attr: CategoryAttribute) => (
+                              <tr key={attr.id}>
+                                <td>{attr.id}</td>
+                                <td>{attr.attribute.name}</td>
+                                <td>{attr.attribute.slug || "N/A"}</td>
+                                <td>
+                                  {attr.is_filterable ? (
+                                    <input
+                                      type="checkbox"
+                                      id={`filterable-${attr.id}`}
+                                      name="is_filterable"
+                                      defaultChecked={true}
+                                      onChange={(e) => handleChange(e, attr.id)}
+                                    />
+                                  ) : (
+                                    <input
+                                      type="checkbox"
+                                      id={`filterable-${attr.id}`}
+                                      name="is_filterable"
+                                      defaultChecked={false}
+                                      onChange={(e) => handleChange(e, attr.id)}
+                                    />
+                                  )}
+                                </td>
+                                <td>
+                                  {attr.is_variant_level ? (
+                                    <input
+                                      type="checkbox"
+                                      id={`variant-level-${attr.id}`}
+                                      name="is_variant_level"
+                                      defaultChecked={true}
+                                      onChange={(e) => handleChange(e, attr.id)}
+                                    />
+                                  ) : (
+                                    <input
+                                      type="checkbox"
+                                      id={`variant-level-${attr.id}`}
+                                      name="is_variant_level"
+                                      defaultChecked={false}
+                                      onChange={(e) => handleChange(e, attr.id)}
+                                    />
+                                  )}
+                                </td>
+                                <td>
+                                  {attr.is_required ? (
+                                    <input
+                                      type="checkbox"
+                                      id={`required-${attr.id}`}
+                                      name="is_required"
+                                      defaultChecked={true}
+                                      onChange={(e) => handleChange(e, attr.id)}
+                                    />
+                                  ) : (
+                                    <input
+                                      type="checkbox"
+                                      id={`required-${attr.id}`}
+                                      name="is_required"
+                                      defaultChecked={false}
+                                      onChange={(e) => handleChange(e, attr.id)}
+                                    />
+                                  )}
+                                </td>
+                              </tr>
+                            ))
+                        : null}
+                    </tbody>
+                  </table>
                 </div>
               </CCollapse>
             </>
