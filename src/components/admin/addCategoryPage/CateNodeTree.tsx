@@ -73,11 +73,12 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
         * Kéo thả để cập nhật thay đổi cấu trúc cây
       </p>
       {isPending && <CSpinner color="primary" />}
+
       <Tree
         tree={nodes}
         rootId={0}
         render={(node, { depth, isOpen, onToggle }) => (
-          <div style={{ marginLeft: depth * 20 }}>
+          <div className="col-lg-3" style={{ marginLeft: depth * 20 }}>
             {node.droppable && (
               <span
                 style={{ cursor: "pointer", marginRight: 5 }}

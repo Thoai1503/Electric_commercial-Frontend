@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CBadge, CButton, CCollapse, CSmartTable } from "@coreui/react-pro";
 import type { NodeModel } from "@minoru/react-dnd-treeview";
 
 import AttributeSelectModal from "./AttributeSelectModal";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import categoryAttributeQuery from "../../../module/admin/query/categoryAttribute";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
-import { updateCategoryAttributeService } from "../../../module/admin/service/categoryAttribute";
+
+import { useCategoryAttributeMutation } from "../../../module/admin/hook/useAttributeMutation";
 
 interface Category {
   id: number;
@@ -37,24 +38,21 @@ interface CategoryListProps {
 }
 
 export const CategoryList = ({ category }: CategoryListProps) => {
-  const queryClient = useQueryClient();
   const [details, setDetails] = useState<number[]>([]);
-  const [categories, setCategories] = useState<NodeModel[]>([]);
+  // const [categories, setCategories] = useState<NodeModel[]>([]);
 
   const [show, setShow] = useState(false);
   const [id, setId] = useState(0);
 
   const { data: categoryAttribute } = useQuery(categoryAttributeQuery.list);
+  const { handleChangeMutation } = useCategoryAttributeMutation(
+    categoryAttribute ?? ([] as CategoryAttribute[])
+  );
   const handleClose = () => setShow(false);
   const handleShow = (id = 0) => {
     setShow(true);
     setId(id);
   };
-
-  useEffect(() => {
-    console.log(categories);
-    setCategories(category);
-  }, [category]);
 
   const toggleDetails = (id: number) => {
     const position = details.indexOf(id);
@@ -65,37 +63,6 @@ export const CategoryList = ({ category }: CategoryListProps) => {
       newDetails.splice(position, 1);
     }
     setDetails(newDetails);
-  };
-
-  const handleChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => {
-    const { name, checked } = e.target;
-
-    const item = categoryAttribute?.find(
-      (attr: CategoryAttribute) => attr.id === id
-    );
-    if (!item) {
-      console.error("Attribute item not found for id:", id);
-      return;
-    }
-
-    const updatedAttr: CategoryAttribute = {
-      ...item,
-      [name]: !!checked, // ensure boolean
-    };
-
-    try {
-      const result = await updateCategoryAttributeService(id, updatedAttr);
-      console.log("Update result:", result);
-      alert("Cập nhật thành công");
-
-      queryClient.invalidateQueries({ queryKey: ["category-attributes"] });
-    } catch (error) {
-      console.error("Error updating category attribute:", error);
-      alert("Có lỗi xảy ra:" + error);
-    }
   };
 
   const columns = [
@@ -211,7 +178,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       id={`filterable-${attr.id}`}
                                       name="is_filterable"
                                       defaultChecked={true}
-                                      onChange={(e) => handleChange(e, attr.id)}
+                                      onChange={(e) =>
+                                        handleChangeMutation(e, attr.id)
+                                      }
                                     />
                                   ) : (
                                     <input
@@ -219,7 +188,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       id={`filterable-${attr.id}`}
                                       name="is_filterable"
                                       defaultChecked={false}
-                                      onChange={(e) => handleChange(e, attr.id)}
+                                      onChange={(e) =>
+                                        handleChangeMutation(e, attr.id)
+                                      }
                                     />
                                   )}
                                 </td>
@@ -230,7 +201,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       id={`variant-level-${attr.id}`}
                                       name="is_variant_level"
                                       defaultChecked={true}
-                                      onChange={(e) => handleChange(e, attr.id)}
+                                      onChange={(e) =>
+                                        handleChangeMutation(e, attr.id)
+                                      }
                                     />
                                   ) : (
                                     <input
@@ -238,7 +211,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       id={`variant-level-${attr.id}`}
                                       name="is_variant_level"
                                       defaultChecked={false}
-                                      onChange={(e) => handleChange(e, attr.id)}
+                                      onChange={(e) =>
+                                        handleChangeMutation(e, attr.id)
+                                      }
                                     />
                                   )}
                                 </td>
@@ -249,7 +224,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       id={`required-${attr.id}`}
                                       name="is_required"
                                       defaultChecked={true}
-                                      onChange={(e) => handleChange(e, attr.id)}
+                                      onChange={(e) =>
+                                        handleChangeMutation(e, attr.id)
+                                      }
                                     />
                                   ) : (
                                     <input
@@ -257,7 +234,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       id={`required-${attr.id}`}
                                       name="is_required"
                                       defaultChecked={false}
-                                      onChange={(e) => handleChange(e, attr.id)}
+                                      onChange={(e) =>
+                                        handleChangeMutation(e, attr.id)
+                                      }
                                     />
                                   )}
                                 </td>
