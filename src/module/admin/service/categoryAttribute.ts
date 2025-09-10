@@ -19,7 +19,7 @@ export const updateCategoryAttributeService = async (
 ): Promise<CategoryAttribute> => {
   console.log("Updating value:", data);
   return await catalogRequest
-    .put(`api/categoryattribute/${id}`, data)
+    .put(`categoryattribute/${id}`, data)
     .then((res) => {
       return res.data;
     })
