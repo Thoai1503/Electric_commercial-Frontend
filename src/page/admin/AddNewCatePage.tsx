@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import categoriesTreeQuery from "../../module/admin/query/category";
 import attributeQuery from "../../module/admin/query/attribute";
 import CategoryTree from "../../components/admin/addCategoryPage/CateNodeTree";
-import { useCategoryPage } from "../../module/admin/hook/useCategoryPage";
+import { useCategoryPage } from "../../module/admin/hook/category_page/useCategoryPage";
 import { CategoryList } from "../../components/admin/addCategoryPage/CategoryList";
 import AddNewCateForm from "../../components/admin/addCategoryPage/AddNewCateForm";
 import AttributeList from "../../components/admin/addCategoryPage/AttributeList";
@@ -126,26 +126,6 @@ export const AddNewCatePage = () => {
                 </li>
               </ul>
             </div>
-            {/* <h4>Quản lý thuộc tính:</h4>
-            <div className="d-flex">
-              <CButton
-                color="info"
-                size="sm"
-                style={{ color: "white" }}
-                className=""
-              >
-                Danh sách thuộc tính
-              </CButton>
-              <CButton
-                color="primary"
-                size="sm"
-                style={{ color: "white" }}
-                className="ms-4"
-                onClick={() => {}}
-              >
-                Thêm mới
-              </CButton>
-            </div> */}
           </CCardBody>
         </CCard>
       </CCol>

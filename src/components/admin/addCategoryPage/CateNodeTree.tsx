@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tree } from "@minoru/react-dnd-treeview";
 import type { NodeModel, DropOptions } from "@minoru/react-dnd-treeview";
-import { useCategoryMutation } from "../../../module/admin/hook/useCategoryMutation";
+import { useCategoryMutation } from "../../../module/admin/hook/category_page/useCategoryMutation";
 import type { UpdatedCategory } from "../../../type/Category";
 import { CSpinner } from "@coreui/react";
 

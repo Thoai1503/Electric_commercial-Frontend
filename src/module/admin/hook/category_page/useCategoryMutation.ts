@@ -1,8 +1,8 @@
 // ...existing code...
 import { useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { updateCategory } from "../service/category";
-import type { UpdatedCategory } from "../../../type/Category";
+import { updateCategory } from "../../service/category";
+import type { UpdatedCategory } from "../../../../type/Category";
 // ...existing imports...
 
 export const useCategoryMutation = (

@@ -1,4 +1,4 @@
-import { catalogRequest } from "../../../api/http";
+import { catalogRequest, catalogRequestTesting } from "../../../api/http";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
 export const getCategoryAttributes = async (): Promise<CategoryAttribute[]> => {
@@ -25,6 +25,20 @@ export const updateCategoryAttributeService = async (
     })
     .catch((error) => {
       console.log("Error updating category attribute:", error);
+      throw error; // Propagate the error to be handled by the caller
+    });
+};
+
+export const deleteCategoryAttributeService = async (
+  id: number
+): Promise<boolean> => {
+  return await catalogRequestTesting
+    .delete(`categoryattribute/${id}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      console.log("Error deleting category attribute:", error);
       throw error; // Propagate the error to be handled by the caller
     });
 };

@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import categoryAttributeQuery from "../../../module/admin/query/categoryAttribute";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
-import { useCategoryAttributeMutation } from "../../../module/admin/hook/useAttributeMutation";
+import { useCategoryAttributeMutation } from "../../../module/admin/hook/category_page/useAttributeMutation";
 
 interface Category {
   id: number;
@@ -39,20 +39,18 @@ interface CategoryListProps {
 
 export const CategoryList = ({ category }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
-  // const [categories, setCategories] = useState<NodeModel[]>([]);
-
-  const [show, setShow] = useState(false);
-  const [id, setId] = useState(0);
 
   const { data: categoryAttribute } = useQuery(categoryAttributeQuery.list);
-  const { handleChangeMutation } = useCategoryAttributeMutation(
+  const {
+    handleChangeMutation,
+    id,
+    show,
+    handleClose,
+    handleShow,
+    deleteCategoryAttribute,
+  } = useCategoryAttributeMutation(
     categoryAttribute ?? ([] as CategoryAttribute[])
   );
-  const handleClose = () => setShow(false);
-  const handleShow = (id = 0) => {
-    setShow(true);
-    setId(id);
-  };
 
   const toggleDetails = (id: number) => {
     const position = details.indexOf(id);
@@ -140,7 +138,7 @@ export const CategoryList = ({ category }: CategoryListProps) => {
           details: (item: any) => (
             <>
               <CCollapse visible={details.includes(item.id)}>
-                <div className="p-3">
+                <div className="p-3" style={{ backgroundColor: "#eeeeeeff  " }}>
                   <h5 className="text-primary">{item.text}</h5>
                   <p className="text-primary">
                     Cấu hình thuộc tính cho danh mục
@@ -157,6 +155,7 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                         <th>Lọc (bặt/tắt)</th>
                         <th>Cấp biến thể (có/ko)</th>
                         <th>Bắt buộc</th>
+                        <th>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -239,6 +238,17 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                       }
                                     />
                                   )}
+                                </td>
+                                <td>
+                                  <button
+                                    className="btn btn-sm btn-danger"
+                                    style={{ color: "white" }}
+                                    onClick={() =>
+                                      deleteCategoryAttribute(attr.id)
+                                    }
+                                  >
+                                    Xóa
+                                  </button>
                                 </td>
                               </tr>
                             ))

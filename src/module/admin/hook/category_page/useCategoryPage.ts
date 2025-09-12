@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
-import type { Category } from "../../../type/Category";
-import { addCategoryService } from "../service/category";
+import type { Category } from "../../../../type/Category";
+import { addCategoryService } from "../../service/category";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 export const useCategoryPage = () => {
   const queryClient = useQueryClient();

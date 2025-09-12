@@ -3,6 +3,8 @@ import Button from "react-bootstrap/Button";
 
 import Modal from "react-bootstrap/Modal";
 import attributeQuery from "../../../module/admin/query/attribute";
+import { CSpinner } from "@coreui/react";
+import { useAttributeSelectModal } from "../../../module/admin/hook/category_page/useAttributeSelectModal";
 
 interface AttributeSelectModalProps {
   id: number;
@@ -16,41 +18,63 @@ function AttributeSelectModal({
   show,
   handleClose,
 }: AttributeSelectModalProps) {
-  const { data: attributes } = useQuery(attributeQuery.list);
+  const { setSelectedList, handleChange } = useAttributeSelectModal(id);
+  const { data: attributes, isPending } = useQuery(
+    attributeQuery.selectedByCategoryId(id)
+  );
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal
+        show={show}
+        onHide={() => {
+          handleClose();
+          setSelectedList([]);
+        }}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Modal heading {id}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div style={{ maxHeight: "500px", overflowY: "auto" }}>
-            <table className="table table-bordered mt-4">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Tên Thuộc Tính</th>
-                  <th>Mô Tả</th>
-                  <th>Hành Động</th>
-                </tr>
-              </thead>
-              <tbody style={{ overflowY: "auto", maxHeight: "60px" }}>
-                {attributes?.map((attr) => (
-                  <tr key={attr.id}>
-                    <td>{attr.id}</td>
-                    <td>{attr.name}</td>
-                    <td>{attr.slug || "N/A"}</td>
-                    <td>
-                      <input type="checkbox" className="me-2" />
-
-                      {/* <button className="btn btn-sm btn-danger">Xóa</button> */}
-                    </td>
+          {isPending ? (
+            <CSpinner color="primary" />
+          ) : (
+            <div style={{ maxHeight: "500px", overflowY: "auto" }}>
+              <table className="table table-bordered mt-4">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tên Thuộc Tính</th>
+                    <th>Mô Tả</th>
+                    <th>Hành Động</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody style={{ overflowY: "auto", maxHeight: "60px" }}>
+                  {attributes?.map((attr) => (
+                    <tr key={attr.id}>
+                      <td>{attr.id}</td>
+                      <td>{attr.name}</td>
+                      <td>{attr.slug || "N/A"}</td>
+                      <td>
+                        {attr.is_selected ? (
+                          <input type="checkbox" checked className="me-2" />
+                        ) : (
+                          <input
+                            type="checkbox"
+                            className="me-2"
+                            onChange={() => {
+                              handleChange(attr.id);
+                            }}
+                          />
+                        )}
+                        {/* <button className="btn btn-sm btn-danger">Xóa</button> */}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

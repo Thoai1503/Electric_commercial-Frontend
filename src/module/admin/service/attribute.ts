@@ -12,3 +12,17 @@ export const getAllAttribute = async (): Promise<Attribute[]> => {
       return []; // Return an empty array or handle the error as needed
     });
 };
+
+export const getAllAndSelectedByCategoryId = async (
+  categoryId: number
+): Promise<Attribute[]> => {
+  return catalogRequest
+    .get(`/attribute/GetByCategoryId/${categoryId}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      console.log("Error fetching attributes:", error);
+      return []; // Return an empty array or handle the error as needed
+    });
+};
