@@ -18,7 +18,7 @@ export interface UserData {
 }
 
 const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
-  const location = useLocation();
+  //const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { accessToken, loading, error } = useSelector(
