@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import categoryAttributeQuery from "../../../module/admin/query/categoryAttribute";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
-import { useCategoryAttributeMutation } from "../../../module/admin/hook/category_page/useAttributeMutation";
+import { useCategoryAttributeMutation } from "../../../module/admin/hook/category_page/useCategoryAttributeMutation";
 
 interface Category {
   id: number;
@@ -48,6 +48,7 @@ export const CategoryList = ({ category }: CategoryListProps) => {
     handleClose,
     handleShow,
     deleteCategoryAttribute,
+    isPendingDelete,
   } = useCategoryAttributeMutation(
     categoryAttribute ?? ([] as CategoryAttribute[])
   );
@@ -246,8 +247,9 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                                     onClick={() =>
                                       deleteCategoryAttribute(attr.id)
                                     }
+                                    disabled={isPendingDelete}
                                   >
-                                    Xóa
+                                    {isPendingDelete ? "..Đang xoá" : "Xoá"}
                                   </button>
                                 </td>
                               </tr>

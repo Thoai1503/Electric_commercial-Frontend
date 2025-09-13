@@ -17,7 +17,6 @@ export const updateCategoryAttributeService = async (
   id: number,
   data: Partial<CategoryAttribute>
 ): Promise<CategoryAttribute> => {
-  console.log("Updating value:", data);
   return await catalogRequest
     .put(`categoryattribute/${id}`, data)
     .then((res) => {
@@ -32,13 +31,30 @@ export const updateCategoryAttributeService = async (
 export const deleteCategoryAttributeService = async (
   id: number
 ): Promise<boolean> => {
-  return await catalogRequestTesting
+  return await catalogRequest
     .delete(`categoryattribute/${id}`)
     .then((res) => {
+      console.log("API: " + res.data);
       return res.data;
     })
     .catch((error) => {
       console.log("Error deleting category attribute:", error);
+      throw error; // Propagate the error to be handled by the caller
+    });
+};
+
+export const createAttributeForCategory = async (
+  id: number,
+  idList: number[]
+): Promise<boolean> => {
+  return await catalogRequestTesting
+    .post(`api/categoryattribute/category/${id}`, idList)
+    .then((res) => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      console.log("Error creating category attribute:", error);
       throw error; // Propagate the error to be handled by the caller
     });
 };

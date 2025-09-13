@@ -82,11 +82,11 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
     );
     return null; // prevent flicker
   }
-  if (error) {
-    navigate("/", { replace: true, state: { from: location.pathname } });
+  // if (error) {
+  //   navigate("/", { replace: true, state: { from: location.pathname } });
 
-    return null;
-  }
+  //   return null;
+  // }
 
   console.log("AdminAuth - Rendering admin content");
   return <>{children || <Outlet />}</>;

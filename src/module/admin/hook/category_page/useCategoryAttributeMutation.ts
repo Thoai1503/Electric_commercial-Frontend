@@ -45,6 +45,7 @@ export const useCategoryAttributeMutation = (
   };
 
   const deleting = async (id: number) => {
+    // alert(id);
     return await deleteCategoryAttributeService(id);
   };
 
@@ -52,7 +53,7 @@ export const useCategoryAttributeMutation = (
     useMutation({
       mutationFn: update,
       onSuccess: (data) => {
-        console.log("Update successfully" + JSON.stringify(data));
+        alert("Update successfully" + JSON.stringify(data));
 
         queryClient.invalidateQueries({ queryKey: ["category-attributes"] });
         alert("Update successfully" + JSON.stringify(data));
@@ -64,9 +65,13 @@ export const useCategoryAttributeMutation = (
     useMutation({
       mutationFn: deleting,
       onSuccess: (data) => {
-        console.log("Delete successfully" + JSON.stringify(data));
+        alert("Delete successfully: " + JSON.stringify(data));
+        queryClient.invalidateQueries({ queryKey: ["category-attributes"] });
+        queryClient.invalidateQueries({
+          queryKey: ["selected-by-category", id],
+        });
       },
-      onError: (err: unknown) => alert("Error: " + err),
+      onError: (err: unknown) => alert("Lỗi khi xoá: " + err),
     });
 
   const { isPending, mutate } = useMutation({
@@ -98,6 +103,7 @@ export const useCategoryAttributeMutation = (
     handleClose,
     handleShow,
     isPendingDelete,
+
     deleteCategoryAttribute,
     isPending,
     mutate,

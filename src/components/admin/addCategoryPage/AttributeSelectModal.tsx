@@ -18,7 +18,8 @@ function AttributeSelectModal({
   show,
   handleClose,
 }: AttributeSelectModalProps) {
-  const { setSelectedList, handleChange } = useAttributeSelectModal(id);
+  const { setSelectedList, handleChange, handleSubmit, isPendingCreate } =
+    useAttributeSelectModal(id, handleClose);
   const { data: attributes, isPending } = useQuery(
     attributeQuery.selectedByCategoryId(id)
   );
@@ -57,13 +58,18 @@ function AttributeSelectModal({
                       <td>{attr.slug || "N/A"}</td>
                       <td>
                         {attr.is_selected ? (
-                          <input type="checkbox" checked className="me-2" />
+                          <input
+                            type="checkbox"
+                            checked
+                            readOnly
+                            className="me-2"
+                          />
                         ) : (
                           <input
                             type="checkbox"
                             className="me-2"
-                            onChange={() => {
-                              handleChange(attr.id);
+                            onChange={(event) => {
+                              handleChange(event, attr.id);
                             }}
                           />
                         )}
@@ -80,8 +86,12 @@ function AttributeSelectModal({
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button
+            variant="primary"
+            disabled={isPendingCreate}
+            onClick={handleSubmit}
+          >
+            {isPendingCreate ? "..Đang lưu" : "Save Changes"}
           </Button>
         </Modal.Footer>
       </Modal>
