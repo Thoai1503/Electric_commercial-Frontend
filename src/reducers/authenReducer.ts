@@ -17,7 +17,7 @@ export const refreshToken = createAsyncThunk<
   UserAuthenData, // return type should match the expected payload shape
   void, // argument type
   { state: { authen: AuthState }; rejectValue: string } // add state type
->("auth/refreshToken", async (_, { rejectWithValue, getState }) => {
+>("auth/refreshToken", async (_, { rejectWithValue }) => {
   try {
     console.log("Refreshing token...");
 

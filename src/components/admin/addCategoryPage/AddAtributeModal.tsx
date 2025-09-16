@@ -19,7 +19,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilSettings, cilCheck, cilX, cilInfo } from "@coreui/icons";
-import type { Attribute } from "../../../type/Attribute";
+
 import { createAttributeService } from "../../../module/admin/service/attribute";
 
 interface AddAttributeModalProps {

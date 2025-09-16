@@ -43,16 +43,8 @@ export const AddNewCatePage = () => {
   const [activeTab, setActiveTab] = useState<"tree" | "attributes">("tree");
   const [showStats, setShowStats] = useState(true);
 
-  const {
-    handleSubmit,
-    handleChange,
-    setCate,
-    cate,
-    isP,
-    isSuccess,
-    toggleSection,
-    setToggleSection,
-  } = useCategoryPage();
+  const { handleSubmit, handleChange, setCate, cate, isP, isSuccess } =
+    useCategoryPage();
 
   const {
     data: categories,
@@ -114,7 +106,7 @@ export const AddNewCatePage = () => {
   const LoadingSpinner = () => (
     <div className="d-flex justify-content-center align-items-center py-5">
       <div className="text-center">
-        <CSpinner color="primary" size="lg" />
+        <CSpinner color="primary" size="sm" />
         <div className="mt-2 text-muted">Đang tải dữ liệu...</div>
       </div>
     </div>
