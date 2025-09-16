@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
 export const getCategoryAttributes = async (): Promise<CategoryAttribute[]> => {
@@ -47,8 +47,8 @@ export const createAttributeForCategory = async (
   id: number,
   idList: number[]
 ): Promise<boolean> => {
-  return await catalogRequestTesting
-    .post(`api/categoryattribute/category/${id}`, idList)
+  return await catalogRequest
+    .post(`categoryattribute/category/${id}`, idList)
     .then((res) => {
       console.log(res.data);
       return res.data;

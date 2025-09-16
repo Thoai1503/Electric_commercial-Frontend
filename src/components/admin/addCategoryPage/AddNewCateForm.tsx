@@ -1,19 +1,21 @@
 import {
   CButton,
-  CDropdown,
-  CDropdownDivider,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
   CFormInput,
-  CInputGroup,
+  CFormLabel,
+  CFormSelect,
   CSpinner,
+  CAlert,
+  CCard,
+  CCardBody,
+  CInputGroup,
+  CInputGroupText,
 } from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import { cilFolder, cilPlus, cilCheck, cilX } from "@coreui/icons";
 
 import type { Category } from "../../../type/Category";
-
 import type { NodeModel } from "@minoru/react-dnd-treeview";
-import { memo } from "react";
+import { memo, useState } from "react";
 
 interface AddNewCateFormProps {
   categoryList: NodeModel[];
@@ -34,74 +36,161 @@ const AddNewCateForm = ({
   handleChange,
   handleSubmit,
 }: AddNewCateFormProps) => {
-  console.log("re-render");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!category.name.trim()) {
+      newErrors.name = "Tên danh mục là bắt buộc";
+    }
+
+    if (category.name.length > 100) {
+      newErrors.name = "Tên danh mục không được vượt quá 100 ký tự";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmitWithValidation = () => {
+    if (validateForm()) {
+      handleSubmit();
+    }
+  };
+
+  const handleParentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const parentId = parseInt(e.target.value) || 0;
+    setCate({ ...category, parent_id: parentId });
+  };
+
+  const selectedParent = categoryList.find(
+    (cate) => cate.id === category.parent_id
+  );
+
   return (
-    <>
-      <h3>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="25"
-          height="25"
-          fill="currentColor"
-          className="bi bi-folder-plus text-info"
-          viewBox="0 0 16 16"
+    <CCard className="border-0 shadow-sm">
+      <CCardBody className="p-4">
+        <div className="mb-4">
+          <h5 className="d-flex align-items-center mb-3">
+            <CIcon icon={cilFolder} className="me-2 text-primary" />
+            Thông tin danh mục
+          </h5>
+
+          {isPending && (
+            <CAlert color="info" className="d-flex align-items-center py-2">
+              <CSpinner size="sm" className="me-2" />
+              <small>Đang xử lý yêu cầu...</small>
+            </CAlert>
+          )}
+        </div>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmitWithValidation();
+          }}
         >
-          <path d="m.5 3 .04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2m5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98z" />
-          <path d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5" />
-        </svg>{" "}
-        Thêm danh mục
-      </h3>
-      {isPending && <h4 style={{ color: "black" }}>Đang thêm..</h4>}
-      <CInputGroup className="mb-3">
-        <CDropdown variant="input-group">
-          <CButton type="button" color="secondary" variant="outline">
-            {category.parent_id !== 0
-              ? categoryList.find((cate) => cate.id === category.parent_id)
-                  ?.text
-              : "Chọn danh mục cha (mặc định là gốc)"}
-          </CButton>
-          <CDropdownToggle color="secondary" variant="outline" split />
-
-          <CDropdownMenu>
-            <CDropdownItem
-              onClick={() => setCate({ ...category, parent_id: 0 })}
-            >
-              Danh mục gốc
-            </CDropdownItem>
-            {categoryList.map((cate) => (
-              <CDropdownItem
-                key={cate.id}
-                onClick={() =>
-                  setCate({ ...category, parent_id: Number(cate.id) })
-                }
+          {/* Parent Category Selection */}
+          <div className="mb-3">
+            <CFormLabel htmlFor="parentCategory" className="fw-semibold">
+              Danh mục cha
+            </CFormLabel>
+            <CInputGroup>
+              <CInputGroupText>
+                <CIcon icon={cilFolder} />
+              </CInputGroupText>
+              <CFormSelect
+                id="parentCategory"
+                value={category.parent_id || 0}
+                onChange={handleParentChange}
+                disabled={isPending}
               >
-                {cate.text}
-              </CDropdownItem>
-            ))}
+                <option value={0}>📁 Danh mục gốc</option>
+                {categoryList.map((cate) => (
+                  <option key={cate.id} value={cate.id}>
+                    📂 {cate.text}
+                  </option>
+                ))}
+              </CFormSelect>
+            </CInputGroup>
+            <small className="text-muted">
+              {selectedParent
+                ? `Sẽ tạo danh mục con trong "${selectedParent.text}"`
+                : "Sẽ tạo danh mục gốc"}
+            </small>
+          </div>
 
-            <CDropdownDivider />
-            <CDropdownItem href="#">Separated link</CDropdownItem>
-          </CDropdownMenu>
-        </CDropdown>
-        <CFormInput
-          name="name"
-          aria-label="Text input with segmented dropdown button"
-          value={category.name}
-          onChange={handleChange}
-          placeholder="Nhập tên danh mục..."
-        />
-      </CInputGroup>
-      <CButton color="success" disabled={isPending} onClick={handleSubmit}>
-        {isPending ? (
-          <>
-            <CSpinner as="span" className="me-2" size="sm" aria-hidden="true" />
-            <span role="status">Loading...</span>
-          </>
-        ) : (
-          <span style={{ color: "white" }}>Thêm</span>
-        )}
-      </CButton>
-    </>
+          {/* Category Name */}
+          <div className="mb-4">
+            <CFormLabel htmlFor="categoryName" className="fw-semibold">
+              Tên danh mục <span className="text-danger">*</span>
+            </CFormLabel>
+            <CInputGroup>
+              <CInputGroupText>
+                <CIcon icon={cilPlus} />
+              </CInputGroupText>
+              <CFormInput
+                type="text"
+                id="categoryName"
+                name="name"
+                value={category.name}
+                onChange={handleChange}
+                placeholder="Nhập tên danh mục..."
+                invalid={!!errors.name}
+                disabled={isPending}
+                maxLength={100}
+              />
+            </CInputGroup>
+            {errors.name && (
+              <small className="text-danger">
+                <CIcon icon={cilX} className="me-1" />
+                {errors.name}
+              </small>
+            )}
+            <small className="text-muted">
+              {category.name.length}/100 ký tự
+            </small>
+          </div>
+
+          {/* Submit Button */}
+          <div className="d-grid">
+            <CButton
+              color="primary"
+              size="lg"
+              disabled={isPending || !category.name.trim()}
+              onClick={handleSubmitWithValidation}
+              className="fw-semibold"
+            >
+              {isPending ? (
+                <>
+                  <CSpinner size="sm" className="me-2" />
+                  Đang thêm danh mục...
+                </>
+              ) : (
+                <>
+                  <CIcon icon={cilCheck} className="me-2" />
+                  Thêm danh mục
+                </>
+              )}
+            </CButton>
+          </div>
+
+          {/* Help Text */}
+          <div className="mt-3 p-3 bg-light rounded">
+            <small className="text-muted">
+              <strong>💡 Gợi ý:</strong>
+              <ul className="mb-0 mt-2">
+                <li>Tên danh mục nên ngắn gọn và dễ hiểu</li>
+                <li>Chọn danh mục cha phù hợp để tổ chức cây danh mục tốt</li>
+                <li>Tránh tạo danh mục trùng lặp</li>
+              </ul>
+            </small>
+          </div>
+        </form>
+      </CCardBody>
+    </CCard>
   );
 };
+
 export default memo(AddNewCateForm);

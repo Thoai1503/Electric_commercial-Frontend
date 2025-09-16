@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/catalog/:path*",
-      "destination": "http://electricstorecatalogapi1234.somee.com/api/:path*"
+      "destination": "http://electriccatalogstoreapi123456789.somee.com/api/:path*"
     },
     {
       "source": "/(.*)",

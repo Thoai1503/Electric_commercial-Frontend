@@ -3,7 +3,7 @@ import Navbar from "../components/client/Navbar";
 import Menu from "../components/client/home/Menu";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import AuthDebug from "../components/client/AuthDebug";
+//import AuthDebug from "../components/client/AuthDebug";
 
 const Client = () => {
   const authState = useSelector((state: RootState) => state.authen);
@@ -12,8 +12,8 @@ const Client = () => {
   return (
     <div>
       {/* Debug Component - Remove after fixing */}
-      <AuthDebug />
-      
+      {/* <AuthDebug /> */}
+
       <Navbar />
       <div className="container">
         <div className="row"></div>

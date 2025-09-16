@@ -8,6 +8,8 @@ import categoryAttributeQuery from "../../../module/admin/query/categoryAttribut
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
 import { useCategoryAttributeMutation } from "../../../module/admin/hook/category_page/useCategoryAttributeMutation";
+import { cilPencil, cilTrash } from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
 
 interface Category {
   id: number;
@@ -39,7 +41,7 @@ interface CategoryListProps {
 
 export const CategoryList = ({ category }: CategoryListProps) => {
   const [details, setDetails] = useState<number[]>([]);
-
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const { data: categoryAttribute } = useQuery(categoryAttributeQuery.list);
   const {
     handleChangeMutation,
@@ -268,6 +270,28 @@ export const CategoryList = ({ category }: CategoryListProps) => {
           className: "align-middle",
         }}
       />
+
+      {/* Bulk Actions */}
+      {selectedItems.length > 0 && (
+        <div className="card-footer bg-light border-top">
+          <div className="d-flex justify-content-between align-items-center">
+            <span className="text-muted">
+              Đã chọn {selectedItems.length} danh mục
+            </span>
+            <div className="d-flex gap-2">
+              <CButton color="warning" variant="outline" size="sm">
+                <CIcon icon={cilPencil} className="me-1" />
+                Chỉnh sửa hàng loạt
+              </CButton>
+              <CButton color="danger" variant="outline" size="sm">
+                <CIcon icon={cilTrash} className="me-1" />
+                Xóa đã chọn
+              </CButton>
+            </div>
+          </div>
+        </div>
+      )}
+
       <AttributeSelectModal
         handleClose={handleClose}
         handleShow={handleShow}

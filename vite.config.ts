@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/catalog": {
-        target: "http://electricstorecatalogapi1234.somee.com",
+        target: "http://electriccatalogstoreapi123456789.somee.com",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/catalog/, "/api"),
       },

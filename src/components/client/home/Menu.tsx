@@ -119,9 +119,13 @@ const Menu = () => {
     <div
       className="menu-container"
       onMouseLeave={() => setHoveredId(null)} // khi rời toàn bộ container thì ẩn panel
+      style={{ borderColor: "white" }}
     >
       {/* Sidebar */}
-      <ul className="list-group list-group-light sidebar-menu">
+      <ul
+        className="list-group list-group-light sidebar-menu"
+        style={{ borderColor: "white" }}
+      >
         {/* <strong>Danh mục </strong> */}
         {categories.map((cat) => (
           <li
