@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CBadge, CButton, CCollapse, CSmartTable } from "@coreui/react-pro";
 
 import type { Product } from "../../../type/Product"; // Import interface
