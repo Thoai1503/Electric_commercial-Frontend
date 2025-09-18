@@ -84,6 +84,7 @@ const authenSlice = createSlice({
       state.accessToken = null;
       state.loading = false;
       state.isAuthenticated = false;
+      localStorage.removeItem("accessToken");
       state.error = action.payload || "Refresh failed";
     });
   },

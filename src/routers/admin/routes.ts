@@ -8,7 +8,9 @@ type Route = {
 };
 
 const Dashboard = React.lazy(() => import("../../page/admin/Dashboard"));
-const Product = React.lazy(() => import("../../page/admin/Product"));
+const Product = React.lazy(
+  () => import("../../page/admin/AddProductProductPage")
+);
 // const Typography = React.lazy(
 //   () => import("./views/theme/typography/Typography")
 // );

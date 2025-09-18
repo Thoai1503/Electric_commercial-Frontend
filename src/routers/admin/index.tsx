@@ -1,13 +1,18 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { AddNewCatePage } from "../../page/admin/AddNewCatePage";
+import ProductDetails from "../../page/admin/ProductDetailsPage";
+import ProductPage from "../../page/admin/ProductPage";
 
 const Dashboard = React.lazy(() => import("../../page/admin/Dashboard"));
-const Product = React.lazy(() => import("../../page/admin/Product"));
+// const Product = React.lazy(
+//   () => import("../../page/admin/AddProductProductPage")
+// );
 
 export const adminRoutes = [
   { path: "", element: <Dashboard /> },
-  { path: "products", element: <Product /> },
+  { path: "products", element: <ProductPage /> },
+  { path: "product/:id", element: <ProductDetails /> },
   { path: "dashboard", element: <Navigate to="/admin" /> },
   { path: "category/create", element: <AddNewCatePage /> },
 ];
