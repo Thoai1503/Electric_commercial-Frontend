@@ -2,10 +2,11 @@ import React, { useCallback, useState } from "react";
 import type { Category } from "../../../../type/Category";
 import { addCategoryService } from "../../service/category";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 export const useCategoryPage = () => {
   const queryClient = useQueryClient();
 
-  const [cate, setCate] = useState<Category>({
+  const [cate, setCate] = useState<Partial<Category>>({
     id: 0,
     name: "",
     parent_id: 0,
@@ -16,9 +17,9 @@ export const useCategoryPage = () => {
     isPending: isP,
     isSuccess,
     mutate: addNew,
-  } = useMutation<Category, Error, Category>({
-    mutationFn: (cate: Category) => addCategoryService(cate),
-    onSuccess: (newCategory: Category) => {
+  } = useMutation<Partial<Category>, Error, Partial<Category>>({
+    mutationFn: (cate: Partial<Category>) => addCategoryService(cate),
+    onSuccess: (newCategory: Partial<Category>) => {
       console.log("Success:" + JSON.stringify(newCategory));
       alert("Thêm mục " + newCategory.name + " thành công");
       queryClient.invalidateQueries({ queryKey: ["categories"] });

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { CBadge, CButton, CCollapse, CSmartTable } from "@coreui/react-pro";
 
 import type { Product } from "../../../type/Product"; // Import interface
+import { FiChevronDown, FiChevronUp, FiEye } from "react-icons/fi";
 
 import { useQuery } from "@tanstack/react-query";
 import productQuery from "../../../module/admin/query/product";
+import { Link } from "react-router-dom";
 
 // Badge theo status (0 = Inactive, 1 = Active)
 const getBadge = (status: number) => {
@@ -33,7 +35,7 @@ export const ProductList = () => {
     {
       key: "show_details",
       label: "",
-      _style: { width: "1%" },
+      _style: { width: "10%" },
       filter: false,
       sorter: false,
     },
@@ -75,13 +77,20 @@ export const ProductList = () => {
         show_details: (item: Product) => (
           <td className="py-2">
             <CButton
+              style={{ marginRight: "5px", marginLeft: "5px" }}
               color="primary"
               variant="outline"
               shape="square"
               size="sm"
               onClick={() => toggleDetails(item.id)}
             >
-              {details.includes(item.id) ? "Hide" : "Show"}
+              {" "}
+              {details.includes(item.id) ? <FiChevronUp /> : <FiChevronDown />}
+            </CButton>
+            <CButton color="primary" variant="outline" size="sm">
+              <Link to={`../product/${item.id}`}>
+                <FiEye />
+              </Link>
             </CButton>
           </td>
         ),

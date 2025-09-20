@@ -9,8 +9,8 @@ import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
 //import CategoryTree from "../../../components/admin/addCategoryPage/CateNodeTree";
 
 export const addCategoryService = async (
-  category: Category
-): Promise<Category> => {
+  category: Partial<Category>
+): Promise<Partial<Category>> => {
   try {
     const res = await http.post<Category>("/api/v1/category", category);
 

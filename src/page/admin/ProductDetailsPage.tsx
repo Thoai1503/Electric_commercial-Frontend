@@ -1,34 +1,17 @@
-import React, { useRef, useState } from "react";
-import {
-  ChevronDown,
-  ArrowRight,
-  ArrowLeft,
-  Plus,
-  Upload,
-  Check,
-} from "lucide-react";
-import { Editor } from "@tinymce/tinymce-react";
-import { useQuery } from "@tanstack/react-query";
-import brandQueries from "../../module/admin/query/brand";
-import type { Brand } from "../../type/Brand";
-import categoriesTreeQuery from "../../module/admin/query/category";
+import { useState } from "react";
+import { ArrowRight, ArrowLeft, Plus, Upload, Check } from "lucide-react";
+
+import GeneralInfoSection from "../../components/admin/product_details_page/GeneralInfoSection";
+import { useParams } from "react-router-dom";
+import { useProductDetailPage } from "../../module/admin/hook/product_detail_page";
+import AttributeConfigSestion from "../../components/admin/product_details_page/AttributeConfigSestion";
 
 const ProductDetails = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [productName, setProductName] = useState("");
-  const [slug, setSlug] = useState("iphone-15-pro");
-  const [selectedBrand, setSelectedBrand] = useState("Apple");
-  const [selectedCategory, setSelectedCategory] = useState("Điện thoại");
+  const { id } = useParams();
+  const { tabs, nextTab, prevTab, activeTab, setActiveTab } =
+    useProductDetailPage(parseInt(id ?? "0"));
 
-  const [brandDropdownOpen, setBrandDropdownOpen] = useState(false);
-  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-  const [content, setContent] = useState("");
   // Attributes data
-  const [attributes, setAttributes] = useState({
-    screen: "6.1",
-    chip: "Apple A17 Pro",
-    battery: "3274",
-  });
 
   // Variants data
   const [selectedVariantAttributes, setSelectedVariantAttributes] = useState({
@@ -36,13 +19,6 @@ const ProductDetails = () => {
     storage: true,
     color: true,
   });
-  const editorRef = useRef(null) as any;
-
-  const logContent = () => {
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent());
-    }
-  };
 
   const [variants] = useState([
     {
@@ -68,346 +44,18 @@ const ProductDetails = () => {
     },
   ]);
 
-  const { data: brands } = useQuery(brandQueries.list);
-  const { data: categories } = useQuery(categoriesTreeQuery.list);
-
-  const tabs = [
-    { id: 0, title: "Thông tin chung" },
-    { id: 1, title: "Thuộc tính" },
-    { id: 2, title: "Biến thể" },
-    { id: 3, title: "Ảnh" },
-  ];
-
-  const generateSlug = (name: any) => {
-    return name
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .trim();
-  };
-
-  const handleProductNameChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const name = e.target.value;
-    setProductName(name);
-    if (name) {
-      setSlug(generateSlug(name));
-    }
-  };
-
-  const nextTab = () => {
-    if (activeTab < tabs.length - 1) {
-      setActiveTab(activeTab + 1);
-    }
-  };
-
-  const prevTab = () => {
-    if (activeTab > 0) {
-      setActiveTab(activeTab - 1);
-    }
-  };
-
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return (
-          <>
-            {/* Product Name */}
-            <div className="row mb-4 align-items-center">
-              <div className="col-2">
-                <label className="form-label mb-0 fw-normal">
-                  Tên sản phẩm:
-                </label>
-              </div>
-              <div className="col-10">
-                <input
-                  type="text"
-                  className="form-control"
-                  value={productName}
-                  onChange={handleProductNameChange}
-                  placeholder=""
-                />
-              </div>
-            </div>
-
-            {/* Slug */}
-            <div className="row mb-4 align-items-center">
-              <div className="col-2">
-                <label className="form-label mb-0 fw-normal">Slug:</label>
-              </div>
-              <div className="col-10">
-                <div className="d-flex align-items-center">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                  />
-                  <span className="ms-2 text-muted small">(auto)</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Brand */}
-            <div className="row mb-4 align-items-center">
-              <div className="col-2">
-                <label className="form-label mb-0 fw-normal">Brand:</label>
-              </div>
-              <div className="col-10">
-                <div className="position-relative">
-                  <button
-                    className="btn btn-outline-light border w-100 text-start d-flex justify-content-between align-items-center"
-                    type="button"
-                    onClick={() => setBrandDropdownOpen(!brandDropdownOpen)}
-                    style={{ backgroundColor: "white", color: "#6c757d" }}
-                  >
-                    <span>{selectedBrand}</span>
-                    <ChevronDown size={16} />
-                  </button>
-                  {brandDropdownOpen && (
-                    <div
-                      className="position-absolute w-100 mt-1"
-                      style={{ zIndex: 1050 }}
-                    >
-                      <ul className="list-group shadow">
-                        {brands?.map((brand: Brand) => (
-                          <li
-                            key={brand.id}
-                            className="list-group-item list-group-item-action border-0"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <button
-                              className="btn btn-link text-decoration-none p-0 w-100 text-start text-dark"
-                              onClick={() => {
-                                setSelectedBrand(brand.name);
-                                setBrandDropdownOpen(false);
-                              }}
-                            >
-                              {brand.name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Category */}
-            <div className="row mb-4 align-items-center">
-              <div className="col-2">
-                <label className="form-label mb-0 fw-normal">Category:</label>
-              </div>
-              <div className="col-10">
-                <div className="d-flex align-items-center">
-                  <div className="position-relative flex-grow-1">
-                    <button
-                      className="btn btn-outline-light border w-100 text-start d-flex justify-content-between align-items-center"
-                      type="button"
-                      onClick={() =>
-                        setCategoryDropdownOpen(!categoryDropdownOpen)
-                      }
-                      style={{ backgroundColor: "white", color: "#6c757d" }}
-                    >
-                      <span>{selectedCategory}</span>
-                      <ChevronDown size={16} />
-                    </button>
-                    {categoryDropdownOpen && (
-                      <div
-                        className="position-absolute w-100 mt-1"
-                        style={{ zIndex: 1050 }}
-                      >
-                        <ul className="list-group shadow">
-                          {categories?.map((category) => (
-                            <li
-                              key={category.id}
-                              className="list-group-item list-group-item-action border-0"
-                              style={{ cursor: "pointer" }}
-                            >
-                              <button
-                                className="btn btn-link text-decoration-none p-0 w-100 text-start text-dark"
-                                onClick={() => {
-                                  setSelectedCategory(category.text);
-                                  setCategoryDropdownOpen(false);
-                                }}
-                              >
-                                {category.text}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  <span className="ms-2 text-muted small">(tree select)</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Product Description */}
-            <div className="row mb-4">
-              <div className="col-2">
-                <label className="form-label mb-0 fw-normal">
-                  Mô tả sản phẩm:
-                </label>
-              </div>
-              <div className="col-10">
-                <div>
-                  <Editor
-                    apiKey="opbl478qvvrtoorhvqc4f7zei61txljv0gkj67k1ogzky57n" // có thể để trống khi test local
-                    initialValue="<p>Soạn thảo với upload ảnh...</p>"
-                    init={{
-                      height: 500,
-                      menubar: true,
-                      plugins: "image media link code",
-                      toolbar:
-                        "undo redo | bold italic | alignleft aligncenter alignright | image media link code",
-
-                      // URL API backend để nhận file upload
-                      images_upload_url: "http://localhost:5000/upload",
-
-                      // Custom handler nếu muốn tự điều khiển upload
-                      images_upload_handler: async (
-                        blobInfo: any,
-                        success: any,
-                        failure: any
-                      ) => {
-                        try {
-                          const formData = new FormData();
-                          formData.append(
-                            "file",
-                            blobInfo.blob(),
-                            blobInfo.filename()
-                          );
-
-                          console.log("form data: " + JSON.stringify(formData));
-                          const response = await fetch(
-                            "http://localhost:5000/upload",
-                            {
-                              method: "POST",
-                              body: formData,
-                            }
-                          );
-
-                          const json = await response.json();
-
-                          // backend trả về link ảnh
-                          success(json);
-                          alert(json);
-                        } catch (err: any) {
-                          failure("Upload thất bại: " + err.message);
-                        }
-                      },
-                    }}
-                    onEditorChange={(newContent) => setContent(newContent)}
-                  />
-
-                  <button onClick={logContent}>Lấy nội dung</button>
-                  <h3 className="mt-4">Xem trước nội dung:</h3>
-                  <div
-                    style={{ border: "1px solid #ddd", padding: "10px" }}
-                    dangerouslySetInnerHTML={{ __html: content }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-2"></div>
-              <div className="col-10">
-                <button
-                  type="button"
-                  className="btn d-flex align-items-center"
-                  style={{ backgroundColor: "#6f42c1", color: "white" }}
-                  onClick={nextTab}
-                >
-                  <span className="me-2">Tiếp tục</span>
-                  <ArrowRight size={16} className="me-1" />
-                  <span>Thuộc tính</span>
-                </button>
-              </div>
-            </div>
-          </>
-        );
+        return <GeneralInfoSection id={parseInt(id ?? "0")} />;
 
       case 1:
         return (
-          <>
-            <div className="mb-4">
-              <h6 className="mb-3">📌 Thuộc tính sản phẩm chung:</h6>
-
-              <div className="row mb-3 align-items-center">
-                <div className="col-2">
-                  <label className="form-label mb-0">Màn hình (inch):</label>
-                </div>
-                <div className="col-4">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={attributes.screen}
-                    onChange={(e) =>
-                      setAttributes({ ...attributes, screen: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="row mb-3 align-items-center">
-                <div className="col-2">
-                  <label className="form-label mb-0">Chip:</label>
-                </div>
-                <div className="col-4">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={attributes.chip}
-                    onChange={(e) =>
-                      setAttributes({ ...attributes, chip: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="row mb-4 align-items-center">
-                <div className="col-2">
-                  <label className="form-label mb-0">Pin (mAh):</label>
-                </div>
-                <div className="col-4">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={attributes.battery}
-                    onChange={(e) =>
-                      setAttributes({ ...attributes, battery: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="d-flex gap-2">
-              <button
-                type="button"
-                className="btn btn-outline-secondary d-flex align-items-center"
-                onClick={prevTab}
-              >
-                <ArrowLeft size={16} className="me-1" />
-                <span>Quay lại</span>
-              </button>
-              <button
-                type="button"
-                className="btn d-flex align-items-center"
-                style={{ backgroundColor: "#6f42c1", color: "white" }}
-                onClick={nextTab}
-              >
-                <span className="me-2">Tiếp tục</span>
-                <ArrowRight size={16} className="me-1" />
-                <span>Biến thể</span>
-              </button>
-            </div>
-          </>
+          <AttributeConfigSestion
+            id={parseInt(id ?? "0")}
+            nextTab={nextTab}
+            prevTab={prevTab}
+          />
         );
 
       case 2:

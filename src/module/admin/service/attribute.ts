@@ -31,7 +31,7 @@ export const createAttributeService = async (
   attr: Partial<Attribute>
 ): Promise<boolean> => {
   return catalogRequestTesting
-    .post(`api/attribute`, attr)
+    .post(`/api/attribute`, attr)
     .then((res) => {
       return res.data;
     })

@@ -1,7 +1,10 @@
+import type { CategoryAttribute } from "./CategoryAttribute";
+
 export interface Category {
   id: number;
   name: string;
   parent_id: number;
+  category_attributes: CategoryAttribute[];
 }
 
 export interface CategoryReponse {
