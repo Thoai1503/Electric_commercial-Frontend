@@ -19,9 +19,9 @@ import { memo, useState } from "react";
 
 interface AddNewCateFormProps {
   categoryList: NodeModel[];
-  category: Category;
+  category: Partial<Category>;
   isPending: boolean;
-  setCate: (cate: Category) => void;
+  setCate: (cate: Partial<Category>) => void;
   handleSubmit: () => void;
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -41,11 +41,11 @@ const AddNewCateForm = ({
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
-    if (!category.name.trim()) {
+    if (!category.name?.trim()) {
       newErrors.name = "Tên danh mục là bắt buộc";
     }
 
-    if (category.name.length > 100) {
+    if (category.name && category.name.length > 100) {
       newErrors.name = "Tên danh mục không được vượt quá 100 ký tự";
     }
 
@@ -149,7 +149,7 @@ const AddNewCateForm = ({
               </small>
             )}
             <small className="text-muted">
-              {category.name.length}/100 ký tự
+              {category.name && category.name.length}/100 ký tự
             </small>
           </div>
 
@@ -158,7 +158,7 @@ const AddNewCateForm = ({
             <CButton
               color="primary"
               size="lg"
-              disabled={isPending || !category.name.trim()}
+              disabled={isPending || !category.name?.trim()}
               onClick={handleSubmitWithValidation}
               className="fw-semibold"
             >
