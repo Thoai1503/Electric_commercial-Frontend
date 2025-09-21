@@ -48,7 +48,7 @@ export const createAttributeForCategory = async (
   idList: number[]
 ): Promise<boolean> => {
   return await catalogRequest
-    .post(`categoryattribute/category/${id}`, idList)
+    .post(`/categoryattribute/category/${id}`, idList)
     .then((res) => {
       console.log(res.data);
       return res.data;

@@ -2,15 +2,30 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import type { Product } from "../../../../type/Product";
 import type { CategoryAttribute } from "../../../../type/CategoryAttribute";
+import type { ProductAttribute } from "../../../../type/ProductAttribute";
 
 export const useAttributeConfigSection = (id: number) => {
   const queryClient = useQueryClient();
 
   const product = queryClient.getQueryData(["product", id]) as Product;
 
-  const productAttribute = product?.category.category_attributes.filter(
+  const categoryAttributes = product?.category.category_attributes.filter(
     (item) => item.is_variant_level == false
   ) as CategoryAttribute[];
 
-  return { product, productAttribute };
+  const selectedAttributes = product?.product_attribute;
+
+  const nonVariantProductAttributes = product?.product_attribute.filter((pa) =>
+    categoryAttributes.some(
+      (ca) =>
+        ca.attribute_id === pa.attribute_id && ca.is_variant_level === false
+    )
+  ) as ProductAttribute[];
+
+  return {
+    product,
+    categoryAttributes,
+    selectedAttributes,
+    nonVariantProductAttributes,
+  };
 };

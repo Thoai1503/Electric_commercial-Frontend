@@ -135,7 +135,10 @@ const GeneralInfoSection = ({ id }: Prop) => {
                         <button
                           className="btn btn-link text-decoration-none p-0 w-100 text-start text-dark"
                           onClick={() => {
-                            setSelectedCategory(category.text);
+                            setSelectedCategory({
+                              id: category.id,
+                              name: category.text,
+                            });
                             setCategoryDropdownOpen(false);
                           }}
                         >

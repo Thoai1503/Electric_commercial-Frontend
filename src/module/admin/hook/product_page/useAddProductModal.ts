@@ -142,7 +142,7 @@ export const useAddProductModal = () => {
       setImagePreview("");
     },
     onError: (error) => {
-      alert(error);
+      alert("Lỗi: " + error);
     },
   });
 
