@@ -1,24 +1,16 @@
 import { useState } from "react";
-import { ArrowRight, ArrowLeft, Plus, Upload, Check } from "lucide-react";
+import { ArrowLeft, Plus, Upload, Check } from "lucide-react";
 
 import GeneralInfoSection from "../../components/admin/product_details_page/GeneralInfoSection";
 import { useParams } from "react-router-dom";
 import { useProductDetailPage } from "../../module/admin/hook/product_detail_page";
 import AttributeConfigSestion from "../../components/admin/product_details_page/AttributeConfigSestion";
+import VariantConfigSection from "../../components/admin/product_details_page/VariantConfigSection";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { tabs, nextTab, prevTab, activeTab, setActiveTab } =
     useProductDetailPage(parseInt(id ?? "0"));
-
-  // Attributes data
-
-  // Variants data
-  const [selectedVariantAttributes, setSelectedVariantAttributes] = useState({
-    ram: true,
-    storage: true,
-    color: true,
-  });
 
   const [variants] = useState([
     {
@@ -60,124 +52,11 @@ const ProductDetails = () => {
 
       case 2:
         return (
-          <>
-            <div className="mb-4">
-              <h6 className="mb-3">📌 Chọn thuộc tính cho biến thể:</h6>
-
-              <div className="mb-3">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selectedVariantAttributes.ram}
-                    onChange={(e) =>
-                      setSelectedVariantAttributes({
-                        ...selectedVariantAttributes,
-                        ram: e.target.checked,
-                      })
-                    }
-                  />
-                  <label className="form-check-label">
-                    RAM (8GB, 12GB, 16GB)
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selectedVariantAttributes.storage}
-                    onChange={(e) =>
-                      setSelectedVariantAttributes({
-                        ...selectedVariantAttributes,
-                        storage: e.target.checked,
-                      })
-                    }
-                  />
-                  <label className="form-check-label">
-                    Storage (128GB, 256GB, 512GB)
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selectedVariantAttributes.color}
-                    onChange={(e) =>
-                      setSelectedVariantAttributes({
-                        ...selectedVariantAttributes,
-                        color: e.target.checked,
-                      })
-                    }
-                  />
-                  <label className="form-check-label">
-                    Màu sắc (Black, Silver, Gold)
-                  </label>
-                </div>
-              </div>
-
-              <div className="table-responsive mb-3">
-                <table className="table table-bordered">
-                  <thead className="table-light">
-                    <tr>
-                      <th>SKU</th>
-                      <th>RAM</th>
-                      <th>Storage</th>
-                      <th>Color</th>
-                      <th>Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {variants.map((variant, index) => (
-                      <tr key={index}>
-                        <td>{variant.sku}</td>
-                        <td>{variant.ram}</td>
-                        <td>{variant.storage}</td>
-                        <td>{variant.color}</td>
-                        <td>{variant.price}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="mb-4">
-                <span className="me-2">👉 Action:</span>
-                <div className="btn-group">
-                  <button className="btn btn-outline-primary btn-sm">
-                    <Plus size={14} className="me-1" />
-                    Add Variant
-                  </button>
-                  <button className="btn btn-outline-secondary btn-sm">
-                    Bulk Edit Price
-                  </button>
-                  <button className="btn btn-outline-secondary btn-sm">
-                    Import CSV
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="d-flex gap-2">
-              <button
-                type="button"
-                className="btn btn-outline-secondary d-flex align-items-center"
-                onClick={prevTab}
-              >
-                <ArrowLeft size={16} className="me-1" />
-                <span>Quay lại</span>
-              </button>
-              <button
-                type="button"
-                className="btn d-flex align-items-center"
-                style={{ backgroundColor: "#6f42c1", color: "white" }}
-                onClick={nextTab}
-              >
-                <span className="me-2">Tiếp tục</span>
-                <ArrowRight size={16} className="me-1" />
-                <span>Ảnh</span>
-              </button>
-            </div>
-          </>
+          <VariantConfigSection
+            id={parseInt(id ?? "0")}
+            nextTab={nextTab}
+            prevTab={prevTab}
+          />
         );
 
       case 3:

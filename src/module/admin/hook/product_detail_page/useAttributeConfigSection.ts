@@ -4,6 +4,7 @@ import type { Product } from "../../../../type/Product";
 import type { CategoryAttribute } from "../../../../type/CategoryAttribute";
 import type { ProductAttribute } from "../../../../type/ProductAttribute";
 import { updateProductAttribute } from "../../service/productAttribute";
+import productQuery from "../../query/product";
 
 export const useAttributeConfigSection = (id: number) => {
   interface Param {
@@ -26,8 +27,19 @@ export const useAttributeConfigSection = (id: number) => {
 
   const { isPending, mutate: updatePA } = useMutation({
     mutationFn: ({ id, en }: Param) => updateProductAttribute(id, en),
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      if (!data) {
+        alert("Cập nhật không thành công");
+        return;
+      }
+      alert("Cập nhật thành công");
+      queryClient.invalidateQueries({
+        queryKey: productQuery.detail(id).queryKey,
+      });
+    },
+    onError: (error) => {
+      alert(error.message);
+    },
   });
 
   const nonVariantProductAttributes = product?.product_attribute.filter((pa) =>

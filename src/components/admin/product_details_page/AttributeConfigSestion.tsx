@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { useAttributeConfigSection } from "../../../module/admin/hook/product_detail_page/useAttributeConfigSection";
+import CustomInput from "./CustomInput/CustomInput";
 
 interface Prop {
   id: number;
@@ -9,7 +10,7 @@ interface Prop {
 }
 
 const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
-  const { nonVariantProductAttributes, categoryAttributes } =
+  const { nonVariantProductAttributes, categoryAttributes, handleSubmit } =
     useAttributeConfigSection(id);
 
   console.log("Res: " + JSON.stringify(categoryAttributes));
@@ -30,24 +31,12 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
             item.value_text != null;
           return (
             <>
-              <div className="row mb-3 align-items-center">
-                <div className="col-2">
-                  <label className="form-label mb-0">
-                    {item.attribute.name} (
-                    {item.attribute.unit != "" && item.attribute.unit}):
-                  </label>
-                </div>
-                <div className="col-4">
-                  {
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={isHavingValuable ? vl : ""}
-                      onChange={(e) => e}
-                    />
-                  }
-                </div>
-              </div>
+              <CustomInput
+                item={item}
+                isHavingValuable={isHavingValuable}
+                vl={vl}
+                handleSubmit={handleSubmit}
+              />
             </>
           );
         })}
