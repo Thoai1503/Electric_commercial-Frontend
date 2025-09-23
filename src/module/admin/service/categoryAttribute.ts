@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
 export const getCategoryAttributes = async (): Promise<CategoryAttribute[]> => {
