@@ -6,9 +6,11 @@ import { useVariantAttributeMutation } from "../../../../module/admin/hook/produ
 
 interface Prop {
   item: Partial<ProductVariant>;
+  index: number;
 }
-const VariantItem = ({ item }: Prop) => {
-  const { isPending, update } = useVariantAttributeMutation();
+const VariantItem = ({ item, index }: Prop) => {
+  console.log(index);
+  const { update } = useVariantAttributeMutation();
   const [variantAttributeList, setVariantAttributeList] = useState<
     VariantAttribute[]
   >(item.variant_attributes ?? []);

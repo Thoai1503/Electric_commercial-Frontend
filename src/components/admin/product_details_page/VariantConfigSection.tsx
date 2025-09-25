@@ -91,7 +91,7 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
             </thead>
             <tbody>
               {variants?.map((variant, index) => (
-                <VariantItem item={variant} />
+                <VariantItem item={variant} index={index} />
               ))}
               <tr>Chưa có biến thể</tr>
             </tbody>
