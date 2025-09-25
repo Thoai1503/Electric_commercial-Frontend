@@ -17,8 +17,9 @@ export const updateCategoryAttributeService = async (
   id: number,
   data: Partial<CategoryAttribute>
 ): Promise<CategoryAttribute> => {
+  alert(JSON.stringify(data));
   return await catalogRequest
-    .put(`categoryattribute/${id}`, data)
+    .put(`/categoryattribute/${id}`, data)
     .then((res) => {
       return res.data;
     })

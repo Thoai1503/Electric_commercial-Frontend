@@ -24,6 +24,8 @@ export const useCategoryAttributeMutation = (
   const handleChangeMutation = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
       const { name, checked } = e.target;
+      // alert(`${id} ${checked}`);
+      // return;
       const item = categoryAttribute?.find(
         (attr: CategoryAttribute) => attr.id === id
       );
@@ -35,6 +37,7 @@ export const useCategoryAttributeMutation = (
         ...item,
         [name]: !!checked, // ensure boolean
       };
+      alert(JSON.stringify(updatedAttr));
       updateCategoryAttribute({ id, en: updatedAttr });
     },
     [categoryAttribute]

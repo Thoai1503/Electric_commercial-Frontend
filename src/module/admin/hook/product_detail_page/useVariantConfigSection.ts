@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Product } from "../../../../type/Product";
 import type { CategoryAttribute } from "../../../../type/CategoryAttribute";
-import type { ProductAttribute } from "../../../../type/ProductAttribute";
+
 import { addProductVariant } from "../../service/productVariant";
 import { useState } from "react";
 import type { ProductVariant } from "../../../../type/productVariant";
 import productVariantQuery from "../../query/productVariant";
+
+import productQuery from "../../query/product";
 
 export const useVariantConfigSection = (id: number) => {
   const [submitVariant, setSubmitVariant] = useState<Partial<ProductVariant>>({
@@ -33,9 +35,19 @@ export const useVariantConfigSection = (id: number) => {
   };
 
   const { isPending, mutate: addVariant } = useMutation({
-    mutationFn: (en: Partial<ProductAttribute>) => addProductVariant(en),
-    onSuccess: () => {},
-    onError: () => {},
+    mutationFn: (en: Partial<ProductVariant>) => addProductVariant(en),
+    onSuccess: (data) => {
+      alert(data);
+      queryClient.invalidateQueries({
+        queryKey: [
+          productQuery.detail(id).queryKey,
+          productVariantQuery.detail_by_product_id(id),
+        ],
+      });
+    },
+    onError: (er) => {
+      alert("Error: " + er.message);
+    },
   });
 
   //variant infomation

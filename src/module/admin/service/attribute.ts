@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { Attribute } from "../../../type/Attribute";
 
 export const getAllAttribute = async (): Promise<Attribute[]> => {
@@ -30,8 +30,8 @@ export const getAllAndSelectedByCategoryId = async (
 export const createAttributeService = async (
   attr: Partial<Attribute>
 ): Promise<boolean> => {
-  return catalogRequestTesting
-    .post(`/api/attribute`, attr)
+  return catalogRequest
+    .post(`/attribute`, attr)
     .then((res) => {
       return res.data;
     })

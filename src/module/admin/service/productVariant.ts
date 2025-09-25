@@ -1,11 +1,11 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { ProductVariant } from "../../../type/productVariant";
 
 export const addProductVariant = async (
   en: Partial<ProductVariant>
 ): Promise<boolean> => {
-  return await catalogRequestTesting
-    .post("/api/productvariant", en)
+  return await catalogRequest
+    .post("/productvariant", en)
     .then((res) => res.data)
     .catch((error) => {
       throw error;

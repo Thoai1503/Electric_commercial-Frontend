@@ -115,7 +115,7 @@ const AddVariantModal = ({ handleChange, handleSubmit }: Prop) => {
             </CButton>
             <CButton
               color="primary"
-              type="submit"
+              type="button"
               disabled={false}
               onClick={handleSubmit}
             >

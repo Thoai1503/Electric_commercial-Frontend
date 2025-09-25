@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
 import { useVariantConfigSection } from "../../../module/admin/hook/product_detail_page/useVariantConfigSection";
 
 import AddVariantModal from "./AddVariantModal/AddVariantModal";
+import VariantItem from "../header/VariantItem/VariantItem";
 
 interface Prop {
   id: number;
@@ -15,7 +16,7 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
     useVariantConfigSection(id);
 
   console.log("Variant Attribute :" + JSON.stringify(variants));
-  const en = variants && variants[0]?.variant_attributes;
+  // const en = variants && variants[0]?.variant_attributes;
   //alert(JSON.stringify(en));
 
   return (
@@ -80,28 +81,17 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
                 <th>STT</th>
                 <th>SKU</th>
                 <th>Giá</th>
-                {categoryAttributes?.map((item) => (
-                  <th key={item.attribute.id}>{item.attribute.name}</th>
-                ))}
+                {categoryAttributes
+                  ?.sort((a, b) => a.attribute.id - b.attribute.id)
+                  .map((item) => (
+                    <th key={item.attribute.id}>{item.attribute.name}</th>
+                  ))}
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {variants?.map((variant, index) => (
-                <tr key={index}>
-                  <td>{variant.id}</td>
-                  <td>{variant.sku}</td>
-                  <td>{variant.price}</td>
-                  {en?.map((e) => (
-                    <td>
-                      <input
-                        placeholder={
-                          e.attribute.id.toString() + "&" + e.id.toString()
-                        }
-                        value={""}
-                      />
-                    </td>
-                  ))}
-                </tr>
+                <VariantItem item={variant} />
               ))}
               <tr>Chưa có biến thể</tr>
             </tbody>
