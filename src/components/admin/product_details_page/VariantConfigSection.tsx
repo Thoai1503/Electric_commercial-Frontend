@@ -79,6 +79,7 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
             <thead className="table-light">
               <tr>
                 <th>STT</th>
+                <th>Tên</th>
                 <th>SKU</th>
                 <th>Giá</th>
                 {categoryAttributes
@@ -93,7 +94,6 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
               {variants?.map((variant, index) => (
                 <VariantItem item={variant} index={index} />
               ))}
-              <tr>Chưa có biến thể</tr>
             </tbody>
           </table>
         </div>

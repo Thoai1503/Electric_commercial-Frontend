@@ -1,50 +1,24 @@
-import { useState } from "react";
-import { ArrowLeft, Plus, Upload, Check } from "lucide-react";
-
 import GeneralInfoSection from "../../components/admin/product_details_page/GeneralInfoSection";
 import { useParams } from "react-router-dom";
 import { useProductDetailPage } from "../../module/admin/hook/product_detail_page";
 import AttributeConfigSestion from "../../components/admin/product_details_page/AttributeConfigSestion";
 import VariantConfigSection from "../../components/admin/product_details_page/VariantConfigSection";
+import ImagesForVariant from "../../components/admin/product_details_page/ImagesForVariant";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { tabs, nextTab, prevTab, activeTab, setActiveTab } =
-    useProductDetailPage(parseInt(id ?? "0"));
-
-  const [variants] = useState([
-    {
-      sku: "IP15P-8-128-BLACK",
-      ram: "8",
-      storage: "128",
-      color: "Black",
-      price: "25,990",
-    },
-    {
-      sku: "IP15P-8-256-SILVER",
-      ram: "8",
-      storage: "256",
-      color: "Silver",
-      price: "28,990",
-    },
-    {
-      sku: "IP15P-12-512-GOLD",
-      ram: "12",
-      storage: "512",
-      color: "Gold",
-      price: "32,990",
-    },
-  ]);
+    useProductDetailPage(parseInt(id!));
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
-        return <GeneralInfoSection id={parseInt(id ?? "0")} />;
+        return <GeneralInfoSection id={parseInt(id!)} />;
 
       case 1:
         return (
           <AttributeConfigSestion
-            id={parseInt(id ?? "0")}
+            id={parseInt(id!)}
             nextTab={nextTab}
             prevTab={prevTab}
           />
@@ -53,66 +27,14 @@ const ProductDetails = () => {
       case 2:
         return (
           <VariantConfigSection
-            id={parseInt(id ?? "0")}
+            id={parseInt(id!)}
             nextTab={nextTab}
             prevTab={prevTab}
           />
         );
 
       case 3:
-        return (
-          <>
-            <div className="mb-4">
-              <h6 className="mb-3">📌 Ảnh chung cho sản phẩm:</h6>
-              <div
-                className="border rounded p-4 text-center mb-4"
-                style={{ backgroundColor: "#f8f9fa" }}
-              >
-                <button className="btn btn-outline-primary">
-                  <Plus size={16} className="me-1" />
-                  Upload Image
-                </button>
-                <p className="text-muted mt-2 mb-0">
-                  Drag & Drop để sắp xếp thứ tự hiển thị
-                </p>
-              </div>
-
-              <h6 className="mb-3">📌 Ảnh cho từng biến thể:</h6>
-              <div className="mb-3">
-                {variants.map((variant, index) => (
-                  <div
-                    key={index}
-                    className="d-flex align-items-center justify-content-between border-bottom py-2"
-                  >
-                    <span>- {variant.sku}</span>
-                    <button className="btn btn-outline-secondary btn-sm">
-                      <Upload size={14} className="me-1" />
-                      Upload
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="d-flex gap-2">
-              <button
-                type="button"
-                className="btn btn-outline-secondary d-flex align-items-center"
-                onClick={prevTab}
-              >
-                <ArrowLeft size={16} className="me-1" />
-                <span>Quay lại</span>
-              </button>
-              <button
-                type="button"
-                className="btn btn-success d-flex align-items-center"
-              >
-                <Check size={16} className="me-1" />
-                <span>Lưu sản phẩm</span>
-              </button>
-            </div>
-          </>
-        );
+        return <ImagesForVariant id={parseInt(id!)} prevTab={prevTab} />;
 
       default:
         return null;

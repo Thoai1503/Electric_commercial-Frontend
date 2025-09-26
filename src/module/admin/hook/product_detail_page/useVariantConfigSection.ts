@@ -13,6 +13,7 @@ export const useVariantConfigSection = (id: number) => {
   const [submitVariant, setSubmitVariant] = useState<Partial<ProductVariant>>({
     product_id: id,
     sku: "",
+    name: "",
     price: 0,
   });
   const { data: variants, isPending: isPendingVariant } = useQuery(
@@ -29,8 +30,6 @@ export const useVariantConfigSection = (id: number) => {
     setSubmitVariant({ ...submitVariant, [name]: value });
   };
   const handleSubmit = () => {
-    // alert("Submited data: " + JSON.stringify(submitVariant));
-    // return;
     addVariant(submitVariant);
   };
 
@@ -65,6 +64,7 @@ export const useVariantConfigSection = (id: number) => {
   return {
     handleChange,
     handleSubmit,
+
     isPending,
     variants,
     categoryAttributes,

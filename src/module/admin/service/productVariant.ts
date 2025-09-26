@@ -1,4 +1,4 @@
-import { catalogRequest } from "../../../api/http";
+import { catalogRequest, catalogRequestTesting } from "../../../api/http";
 import type { ProductVariant } from "../../../type/productVariant";
 
 export const addProductVariant = async (
@@ -17,6 +17,15 @@ export const getVariantByProductId = async (
 ): Promise<Partial<ProductVariant>[]> => {
   return await catalogRequest
     .get(`/productvariant/product/${id}`)
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const deleteProductVariant = async (id: number): Promise<boolean> => {
+  return await catalogRequestTesting
+    .delete(`/api/productvariant/${id}`)
     .then((res) => res.data)
     .catch((error) => {
       throw error;

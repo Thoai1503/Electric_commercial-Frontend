@@ -74,6 +74,7 @@ const AddVariantModal = ({ handleChange, handleSubmit }: Prop) => {
                   name="name"
                   placeholder="Nhập tên sản phẩm"
                   maxLength={255}
+                  onChange={handleChange}
                   required
                 />
               </CCol>
