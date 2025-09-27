@@ -1,6 +1,7 @@
 import type { Brand } from "./Brand";
 import type { Category } from "./Category";
 import type { ProductAttribute } from "./ProductAttribute";
+import type { ProductVariant } from "./productVariant";
 
 export interface Product {
   id: number;
@@ -12,6 +13,7 @@ export interface Product {
   status: number;
   image?: string;
   product_attribute: ProductAttribute[];
+  product_variant?: ProductVariant[];
 }
 
 export interface ProductWithBrandId {

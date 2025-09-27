@@ -1,3 +1,4 @@
+import type { ProductImage } from "./ProductImage";
 import type { VariantAttribute } from "./VariantAttribute";
 
 export interface ProductVariant {
@@ -8,4 +9,5 @@ export interface ProductVariant {
   price: number;
   status: number;
   variant_attributes: VariantAttribute[];
+  product_images?: ProductImage[];
 }

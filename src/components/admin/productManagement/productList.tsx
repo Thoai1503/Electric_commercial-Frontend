@@ -7,6 +7,8 @@ import { FiChevronDown, FiChevronUp, FiEye } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import productQuery from "../../../module/admin/query/product";
 import { Link } from "react-router-dom";
+import { CContainer } from "@coreui/react";
+import type { ProductVariant } from "../../../type/productVariant";
 
 // Badge theo status (0 = Inactive, 1 = Active)
 const getBadge = (status: number) => {
@@ -97,19 +99,44 @@ export const ProductList = () => {
         details: (item: any) => (
           <CCollapse visible={details.includes(item.id)}>
             <div className="p-3">
-              <h4>{item.name}</h4>
-              <p>
-                <b>Brand:</b> {item.brand?.name} <br />
-                <b>Category:</b> {item.category?.name} <br />
-                <b>Status:</b> {item.status === 1 ? "Active" : "Inactive"}
-              </p>
-              <CButton size="sm" color="info">
-                Edit
-              </CButton>
-              <CButton size="sm" color="danger" className="ms-1">
-                Delete
-              </CButton>
+              <h4>Danh sách biến thể</h4>
             </div>
+            <CContainer>
+              <CContainer>
+                <table className="table mb-5">
+                  <thead>
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Ảnh</th>
+                      <th scope="col">Tên</th>
+                      <th scope="col">SKU</th>
+                      <th scope="col">Giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.product_variant &&
+                      item.product_variant.length > 0 &&
+                      item.product_variant.map((i: ProductVariant) => (
+                        <>
+                          <tr key={i.id}>
+                            <th scope="row">3</th>
+                            <th>
+                              <img
+                                width={50}
+                                height={50}
+                                src={`http://electriccatalogstoreapi123456789.somee.com/uploads/${i.product_images?.[0]?.url}`}
+                              />
+                            </th>
+                            <td>{i.name}</td>
+                            <th>{i.sku}</th>
+                            <td>{i.price}</td>
+                          </tr>
+                        </>
+                      ))}
+                  </tbody>
+                </table>
+              </CContainer>
+            </CContainer>
           </CCollapse>
         ),
       }}
