@@ -1,15 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateVariantAttributeList } from "../../service/variantAttribute";
 import type { VariantAttribute } from "../../../../type/VariantAttribute";
-import { deleteProductVariant } from "../../service/productVariant";
+import {
+  deleteProductVariant,
+  updateProductVariant,
+} from "../../service/productVariant";
+import { useState } from "react";
+import type { ProductVariant } from "../../../../type/productVariant";
+import productVariantQuery from "../../query/productVariant";
 
-export const useVariantAttributeMutation = () => {
+export const useVariantAttributeMutation = (variant_id: number) => {
   const queryClient = useQueryClient();
+  const [isEdit, setIsEdit] = useState(false);
   const { isPending, mutate: update } = useMutation({
     mutationFn: (list: VariantAttribute[]) => updateVariantAttributeList(list),
     onSuccess: (data) => {
       if (!data) alert("Cập nhật chưa thành công");
       alert("Cập nhật thành công");
+      setIsEdit(!isEdit);
     },
     onError: (error) => {
       alert("Lỗi: " + error.message);
@@ -26,7 +34,9 @@ export const useVariantAttributeMutation = () => {
       console.log(data);
       alert("Xoá biến thể thành công");
       queryClient.invalidateQueries({
-        queryKey: [],
+        queryKey: [
+          productVariantQuery.detail_by_product_id(variant_id).queryKey,
+        ],
       });
     },
     onError: (er) => {
@@ -34,5 +44,22 @@ export const useVariantAttributeMutation = () => {
     },
   });
 
-  return { isPending, update, handleDelete, isPendingDelete };
+  const { mutate: updateVariant } = useMutation({
+    mutationFn: (en: Partial<ProductVariant>) => updateProductVariant(en),
+    onSuccess: (data) => {
+      if (!data) alert("Cập nhật không thành công");
+      queryClient.invalidateQueries();
+    },
+    onError: (error) => alert("Lỗi: " + error.message),
+  });
+
+  return {
+    isPending,
+    update,
+    handleDelete,
+    isPendingDelete,
+    isEdit,
+    setIsEdit,
+    updateVariant,
+  };
 };

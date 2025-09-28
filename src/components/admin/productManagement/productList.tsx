@@ -124,7 +124,7 @@ export const ProductList = () => {
                               <img
                                 width={50}
                                 height={50}
-                                src={`/uploads/${i.product_images?.[0]?.url}`}
+                                src={`http://electriccatalogstoreapi123456789.somee.com/uploads/${i.product_images?.[0]?.url}`}
                               />
                             </th>
                             <td>{i.name}</td>

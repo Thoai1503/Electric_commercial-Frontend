@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
 import { useVariantConfigSection } from "../../../module/admin/hook/product_detail_page/useVariantConfigSection";
 
 import AddVariantModal from "./AddVariantModal/AddVariantModal";
-import VariantItem from "../header/VariantItem/VariantItem";
+import VariantItem from "./VariantItem/VariantItem";
 
 interface Prop {
   id: number;
@@ -24,56 +24,6 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
       {" "}
       <div className="mb-4">
         <h6 className="mb-3">📌 Danh sách các biến thể:</h6>
-
-        {/* <div className="mb-3">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              checked={selectedVariantAttributes.ram}
-              onChange={(e) =>
-                setSelectedVariantAttributes({
-                  ...selectedVariantAttributes,
-                  ram: e.target.checked,
-                })
-              }
-            />
-            <label className="form-check-label">RAM (8GB, 12GB, 16GB)</label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              checked={selectedVariantAttributes.storage}
-              onChange={(e) =>
-                setSelectedVariantAttributes({
-                  ...selectedVariantAttributes,
-                  storage: e.target.checked,
-                })
-              }
-            />
-            <label className="form-check-label">
-              Storage (128GB, 256GB, 512GB)
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              checked={selectedVariantAttributes.color}
-              onChange={(e) =>
-                setSelectedVariantAttributes({
-                  ...selectedVariantAttributes,
-                  color: e.target.checked,
-                })
-              }
-            />
-            <label className="form-check-label">
-              Màu sắc (Black, Silver, Gold)
-            </label>
-          </div>
-        </div> */}
-
         <div className="table-responsive mb-3">
           <table className="table table-bordered">
             <thead className="table-light">

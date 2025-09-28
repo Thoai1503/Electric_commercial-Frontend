@@ -24,8 +24,19 @@ export const getVariantByProductId = async (
 };
 
 export const deleteProductVariant = async (id: number): Promise<boolean> => {
+  return await catalogRequest
+    .delete(`/productvariant/${id}`)
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const updateProductVariant = async (
+  en: Partial<ProductVariant>
+): Promise<boolean> => {
   return await catalogRequestTesting
-    .delete(`/api/productvariant/${id}`)
+    .post(`/api/productvariant/update`, en)
     .then((res) => res.data)
     .catch((error) => {
       throw error;

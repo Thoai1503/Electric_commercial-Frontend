@@ -99,7 +99,7 @@ const AddImageModal = ({
               >
                 <AspectRatio ratio="1" sx={{ minWidth: 200 }}>
                   <img
-                    srcSet={`${item.url}?h=120&fit=crop&auto=format&dpr=2 2x`}
+                    srcSet={`${item.url}?h=120&fit=crop&auto=format&dpr=2 2x}`}
                     src={`/uploads/${item.url}?h=120&fit=crop&auto=format`}
                     alt={item.url}
                   />
@@ -211,9 +211,9 @@ const AddImageModal = ({
           </CButton>
         </CModalFooter>
       </CModal>
-      <CButton color="primary" onClick={() => addToast(exampleToast)}>
+      {/* <CButton color="primary" onClick={() => addToast(exampleToast)}>
         Send a toast
-      </CButton>
+      </CButton> */}
       <CToaster
         className="p-3"
         placement="top-end"
