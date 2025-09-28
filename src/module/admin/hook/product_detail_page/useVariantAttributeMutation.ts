@@ -18,9 +18,14 @@ export const useVariantAttributeMutation = (variant_id: number) => {
       if (!data) alert("Cập nhật chưa thành công");
       alert("Cập nhật thành công");
       setIsEdit(!isEdit);
+      queryClient.invalidateQueries({
+        queryKey: [
+          productVariantQuery.detail_by_product_id(variant_id).queryKey,
+        ],
+      });
     },
     onError: (error) => {
-      alert("Lỗi: " + error.message);
+      alert("Lỗi cập nhật Attri: " + error.message);
     },
   });
 

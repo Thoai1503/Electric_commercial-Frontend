@@ -33,6 +33,8 @@ const VariantItem = ({ item, index }: Prop) => {
   );
 
   const handleSubmit = () => {
+    console.log("Data: " + JSON.stringify(variantAttributeList));
+    // return;
     updateVariant(productVariant);
     update(variantAttributeList);
   };

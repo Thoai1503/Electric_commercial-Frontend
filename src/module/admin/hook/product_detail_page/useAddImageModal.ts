@@ -65,7 +65,7 @@ export const useAddImageModals = (
     formData.append("variant_id", String(variant_id));
     try {
       const response = await fetch(
-        `http://electriccatalogstoreapi123456789.somee.com/api/productimage/variant/${variant_id}`,
+        `/api/catalog/productimage/variant/${variant_id}`,
         {
           method: "POST",
           body: formData,
