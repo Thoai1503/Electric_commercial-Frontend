@@ -10,6 +10,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/catalog/, "/api"),
       },
+      "/uploads": {
+        target: "http://electriccatalogstoreapi123456789.somee.com",
+        changeOrigin: true,
+        // No rewrite needed since we want /uploads/* to map directly
+      },
     },
   },
 });

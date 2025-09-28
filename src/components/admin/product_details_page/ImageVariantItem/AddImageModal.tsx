@@ -100,7 +100,7 @@ const AddImageModal = ({
                 <AspectRatio ratio="1" sx={{ minWidth: 200 }}>
                   <img
                     srcSet={`${item.url}?h=120&fit=crop&auto=format&dpr=2 2x`}
-                    src={`http://electriccatalogstoreapi123456789.somee.com/uploads/${item.url}?h=120&fit=crop&auto=format`}
+                    src={`/uploads/${item.url}?h=120&fit=crop&auto=format`}
                     alt={item.url}
                   />
                 </AspectRatio>

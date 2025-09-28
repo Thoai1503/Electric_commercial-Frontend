@@ -5,6 +5,10 @@
       "destination": "http://electriccatalogstoreapi123456789.somee.com/api/:path*"
     },
     {
+      "source": "/uploads/:path*",
+      "destination": "http://electriccatalogstoreapi123456789.somee.com/uploads/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
