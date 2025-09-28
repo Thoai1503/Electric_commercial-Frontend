@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { ProductVariant } from "../../../type/productVariant";
 
 export const addProductVariant = async (
@@ -35,8 +35,8 @@ export const deleteProductVariant = async (id: number): Promise<boolean> => {
 export const updateProductVariant = async (
   en: Partial<ProductVariant>
 ): Promise<boolean> => {
-  return await catalogRequestTesting
-    .post(`/api/productvariant/update`, en)
+  return await catalogRequest
+    .post(`/productvariant/update`, en)
     .then((res) => res.data)
     .catch((error) => {
       throw error;

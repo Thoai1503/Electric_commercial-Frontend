@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { Product } from "../../../type/Product";
 
 export const getAllProduct = async (): Promise<Partial<Product>[]> => {
@@ -22,8 +22,8 @@ export const getProductById = async (id: number): Promise<Product> => {
 export const createProduct = async (
   product: Partial<Product>
 ): Promise<Partial<Product>> => {
-  return await catalogRequestTesting
-    .post<Partial<Product>>("/api/product", product)
+  return await catalogRequest
+    .post<Partial<Product>>("/product", product)
     .then((res) => res.data)
     .catch((error) => {
       throw error;
