@@ -75,15 +75,18 @@ export const useAddImageModals = (
       if (!response.ok) throw new Error("Upload failed");
 
       const result = await response.json();
-      console.log("✅ Upload thành công:", result);
+      alert("✅ Upload thành công:" + result);
+      queryClient.invalidateQueries({
+        queryKey: productImageQuery.get_by_variant_id(variant_id).queryKey,
+      });
 
       // reset
       setSelectedFiles([]);
       setSelectedImages([]);
-      setVisible(false);
     } catch (err) {
       console.error("❌ Upload error:", err);
       alert("Upload thất bại!");
+      setVisible(false);
     }
   };
 

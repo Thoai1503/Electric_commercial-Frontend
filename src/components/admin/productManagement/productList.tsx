@@ -122,9 +122,12 @@ export const ProductList = () => {
                             <th scope="row">3</th>
                             <th>
                               <img
-                                width={50}
-                                height={50}
+                                width={120}
+                                height={120}
                                 src={`/uploads/${i.product_images?.[0]?.url}`}
+                                style={{
+                                  objectFit: "contain", // hoặc "cover"
+                                }}
                               />
                             </th>
                             <td>{i.name}</td>

@@ -8,11 +8,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import "./style.css";
+import { useQuery } from "@tanstack/react-query";
+import { productVariantQuery } from "../../module/client/query/productVariant";
 
 const HomeProList = ({ match }: any) => {
   const [activeFilter, setActiveFilter] = useState<string>("*");
   const id = match?.params.id;
   console.log("Id: " + id);
+  const { data } = useQuery(productVariantQuery.list);
   const products = [
     {
       id: 1,
@@ -45,6 +48,7 @@ const HomeProList = ({ match }: any) => {
   ];
 
   const filters = ["*", "Apple", "Samsung", "Redmi"];
+
   return (
     <>
       <div className="row mt-5">
@@ -59,472 +63,153 @@ const HomeProList = ({ match }: any) => {
                   <Swiper
                     modules={[Navigation, Autoplay]}
                     navigation
-                    spaceBetween={5}
-                    slidesPerView={5} // số item hiển thị cùng lúc
-                    loop={true} // chạy vòng lặp vô hạn
+                    spaceBetween={15}
+                    slidesPerView={5}
+                    loop={true}
                     autoplay={{
-                      delay: 2000, // 3s đổi slide
-                      disableOnInteraction: false, // không dừng khi user bấm vào
+                      delay: 2000,
+                      disableOnInteraction: false,
                     }}
                   >
-                    <SwiperSlide>
-                      <div
-                        className="col-md-3 col-lg-6 col-xl-4"
-                        style={{ margin: "2px", width: "250px" }}
-                      >
-                        <div className="card" style={{ borderRadius: "5px" }}>
+                    {data?.map((item) => (
+                      <SwiperSlide key={item.id}>
+                        <div style={{ padding: "0 5px" }}>
                           <div
-                            className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light"
+                            className="card"
+                            style={{
+                              borderRadius: "15px",
+                              height: "100%",
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
                           >
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/12.webp"
+                            {/* Container ảnh với tỉ lệ cố định */}
+                            <div
+                              className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
+                              data-mdb-ripple-color="light"
                               style={{
+                                position: "relative",
+                                width: "100%",
+                                paddingTop: "75%", // Tỉ lệ 4:3
+                                overflow: "hidden",
                                 borderTopLeftRadius: "15px",
                                 borderTopRightRadius: "15px",
+                                backgroundColor: "#f8f9fa",
                               }}
-                              className="img-fluid"
-                              alt="Laptop"
-                            />
-                            <a href="#!">
-                              <div className="mask"></div>
-                            </a>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <div>
+                            >
+                              <img
+                                src={
+                                  item?.product_images?.[0]?.url
+                                    ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                    : "https://via.placeholder.com/300x225?text=No+Image"
+                                }
+                                style={{
+                                  position: "absolute",
+                                  top: "50%",
+                                  left: "50%",
+                                  transform: "translate(-50%, -50%)",
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "contain",
+                                  padding: "10px",
+                                }}
+                                className="img-fluid"
+                                alt={item.name || "Product"}
+                              />
+                              <a href="#!">
+                                <div className="mask"></div>
+                              </a>
+                            </div>
+
+                            {/* Card body với chiều cao cố định */}
+                            <div
+                              className="card-body pb-0"
+                              style={{ minHeight: "100px" }}
+                            >
+                              <div className="d-flex justify-content-between align-items-start">
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <p
+                                    style={{
+                                      marginBottom: "0.25rem",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    <a href="#!" className="text-dark">
+                                      {item.name || "Product Name"}
+                                    </a>
+                                  </p>
+                                  <p className="small text-muted">Laptops</p>
+                                </div>
+                                <div style={{ marginLeft: "10px" }}>
+                                  <div className="d-flex flex-row justify-content-end mt-1 mb-2 text-danger">
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                    <i className="fas fa-star"></i>
+                                  </div>
+                                  <p
+                                    className="small text-muted"
+                                    style={{ fontSize: "0.7rem" }}
+                                  >
+                                    Rated 4.0/5
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <hr className="my-0" />
+
+                            {/* Price section */}
+                            <div
+                              className="card-body pb-0"
+                              style={{ minHeight: "70px" }}
+                            >
+                              <div className="d-flex justify-content-between">
                                 <p>
                                   <a href="#!" className="text-dark">
-                                    Dell Xtreme 270
+                                    ${item.price || "N/A"}
                                   </a>
                                 </p>
-                                <p className="small text-muted">Laptops</p>
+                                <p className="text-dark">#### 8787</p>
                               </div>
-                              <div>
-                                <div className="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                                <p className="small text-muted">Rated 4.0/5</p>
-                              </div>
+                              <p className="small text-muted">VISA Platinum</p>
                             </div>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <a href="#!" className="text-dark">
-                                  $3,999
+
+                            <hr className="my-0" />
+
+                            {/* Action buttons */}
+                            <div
+                              className="card-body"
+                              style={{ marginTop: "auto" }}
+                            >
+                              <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
+                                <a href="#!" className="text-dark fw-bold">
+                                  Cancel
                                 </a>
-                              </p>
-                              <p className="text-dark">#### 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                              <a href="#!" className="text-dark fw-bold">
-                                Cancel
-                              </a>
-                              <button
-                                type="button"
-                                data-mdb-button-init
-                                data-mdb-ripple-init
-                                className="btn btn-outline-primary"
-                              >
-                                Buy now
-                              </button>
+                                <button
+                                  type="button"
+                                  data-mdb-button-init
+                                  data-mdb-ripple-init
+                                  className="btn btn-outline-primary btn-sm"
+                                >
+                                  Buy now
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <div
-                        className="col-md-3 col-lg-6 col-xl-4"
-                        style={{ margin: "2px", width: "250px" }}
-                      >
-                        <div className="card" style={{ borderRadius: "5px" }}>
-                          <div
-                            className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light"
-                          >
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/12.webp"
-                              style={{
-                                borderTopLeftRadius: "15px",
-                                borderTopRightRadius: "15px",
-                              }}
-                              className="img-fluid"
-                              alt="Laptop"
-                            />
-                            <a href="#!">
-                              <div className="mask"></div>
-                            </a>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <div>
-                                <p>
-                                  <a href="#!" className="text-dark">
-                                    Dell Xtreme 270
-                                  </a>
-                                </p>
-                                <p className="small text-muted">Laptops</p>
-                              </div>
-                              <div>
-                                <div className="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                                <p className="small text-muted">Rated 4.0/5</p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <a href="#!" className="text-dark">
-                                  $3,999
-                                </a>
-                              </p>
-                              <p className="text-dark">#### 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                              <a href="#!" className="text-dark fw-bold">
-                                Cancel
-                              </a>
-                              <button
-                                type="button"
-                                data-mdb-button-init
-                                data-mdb-ripple-init
-                                className="btn btn-outline-primary"
-                              >
-                                Buy now
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <div
-                        className="col-md-3 col-lg-6 col-xl-4"
-                        style={{ margin: "2px", width: "250px" }}
-                      >
-                        <div className="card" style={{ borderRadius: "5px" }}>
-                          <div
-                            className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light"
-                          >
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/12.webp"
-                              style={{
-                                borderTopLeftRadius: "15px",
-                                borderTopRightRadius: "15px",
-                              }}
-                              className="img-fluid"
-                              alt="Laptop"
-                            />
-                            <a href="#!">
-                              <div className="mask"></div>
-                            </a>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <div>
-                                <p>
-                                  <a href="#!" className="text-dark">
-                                    Dell Xtreme 270
-                                  </a>
-                                </p>
-                                <p className="small text-muted">Laptops</p>
-                              </div>
-                              <div>
-                                <div className="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                                <p className="small text-muted">Rated 4.0/5</p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <a href="#!" className="text-dark">
-                                  $3,999
-                                </a>
-                              </p>
-                              <p className="text-dark">#### 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                              <a href="#!" className="text-dark fw-bold">
-                                Cancel
-                              </a>
-                              <button
-                                type="button"
-                                data-mdb-button-init
-                                data-mdb-ripple-init
-                                className="btn btn-outline-primary"
-                              >
-                                Buy now
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <div
-                        className="col-md-3 col-lg-6 col-xl-4"
-                        style={{ margin: "2px", width: "250px" }}
-                      >
-                        <div className="card" style={{ borderRadius: "5px" }}>
-                          <div
-                            className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light"
-                          >
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/12.webp"
-                              style={{
-                                borderTopLeftRadius: "15px",
-                                borderTopRightRadius: "15px",
-                              }}
-                              className="img-fluid"
-                              alt="Laptop"
-                            />
-                            <a href="#!">
-                              <div className="mask"></div>
-                            </a>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <div>
-                                <p>
-                                  <a href="#!" className="text-dark">
-                                    Dell Xtreme 270
-                                  </a>
-                                </p>
-                                <p className="small text-muted">Laptops</p>
-                              </div>
-                              <div>
-                                <div className="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                                <p className="small text-muted">Rated 4.0/5</p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <a href="#!" className="text-dark">
-                                  $3,999
-                                </a>
-                              </p>
-                              <p className="text-dark">#### 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                              <a href="#!" className="text-dark fw-bold">
-                                Cancel
-                              </a>
-                              <button
-                                type="button"
-                                data-mdb-button-init
-                                data-mdb-ripple-init
-                                className="btn btn-outline-primary"
-                              >
-                                Buy now
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <div
-                        className="col-md-3 col-lg-6 col-xl-4"
-                        style={{ margin: "2px", width: "250px" }}
-                      >
-                        <div className="card" style={{ borderRadius: "5px" }}>
-                          <div
-                            className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light"
-                          >
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/12.webp"
-                              style={{
-                                borderTopLeftRadius: "15px",
-                                borderTopRightRadius: "15px",
-                              }}
-                              className="img-fluid"
-                              alt="Laptop"
-                            />
-                            <a href="#!">
-                              <div className="mask"></div>
-                            </a>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <div>
-                                <p>
-                                  <a href="#!" className="text-dark">
-                                    Dell Xtreme 270
-                                  </a>
-                                </p>
-                                <p className="small text-muted">Laptops</p>
-                              </div>
-                              <div>
-                                <div className="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                                <p className="small text-muted">Rated 4.0/5</p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <a href="#!" className="text-dark">
-                                  $3,999
-                                </a>
-                              </p>
-                              <p className="text-dark">#### 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                              <a href="#!" className="text-dark fw-bold">
-                                Cancel
-                              </a>
-                              <button
-                                type="button"
-                                data-mdb-button-init
-                                data-mdb-ripple-init
-                                className="btn btn-outline-primary"
-                              >
-                                Buy now
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <div
-                        className="col-md-3 col-lg-6 col-xl-4"
-                        style={{ margin: "2px", width: "250px" }}
-                      >
-                        <div className="card" style={{ borderRadius: "5px" }}>
-                          <div
-                            className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                            data-mdb-ripple-color="light"
-                          >
-                            <img
-                              src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/12.webp"
-                              style={{
-                                borderTopLeftRadius: "15px",
-                                borderTopRightRadius: "15px",
-                              }}
-                              className="img-fluid"
-                              alt="Laptop"
-                            />
-                            <a href="#!">
-                              <div className="mask"></div>
-                            </a>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <div>
-                                <p>
-                                  <a href="#!" className="text-dark">
-                                    Dell Xtreme 270
-                                  </a>
-                                </p>
-                                <p className="small text-muted">Laptops</p>
-                              </div>
-                              <div>
-                                <div className="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                  <i className="fas fa-star"></i>
-                                </div>
-                                <p className="small text-muted">Rated 4.0/5</p>
-                              </div>
-                            </div>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <a href="#!" className="text-dark">
-                                  $3,999
-                                </a>
-                              </p>
-                              <p className="text-dark">#### 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <hr className="my-0" />
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                              <a href="#!" className="text-dark fw-bold">
-                                Cancel
-                              </a>
-                              <button
-                                type="button"
-                                data-mdb-button-init
-                                data-mdb-ripple-init
-                                className="btn btn-outline-primary"
-                              >
-                                Buy now
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
+                      </SwiperSlide>
+                    ))}
                   </Swiper>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        {/* <TopSaleCarousel /> */}
       </div>
+
       <section id="special-price">
         <div className="container">
           <h4 className="font-size-20">Special Price</h4>
@@ -553,12 +238,45 @@ const HomeProList = ({ match }: any) => {
                   className={`col-md-3 product-filter-item border ${!visible ? "hidden" : ""}`}
                 >
                   <div className="product text-center p-3">
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      className="img-fluid"
-                    />
-                    <h6 className="mt-2">{product.name}</h6>
+                    {/* Container ảnh với tỉ lệ cố định cho grid */}
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        paddingTop: "100%", // Tỉ lệ 1:1
+                        overflow: "hidden",
+                        backgroundColor: "#f8f9fa",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          padding: "10px",
+                        }}
+                      />
+                    </div>
+                    <h6
+                      className="mt-2"
+                      style={{
+                        minHeight: "2.5rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {product.name}
+                    </h6>
                     <div className="price py-2">${product.price}</div>
                     <button
                       type="button"

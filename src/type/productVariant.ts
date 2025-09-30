@@ -8,6 +8,6 @@ export interface ProductVariant {
   sku: string;
   price: number;
   status: number;
-  variant_attributes: VariantAttribute[];
+  variant_attributes?: VariantAttribute[];
   product_images?: ProductImage[];
 }
