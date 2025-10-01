@@ -1,5 +1,5 @@
-import HomeProList from "../../components/client/HomeProList";
 import Client from "../../layout/Client";
+import Home from "../../page/client/HomePage";
 import Login from "../../page/client/Login";
 
 export const clientRoutes = [
@@ -7,7 +7,7 @@ export const clientRoutes = [
     path: "/",
     element: <Client />,
     children: [
-      { path: "", element: <HomeProList /> },
+      { path: "", element: <Home /> },
 
       {
         path: "/products",

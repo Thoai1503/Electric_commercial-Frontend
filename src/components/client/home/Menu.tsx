@@ -13,7 +13,7 @@ const Menu = () => {
   const categories = [
     {
       id: 1,
-      name: "Điện thoại",
+      name: "Điện thoại, Tablet",
       count: 14,
       icon: <FaMobileAlt />,
       children: [
@@ -139,7 +139,8 @@ const Menu = () => {
               className="d-flex align-items-center gap-2"
               style={{ color: "black" }}
             >
-              <span style={{ color: "#06b6d4" }}> {cat.icon}</span> {cat.name}
+              <span style={{ color: "#06b6d4" }}> {cat.icon}</span>{" "}
+              <strong>{cat.name}</strong>
             </span>
           </li>
         ))}

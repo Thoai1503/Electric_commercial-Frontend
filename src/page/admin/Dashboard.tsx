@@ -212,6 +212,7 @@ const Dashboard = () => {
   return (
     <>
       <WidgetsDropdown className="mb-4" />
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
