@@ -110,8 +110,6 @@ const Home = () => {
               >
                 SẢN PHẨM NỔI BẬT
               </h4>{" "}
-              {/* <hr style={{ color: "#48d6f0ff" }} />
-               */}
               <div className="col-md-12 mt-4">
                 <div className="row justify-content-center">
                   <Swiper
@@ -161,7 +159,7 @@ const Home = () => {
                           position: "absolute",
                           top: "50%",
                           left: "50%",
-                          transform: "translate(-50%, -50%)",
+                          // transform: "translate(-50%, -50%)",
                           zIndex: 1000,
                         }}
                       >
