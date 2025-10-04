@@ -10,12 +10,17 @@ import "swiper/css/navigation";
 import "../../scss/style.scss";
 import { useQuery } from "@tanstack/react-query";
 import { productVariantQuery } from "../../module/client/query/productVariant";
-//import { productVariantQuery } from "../../module/client/query/productVariant";
+import Carousel from "../../components/client/home/Carousel";
+import Menu from "../../components/client/home/Menu";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../store/store";
+import { addToCartAsync } from "../../reducers/cartReducer";
 
-const Home = ({ match }: any) => {
+const Home = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector((state: RootState) => state.cart.loading);
   const [activeFilter, setActiveFilter] = useState<string>("*");
-  const id = match?.params.id;
-  console.log("Id: " + id);
+
   const { data } = useQuery(productVariantQuery.list);
   const formatVND = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -72,6 +77,14 @@ const Home = ({ match }: any) => {
 
   return (
     <>
+      <div className="row justify-content-center">
+        <div className="col-md-3">
+          <Menu />
+        </div>
+        <div className="col-md-9 mt-5">
+          <Carousel />
+        </div>
+      </div>
       <div className="row mt-2">
         <section>
           <div
@@ -83,18 +96,22 @@ const Home = ({ match }: any) => {
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              minHeight: "80vh", // full screen height
+              minHeight: "70vh",
+              height: "auto",
               width: "100%",
             }}
           >
             <div className="row">
-              <h3
+              <h4
                 style={{
                   color: "#48d6f0ff",
+                  borderBottom: "1px solid #48d6f0ff",
                 }}
               >
                 SẢN PHẨM NỔI BẬT
-              </h3>
+              </h4>{" "}
+              {/* <hr style={{ color: "#48d6f0ff" }} />
+               */}
               <div className="col-md-12 mt-4">
                 <div className="row justify-content-center">
                   <Swiper
@@ -108,6 +125,10 @@ const Home = ({ match }: any) => {
                       disableOnInteraction: false,
                     }}
                     breakpoints={{
+                      80: {
+                        slidesPerView: 1,
+                        spaceBetween: 10,
+                      },
                       480: {
                         slidesPerView: 2,
                         spaceBetween: 10,
@@ -130,26 +151,42 @@ const Home = ({ match }: any) => {
                       },
                     }}
                   >
+                    {loading && (
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                        style={{
+                          width: "3rem",
+                          height: "3rem",
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    )}
                     {data?.map((item) => (
                       <SwiperSlide key={item.id}>
                         <div style={{ padding: "0 5px" }}>
                           <div
                             className="card"
                             style={{
-                              borderRadius: "15px",
+                              borderRadius: "0px",
                               height: "100%",
                               display: "flex",
                               flexDirection: "column",
                             }}
                           >
-                            {/* Container ảnh với tỉ lệ cố định */}
                             <div
                               className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
                               data-mdb-ripple-color="light"
                               style={{
                                 position: "relative",
                                 width: "100%",
-                                paddingTop: "75%", // Tỉ lệ 4:3
+                                paddingTop: "75%",
                                 overflow: "hidden",
                                 borderTopLeftRadius: "15px",
                                 borderTopRightRadius: "15px",
@@ -180,7 +217,6 @@ const Home = ({ match }: any) => {
                               </a>
                             </div>
 
-                            {/* Card body với chiều cao cố định */}
                             <div
                               className="card-body pb-0"
                               style={{ minHeight: "100px" }}
@@ -195,59 +231,45 @@ const Home = ({ match }: any) => {
                                       whiteSpace: "nowrap",
                                     }}
                                   >
-                                    <a href="#!" className="">
+                                    <p className="">
                                       {item.name || "Product Name"}
-                                    </a>
+                                    </p>
                                   </p>
                                   <p className="small text-muted">Laptops</p>
-                                </div>
-                                <div style={{ marginLeft: "10px" }}>
-                                  <div className="d-flex flex-row justify-content-end mt-1 mb-2 text-danger">
-                                    <i className="fas fa-star"></i>
-                                    <i className="fas fa-star"></i>
-                                    <i className="fas fa-star"></i>
-                                    <i className="fas fa-star"></i>
-                                  </div>
-                                  <p
-                                    className="small text-muted"
-                                    style={{ fontSize: "0.7rem" }}
-                                  >
-                                    Rated 4.0/5
-                                  </p>
                                 </div>
                               </div>
                             </div>
 
-                            <hr className="my-0" />
+                            {/* <hr className="my-0" /> */}
 
-                            {/* Price section */}
                             <div
                               className="card-body pb-0"
                               style={{ minHeight: "70px" }}
                             >
                               <div className="d-flex justify-content-between">
                                 <p>
-                                  <a href="#!" className="text-dark">
-                                    ${item.price || "N/A"}
-                                  </a>
+                                  <span style={{ color: "#1a96e2ff" }}>
+                                    <strong>
+                                      {" "}
+                                      {formatVND(item.price || 0)}
+                                    </strong>
+                                  </span>
                                 </p>
-                                <p className="text-dark">#### 8787</p>
+                                <p className="text-dark"> 8787</p>
                               </div>
                               <p className="small text-muted">VISA Platinum</p>
                             </div>
+                            {/* 
+                            <hr className="my-0" /> */}
 
-                            <hr className="my-0" />
-
-                            {/* Action buttons */}
+                            {/* Action buttons - Moved to right */}
                             <div
                               className="card-body"
                               style={{ marginTop: "auto" }}
                             >
-                              <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                                <a href="#!" className="text-dark fw-bold">
-                                  Cancel
-                                </a>
+                              <div className="d-flex justify-content-end align-items-center pb-2 mb-1">
                                 <button
+                                  onClick={() => dispatch(addToCartAsync(item))}
                                   type="button"
                                   data-mdb-button-init
                                   data-mdb-ripple-init
@@ -269,7 +291,7 @@ const Home = ({ match }: any) => {
         </section>
       </div>
 
-      <section id="special-price">
+      <section id="special-price" className="mt-5">
         <div className="container mt-5">
           <h3 className="font-size-20 mb-0">ĐIỆN THOẠI HOT</h3>
 
@@ -301,14 +323,13 @@ const Home = ({ match }: any) => {
                       borderRadius: "12px",
                     }}
                   >
-                    {/* Container ảnh với tỉ lệ cố định */}
                     <div
                       className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
                       data-mdb-ripple-color="light"
                       style={{
                         position: "relative",
                         width: "100%",
-                        paddingTop: "75%", // Tỉ lệ 4:3
+                        paddingTop: "75%",
                         overflow: "hidden",
                         borderTopLeftRadius: "15px",
                         borderTopRightRadius: "15px",
@@ -339,7 +360,6 @@ const Home = ({ match }: any) => {
                       </a>
                     </div>
 
-                    {/* Card body với chiều cao cố định */}
                     <div
                       className="card-body pb-0"
                       style={{ minHeight: "100px" }}
@@ -379,7 +399,6 @@ const Home = ({ match }: any) => {
 
                     <hr className="my-0" />
 
-                    {/* Price section */}
                     <div
                       className="card-body pb-0"
                       style={{ minHeight: "70px" }}
@@ -392,25 +411,33 @@ const Home = ({ match }: any) => {
                           <strong> {formatVND(item.price || 0)}</strong>
                         </h5>
 
-                        <p className="text-dark">#### 8787</p>
+                        <p className="text-dark"> 8787</p>
                       </div>
                     </div>
 
                     <hr className="my-0" />
 
-                    {/* Action buttons */}
+                    {/* Action buttons - Moved to right */}
                     <div className="card-body" style={{ marginTop: "auto" }}>
-                      <div className="d-flex justify-content-between align-items-center pb-2 mb-1">
-                        <a href="#!" className="text-dark fw-bold">
-                          Cancel
-                        </a>
+                      <div className="d-flex justify-content-end align-items-center pb-2 mb-1">
                         <button
                           type="button"
                           data-mdb-button-init
                           data-mdb-ripple-init
                           className="btn btn-outline-primary btn-sm"
                         >
-                          Buy now
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-cart2"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
+                          </svg>
+                          {"    "}
+                          Buy
                         </button>
                       </div>
                     </div>
@@ -430,7 +457,6 @@ const Home = ({ match }: any) => {
                   className={`col-md-3 product-filter-item border ${!visible ? "filter-hidden" : "filter-visible"}`}
                 >
                   <div className="product text-center p-3">
-                    {/* Container ảnh với tỉ lệ cố định cho grid */}
                     <div
                       style={{
                         position: "relative",

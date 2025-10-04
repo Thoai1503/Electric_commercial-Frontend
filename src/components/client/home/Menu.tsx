@@ -35,7 +35,7 @@ const Menu = () => {
     },
     {
       id: 3,
-      name: "Phụ kiện",
+      name: "Phụ kiện, đồ chơi",
       count: 20,
       icon: <FaHeadphones />,
       children: [
@@ -49,44 +49,44 @@ const Menu = () => {
       name: "Điện thoại",
       count: 14,
       icon: <FaMobileAlt />,
-      children: [
-        { name: "iPhone", icon: <FaApple /> },
-        { name: "Samsung", icon: <FaMobileAlt /> },
-        { name: "Xiaomi", icon: <FaMobileAlt /> },
-      ],
+      // children: [
+      //   { name: "iPhone", icon: <FaApple /> },
+      //   { name: "Samsung", icon: <FaMobileAlt /> },
+      //   { name: "Xiaomi", icon: <FaMobileAlt /> },
+      // ],
     },
     {
       id: 5,
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
-      children: [
-        { name: "MacBook", icon: <FaApple /> },
-        { name: "Dell", icon: <FaWindows /> },
-        { name: "Asus", icon: <FaWindows /> },
-      ],
+      // children: [
+      //   { name: "MacBook", icon: <FaApple /> },
+      //   { name: "Dell", icon: <FaWindows /> },
+      //   { name: "Asus", icon: <FaWindows /> },
+      // ],
     },
     {
       id: 6,
       name: "Phụ kiện",
       count: 20,
       icon: <FaHeadphones />,
-      children: [
-        { name: "Chuột", icon: <FaKeyboard /> },
-        { name: "Bàn phím", icon: <FaKeyboard /> },
-        { name: "Tai nghe", icon: <FaHeadphones /> },
-      ],
+      // children: [
+      //   { name: "Chuột", icon: <FaKeyboard /> },
+      //   { name: "Bàn phím", icon: <FaKeyboard /> },
+      //   { name: "Tai nghe", icon: <FaHeadphones /> },
+      // ],
     },
     {
       id: 7,
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
-      children: [
-        { name: "MacBook", icon: <FaApple /> },
-        { name: "Dell", icon: <FaWindows /> },
-        { name: "Asus", icon: <FaWindows /> },
-      ],
+      // children: [
+      //   { name: "MacBook", icon: <FaApple /> },
+      //   { name: "Dell", icon: <FaWindows /> },
+      //   { name: "Asus", icon: <FaWindows /> },
+      // ],
     },
     {
       id: 8,
@@ -117,7 +117,7 @@ const Menu = () => {
 
   return (
     <div
-      className="menu-container"
+      className="menu-container mt-5 mr-2"
       onMouseLeave={() => setHoveredId(null)} // khi rời toàn bộ container thì ẩn panel
       style={{ borderColor: "white" }}
     >
@@ -151,7 +151,7 @@ const Menu = () => {
         <div className="submenu-panel">
           <h6 className="mb-3">{activeCategory.name}</h6>
           <ul className="list-group">
-            {activeCategory.children.map((item, index) => (
+            {activeCategory.children?.map((item, index) => (
               <li
                 key={index}
                 className="list-group-item d-flex align-items-center gap-2"

@@ -1,6 +1,7 @@
 import Client from "../../layout/Client";
 import Home from "../../page/client/HomePage";
 import Login from "../../page/client/Login";
+import CartPage from "../../page/client/CartPage";
 
 export const clientRoutes = [
   {
@@ -12,6 +13,10 @@ export const clientRoutes = [
       {
         path: "/products",
         element: <p>Product List</p>,
+      },
+      {
+        path: "/cart",
+        element: <CartPage />,
       },
     ],
   },

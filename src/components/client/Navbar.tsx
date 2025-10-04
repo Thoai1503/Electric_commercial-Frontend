@@ -89,7 +89,7 @@ const Navbar = () => {
               <li className="nav-item active">
                 <a
                   className="nav-link"
-                  href="./index.html"
+                  href="./"
                   style={{ color: "#48d6f0ff" }}
                 >
                   Home

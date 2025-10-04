@@ -7,6 +7,7 @@ export interface ProductVariant {
   name: string;
   sku: string;
   price: number;
+  quantity: number;
   status: number;
   variant_attributes?: VariantAttribute[];
   product_images?: ProductImage[];

@@ -2,7 +2,11 @@
 
 const Carousel = () => {
   return (
-    <div id="carouselExampleDark" className="carousel carousel-dark slide">
+    <div
+      id="carouselExampleDark"
+      className="carousel carousel-dark slide"
+      style={{ width: "930px" }}
+    >
       <div className="carousel-indicators">
         <button
           type="button"
@@ -28,7 +32,7 @@ const Carousel = () => {
       <div className="carousel-inner">
         <div className="carousel-item active" data-bs-interval="10000">
           <img
-            src="https://images.hindustantimes.com/tech/img/2025/01/02/1600x900/iphone_16_pro_price_india_1725908169871_1735786663922.jpg"
+            src="/banners/banner-iphone-12-8983a0b6-defe-415e-bb29-2b31927c45f4.jpg"
             className="d-block w-100"
             height={500}
             alt="..."
