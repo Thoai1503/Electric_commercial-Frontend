@@ -8,19 +8,18 @@ const CartPage = () => {
   const cartList = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
 
-  // const handleQuantityChange = (id: number, newQty: number) => {
-  //   setCart((prevCart) =>
-  //     prevCart.map((item) =>
-  //       item.id === id ? { ...item, qty: newQty > 0 ? newQty : 1 } : item
-  //     )
-  //   );
-  // };
-
   const totalPrice = cartList.reduce(
     (sum, item) => sum + item.price! * item.quantity!,
     0
   );
   const checkOut = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      alert("Vui lòng đăng nhập để thanh toán");
+      window.location.href = "/login";
+      return;
+    }
+
     const result = await axios.post(
       "http://localhost:5000/api/v1/momo-payment/create_payment"
     );
@@ -28,14 +27,14 @@ const CartPage = () => {
     const url = result.data.url;
     window.location.href = url;
   };
-  const checkOutVNPay = async () => {
-    const result = await axios.post(
-      "http://localhost:5000/api/v1/payment/create_payment_url"
-    );
-    alert("Url: " + result.data.url);
-    const url = result.data.url;
-    window.location.href = url;
-  };
+  // const checkOutVNPay = async () => {
+  //   const result = await axios.post(
+  //     "http://localhost:5000/api/v1/payment/create_payment_url"
+  //   );
+  //   alert("Url: " + result.data.url);
+  //   const url = result.data.url;
+  //   window.location.href = url;
+  // };
 
   return (
     <div className="container mt-5 mb-5 ">
