@@ -12,7 +12,7 @@ const Client = () => {
 
   console.log("Trạng thái xác thực:" + JSON.stringify(authState));
   return (
-    <div>
+    <div style={{ backgroundColor: "#F8F8FC" }}>
       {/* Debug Component - Remove after fixing */}
       {/* <AuthDebug /> */}
 

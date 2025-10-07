@@ -5,12 +5,18 @@
 @use "vendors/simplebar";
 
 body {
-  background-color: var(--cui-tertiary-bg);
+  background-color: rgb(129, 129, 129);
 }
 
 .btn-outline-primary {
   color: #06b6d4; /* màu chữ */
   border-color: #06b6d4; /* viền */
+}
+.bg-white {
+  background-color: white !important;
+}
+.text {
+  font-size: 13px;
 }
 
 .wrapper {

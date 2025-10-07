@@ -77,217 +77,223 @@ const Home = () => {
 
   return (
     <>
-      <div className="row justify-content-center">
-        <div className="col-md-3">
+      <div className="d-flex row justify-content-center">
+        <div className="d-flex col-md-3">
           <Menu />
         </div>
-        <div className="col-md-9 mt-5">
+        <div className="d-flex col-md-9 mt-5">
           <Carousel />
         </div>
       </div>
-      <div className="row mt-2">
-        <section>
-          <div
-            className="container py-5 "
-            style={{
-              backgroundColor: "black",
-              backgroundImage:
-                "url('/images/7510236c-c858-4cab-a779-c3aaf12a5643.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              minHeight: "70vh",
-              height: "auto",
-              width: "100%",
-            }}
-          >
-            <div className="row">
-              <h4
-                style={{
-                  color: "#48d6f0ff",
-                  borderBottom: "1px solid #48d6f0ff",
-                }}
-              >
-                SẢN PHẨM NỔI BẬT
-              </h4>{" "}
-              <div className="col-md-12 mt-4">
-                <div className="row justify-content-center">
-                  <Swiper
-                    modules={[Navigation, Autoplay]}
-                    navigation
-                    spaceBetween={15}
-                    slidesPerView={5}
-                    loop={true}
-                    autoplay={{
-                      delay: 2000,
-                      disableOnInteraction: false,
-                    }}
-                    breakpoints={{
-                      80: {
-                        slidesPerView: 1,
-                        spaceBetween: 10,
-                      },
-                      480: {
-                        slidesPerView: 2,
-                        spaceBetween: 10,
-                      },
-                      640: {
-                        slidesPerView: 3,
-                        spaceBetween: 12,
-                      },
-                      768: {
-                        slidesPerView: 3,
-                        spaceBetween: 15,
-                      },
-                      1024: {
-                        slidesPerView: 4,
-                        spaceBetween: 15,
-                      },
-                      1280: {
-                        slidesPerView: 5,
-                        spaceBetween: 15,
-                      },
-                    }}
-                  >
-                    {loading && (
-                      <div
-                        className="spinner-border text-primary"
-                        role="status"
-                        style={{
-                          width: "3rem",
-                          height: "3rem",
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          // transform: "translate(-50%, -50%)",
-                          zIndex: 1000,
-                        }}
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    )}
-                    {data?.map((item) => (
-                      <SwiperSlide key={item.id}>
-                        <div style={{ padding: "0 5px" }}>
-                          <div
-                            className="card"
-                            style={{
-                              borderRadius: "0px",
-                              height: "100%",
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
+      {data && (
+        <div className="row mt-2">
+          <section>
+            <div
+              className="container py-5 "
+              style={{
+                backgroundColor: "black",
+                backgroundImage:
+                  "url('/images/7510236c-c858-4cab-a779-c3aaf12a5643.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                minHeight: "70vh",
+                height: "auto",
+                width: "100%",
+              }}
+            >
+              <div className="row">
+                <h4
+                  style={{
+                    color: "#48d6f0ff",
+                    borderBottom: "1px solid #48d6f0ff",
+                  }}
+                >
+                  SẢN PHẨM NỔI BẬT
+                </h4>{" "}
+                <div className="col-md-12 mt-4">
+                  <div className="row justify-content-center">
+                    <Swiper
+                      modules={[Navigation, Autoplay]}
+                      navigation
+                      spaceBetween={15}
+                      slidesPerView={5}
+                      loop={true}
+                      autoplay={{
+                        delay: 2000,
+                        disableOnInteraction: false,
+                      }}
+                      breakpoints={{
+                        80: {
+                          slidesPerView: 1,
+                          spaceBetween: 10,
+                        },
+                        480: {
+                          slidesPerView: 2,
+                          spaceBetween: 10,
+                        },
+                        640: {
+                          slidesPerView: 3,
+                          spaceBetween: 12,
+                        },
+                        768: {
+                          slidesPerView: 3,
+                          spaceBetween: 15,
+                        },
+                        1024: {
+                          slidesPerView: 4,
+                          spaceBetween: 15,
+                        },
+                        1280: {
+                          slidesPerView: 5,
+                          spaceBetween: 15,
+                        },
+                      }}
+                    >
+                      {loading && (
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                          style={{
+                            width: "3rem",
+                            height: "3rem",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            // transform: "translate(-50%, -50%)",
+                            zIndex: 1000,
+                          }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      )}
+                      {data?.map((item) => (
+                        <SwiperSlide key={item.id}>
+                          <div style={{ padding: "0 5px" }}>
                             <div
-                              className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                              data-mdb-ripple-color="light"
+                              className="card"
                               style={{
-                                position: "relative",
-                                width: "100%",
-                                paddingTop: "75%",
-                                overflow: "hidden",
-                                borderTopLeftRadius: "15px",
-                                borderTopRightRadius: "15px",
-                                backgroundColor: "#f8f9fa",
+                                borderRadius: "0px",
+                                height: "100%",
+                                display: "flex",
+                                flexDirection: "column",
                               }}
                             >
-                              <img
-                                src={
-                                  item?.product_images?.[0]?.url
-                                    ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
-                                    : "https://via.placeholder.com/300x225?text=No+Image"
-                                }
+                              <div
+                                className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
+                                data-mdb-ripple-color="light"
                                 style={{
-                                  position: "absolute",
-                                  top: "50%",
-                                  left: "50%",
-                                  transform: "translate(-50%, -50%)",
+                                  position: "relative",
                                   width: "100%",
-                                  height: "100%",
-                                  objectFit: "contain",
-                                  padding: "10px",
+                                  paddingTop: "75%",
+                                  overflow: "hidden",
+                                  borderTopLeftRadius: "15px",
+                                  borderTopRightRadius: "15px",
+                                  backgroundColor: "#f8f9fa",
                                 }}
-                                className="img-fluid"
-                                alt={item.name || "Product"}
-                              />
-                              <a href="#!">
-                                <div className="mask"></div>
-                              </a>
-                            </div>
+                              >
+                                <img
+                                  src={
+                                    item?.product_images?.[0]?.url
+                                      ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                      : "https://via.placeholder.com/300x225?text=No+Image"
+                                  }
+                                  style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "contain",
+                                    padding: "10px",
+                                  }}
+                                  className="img-fluid"
+                                  alt={item.name || "Product"}
+                                />
+                                <a href="#!">
+                                  <div className="mask"></div>
+                                </a>
+                              </div>
 
-                            <div
-                              className="card-body pb-0"
-                              style={{ minHeight: "100px" }}
-                            >
-                              <div className="d-flex justify-content-between align-items-start">
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                  <p
-                                    style={{
-                                      marginBottom: "0.25rem",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    <p className="">
-                                      {item.name || "Product Name"}
+                              <div
+                                className="card-body pb-0"
+                                style={{ minHeight: "100px" }}
+                              >
+                                <div className="d-flex justify-content-between align-items-start">
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <p
+                                      style={{
+                                        marginBottom: "0.25rem",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                      }}
+                                    >
+                                      <p className="">
+                                        {item.name || "Product Name"}
+                                      </p>
                                     </p>
+                                    <p className="small text-muted">Laptops</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* <hr className="my-0" /> */}
+
+                              <div
+                                className="card-body pb-0"
+                                style={{ minHeight: "70px" }}
+                              >
+                                <div className="d-flex justify-content-between">
+                                  <p>
+                                    <span style={{ color: "#1a96e2ff" }}>
+                                      <strong>
+                                        {" "}
+                                        {formatVND(item.price || 0)}
+                                      </strong>
+                                    </span>
                                   </p>
-                                  <p className="small text-muted">Laptops</p>
+                                  <p className="text-dark"> 8787</p>
+                                </div>
+                                <p className="small text-muted">
+                                  VISA Platinum
+                                </p>
+                              </div>
+                              {/* 
+                            <hr className="my-0" /> */}
+
+                              {/* Action buttons - Moved to right */}
+                              <div
+                                className="card-body"
+                                style={{ marginTop: "auto" }}
+                              >
+                                <div className="d-flex justify-content-end align-items-center pb-2 mb-1">
+                                  <button
+                                    onClick={() =>
+                                      dispatch(addToCartAsync(item))
+                                    }
+                                    type="button"
+                                    data-mdb-button-init
+                                    data-mdb-ripple-init
+                                    className="btn btn-outline-primary btn-sm"
+                                  >
+                                    Buy now
+                                  </button>
                                 </div>
                               </div>
                             </div>
-
-                            {/* <hr className="my-0" /> */}
-
-                            <div
-                              className="card-body pb-0"
-                              style={{ minHeight: "70px" }}
-                            >
-                              <div className="d-flex justify-content-between">
-                                <p>
-                                  <span style={{ color: "#1a96e2ff" }}>
-                                    <strong>
-                                      {" "}
-                                      {formatVND(item.price || 0)}
-                                    </strong>
-                                  </span>
-                                </p>
-                                <p className="text-dark"> 8787</p>
-                              </div>
-                              <p className="small text-muted">VISA Platinum</p>
-                            </div>
-                            {/* 
-                            <hr className="my-0" /> */}
-
-                            {/* Action buttons - Moved to right */}
-                            <div
-                              className="card-body"
-                              style={{ marginTop: "auto" }}
-                            >
-                              <div className="d-flex justify-content-end align-items-center pb-2 mb-1">
-                                <button
-                                  onClick={() => dispatch(addToCartAsync(item))}
-                                  type="button"
-                                  data-mdb-button-init
-                                  data-mdb-ripple-init
-                                  className="btn btn-outline-primary btn-sm"
-                                >
-                                  Buy now
-                                </button>
-                              </div>
-                            </div>
                           </div>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
+      )}
 
       <section id="special-price" className="mt-5">
         <div className="container mt-5">

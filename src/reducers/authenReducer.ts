@@ -64,7 +64,15 @@ const authenSlice = createSlice({
     },
     clearUser(state) {
       state.user = null;
+
       state.isAuthenticated = false;
+      //remove tokens from localStorage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+      state.accessToken = "";
+      state.refreshToken = "";
+      state.error = null;
     },
   },
   extraReducers: (builder) => {

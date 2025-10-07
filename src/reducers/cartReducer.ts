@@ -34,6 +34,7 @@ export const addToCartAsync = createAsyncThunk<
     const ok = await new Promise<boolean>((resolve) =>
       setTimeout(() => resolve(true), 700)
     );
+
     if (!ok) {
       return rejectWithValue("Sản phẩm đã hết hàng");
     }

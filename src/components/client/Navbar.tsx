@@ -1,16 +1,20 @@
 import { useState } from "react";
 import type { MouseEvent } from "react";
+import { clearUser } from "../../reducers/authenReducer";
+import { useDispatch } from "react-redux";
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
+  const dispatch = useDispatch();
+  const user = localStorage.getItem("user");
   const logout = () => {
-    setTimeout(() => {
-      console.log("User logged out");
-      // In a real app, you would handle logout here
-      // localStorage.removeItem("token");
-      // localStorage.removeItem("user");
-      // navigate("/");
-    }, 1500);
+    // setTimeout(() => {
+    //   console.log("User logged out");
+    //   // In a real app, you would handle logout here
+    //   // localStorage.removeItem("token");
+    //   // localStorage.removeItem("user");
+    //   // navigate("/");
+    // }, 1500);
+    dispatch(clearUser());
   };
 
   const handleMouseEnter = (dropdown: string) => {
@@ -481,8 +485,10 @@ const Navbar = () => {
             </ul>
 
             <div className="font-size-12">
-              <a
-                href="./cart.html"
+              <button
+                onClick={() => {
+                  logout();
+                }}
                 className="d-flex align-items-center rounded-pill bg-primary"
               >
                 <span className="font-size-14 px-2 py-2 text-white">
@@ -491,7 +497,16 @@ const Navbar = () => {
                 <div className="px-3 py-2 font-size-14 rounded-pill text-black bg-white">
                   0
                 </div>
-              </a>
+              </button>
+              {user ? (
+                <span className="text-white mx-3">
+                  Hello, {JSON.parse(user).name}
+                </span>
+              ) : (
+                <a href="./login" className="btn btn-primary text-white">
+                  Login
+                </a>
+              )}
             </div>
           </div>
         </div>
