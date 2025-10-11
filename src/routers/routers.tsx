@@ -12,7 +12,7 @@ import AdminAuth from "../components/auth/adminAuth";
 //
 export const routerRoot = createBrowserRouter([
   ...clientRoutes,
-  //...adminRoutes,
+
   {
     path: "admin",
     element: <AdminAuth />,

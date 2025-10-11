@@ -30,10 +30,18 @@ export const addToCartAsync = createAsyncThunk<
   { rejectValue: string }
 >("cart/addToCartAsync", async (item, { rejectWithValue }) => {
   try {
+    const user = localStorage.getItem("user");
+    let ok = false;
     // Gọi API check số lượng trước
-    const ok = await new Promise<boolean>((resolve) =>
-      setTimeout(() => resolve(true), 700)
-    );
+    if (!user) {
+      ok = await new Promise<boolean>((resolve) =>
+        setTimeout(() => resolve(true), 700)
+      );
+    } else {
+      ok = await new Promise<boolean>((resolve) =>
+        setTimeout(() => resolve(true), 700)
+      );
+    }
 
     if (!ok) {
       return rejectWithValue("Sản phẩm đã hết hàng");

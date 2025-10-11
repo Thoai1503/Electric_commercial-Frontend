@@ -11,6 +11,7 @@ export const useLoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authState = useSelector((state: RootState) => state.authen);
+  //const location = useLocation();
 
   const [loginValue, setLoginValue] = useState<UserLogin>({
     email: "",
@@ -19,6 +20,7 @@ export const useLoginPage = () => {
   const [showError, setShowError] = useState(false);
 
   const login = async () => {
+    // alert("Path: " + location.pathname);
     const data = await userLoginService(loginValue);
     return data;
   };

@@ -21,9 +21,7 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
   //const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { accessToken, loading, error } = useSelector(
-    (state: RootState) => state.authen
-  );
+  const { error } = useSelector((state: RootState) => state.authen);
 
   // Check for both possible token keys
   const token =
@@ -32,30 +30,8 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
     ? JSON.parse(localStorage.getItem("user") as string)
     : null;
 
-  console.log(
-    "AuthApp - Loading:",
-    loading,
-    "AccessToken:",
-    accessToken,
-    "Error:",
-    error
-  );
-
   useEffect(() => {
-    console.log("AdminAuth - Token:", token ? "EXISTS" : "MISSING");
-    console.log("AdminAuth - User:", user);
-    console.log("AdminAuth - User role/rule:", user?.role || user?.rule);
-
     dispatch(refreshToken());
-    // if (!token) {
-    //   console.log("AdminAuth - No token found, redirecting to login");
-    //   // not logged in → redirect to login
-    //   navigate("/", {
-    //     replace: true,
-    //     state: { from: location.pathname },
-    //   });
-    //   return;
-    // }
 
     // Check for admin role - handle both 'role' and 'rule' properties
     const userRole = user?.role || user?.rule;
