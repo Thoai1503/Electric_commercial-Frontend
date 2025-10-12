@@ -3,6 +3,8 @@ import Home from "../../page/client/HomePage";
 import Login from "../../page/client/Login";
 import CartPage from "../../page/client/CartPage";
 
+import CheckOut from "../../page/client/CheckOut";
+
 export const clientRoutes = [
   {
     path: "/",
@@ -18,6 +20,7 @@ export const clientRoutes = [
         path: "/cart",
         element: <CartPage />,
       },
+      { path: "/checkout", element: <CheckOut /> },
     ],
   },
 

@@ -286,3 +286,8 @@ a {
   font-size: 14px;
   color: #333;
 }
+.input-placeholder::placeholder {
+  font-size: 13px;
+  line-height: "40px";
+  color: gray;
+}

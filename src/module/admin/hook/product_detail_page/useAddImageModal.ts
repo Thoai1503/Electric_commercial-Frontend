@@ -41,7 +41,21 @@ export const useAddImageModals = (
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const fileContent = file;
+          console.log(e);
+          console.log("File content:", fileContent);
+          // You can now process or display the fileContent
+        };
 
+        reader.onerror = (e) => {
+          console.error("Error reading file:", e?.target?.error);
+        };
+
+        reader.readAsDataURL(file); // Read the file as text
+      });
       // lưu file để submit
       setSelectedFiles((prev) => [...prev, ...files]);
 

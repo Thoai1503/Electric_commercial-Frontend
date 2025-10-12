@@ -5,6 +5,8 @@ import { clearCart } from "../../reducers/cartReducer";
 import axios from "axios";
 import useCartPage from "../../module/client/hook/cart_page/useCartPage";
 import CartItem from "../../components/client/cart/CartItem";
+import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
+import { Link } from "react-router-dom";
 
 const CartPage = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
@@ -33,6 +35,7 @@ const CartPage = () => {
   if (!isLoggedIn) {
     return (
       <div className="container mt-5 mb-5 ">
+        <Breadcrumbs />
         <div className="row mt-4 ">
           <div className="col-lg-8 mb-4  ">
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -185,6 +188,7 @@ const CartPage = () => {
   }
   return (
     <div className="container mt-5 mb-5 ">
+      <Breadcrumbs />
       <div className="row mt-4 ">
         <div className="col-lg-8 mb-4  ">
           <div className="d-flex justify-content-between align-items-center mb-3">
@@ -239,6 +243,10 @@ const CartPage = () => {
               <strong>Thanh toán</strong>
             </p>
             <div className="d-flex justify-content-between align-items-center">
+              <h6>Tạm tính:</h6>
+              <p>{totalPrice?.toLocaleString("vi-VN")}đ</p>
+            </div>
+            <div className="d-flex justify-content-between align-items-center">
               <h6>Thành tiền:</h6>
               <h6 style={{ color: "#1586ddff" }}>
                 {totalPrice?.toLocaleString("vi-VN")}đ
@@ -249,12 +257,9 @@ const CartPage = () => {
               Giá đã bao gồm VAT (nếu có)
             </p>
 
-            <button
-              onClick={checkOut}
-              className="btn btn-outline-primary w-100 mt-3"
-            >
+            <Link to="/checkout" className="btn btn-outline-primary w-100 mt-3">
               Thanh toán
-            </button>
+            </Link>
             {/* <button
               onClick={checkOutVNPay}
               className="btn btn-outline-primary w-100 mt-3"

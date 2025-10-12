@@ -3,6 +3,7 @@ import Navbar from "../components/client/Navbar";
 
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
+import "../scss/style.scss";
 
 //import AuthDebug from "../components/client/AuthDebug";
 //import "../scss/client.sass";

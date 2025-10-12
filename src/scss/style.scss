@@ -18,6 +18,12 @@ body {
 .text {
   font-size: 13px;
 }
+.input-placeholder::placeholder {
+  font-size: 14px;
+  font-style: italic;
+  color: gray;
+  font-family: "Segoe UI", sans-serif;
+}
 
 .wrapper {
   width: 100%;
@@ -63,6 +69,10 @@ body {
   .sidebar-toggler {
     margin-inline-end: auto;
   }
+}
+.method-item:hover {
+  border-radius: 5px;
+  border: "1px solid black";
 }
 .menu-container {
   position: relative;
