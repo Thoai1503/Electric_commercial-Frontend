@@ -318,8 +318,8 @@ const Home = () => {
               return (
                 <div
                   key={item.id}
-                  className={`col-6 col-sm-4 col-md-3 col-lg-3 py-3 product-filter-item   ${!visible ? "filter-hidden" : "filter-visible"}`}
-                  style={{ borderRadius: "8px" }}
+                  className={`col-6 col-sm-4 col-md-3 col-lg-2 py-3 product-filter-item   ${!visible ? "filter-hidden" : "filter-visible"}`}
+                  style={{ borderRadius: "8px", width: "300px" }}
                 >
                   <div
                     className="card h-100 "
