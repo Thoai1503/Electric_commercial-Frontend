@@ -1,3 +1,4 @@
+import { useAddAddressModel } from "../../../module/client/hook/checkout_page/useAddAddressPage";
 import "../../../scss/client.scss";
 import Modal from "react-bootstrap/Modal";
 
@@ -7,6 +8,7 @@ interface Prop {
   handleShow: () => void;
 }
 const AddAddressModal = ({ show, handleClose }: Prop) => {
+  const { provinceList } = useAddAddressModel();
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -40,7 +42,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
               <input
                 className="input-placeholder"
                 type="text"
-                placeholder="  Vui lòng nhập tên người nhận"
+                placeholder="  Nhập số điện thoại"
                 style={{
                   width: "100%",
                   border: "1px solid lightgray",
@@ -56,7 +58,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
               <input
                 className="input-placeholder"
                 type="text"
-                placeholder="  Vui lòng nhập tên người nhận"
+                placeholder="  Nhập email của bạn"
                 style={{
                   width: "100%",
                   border: "1px solid lightgray",
@@ -83,12 +85,17 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                   borderRadius: "3px",
                   color: "#000", // màu chữ bình thường
                 }}
+                onChange={() => {
+                  alert("Chọn");
+                }}
               >
-                <option value="" disabled style={{ color: "gray" }}>
+                <option value="" style={{ color: "gray" }}>
                   Chọn
                 </option>
-                <option value="1">Tùy chọn 1</option>
-                <option value="2">Tùy chọn 2</option>
+
+                {provinceList?.map((item) => (
+                  <option value={item.id}>{item.name}</option>
+                ))}
               </select>
             </div>
             <div className="col-lg-6">
@@ -113,7 +120,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
               </select>
             </div>
           </div>
-          <div className="row mt-4">
+          <div className="row mt-4 mb-4">
             <div className="col-lg-6">
               <p className="text">
                 <strong>Phường/Xã</strong>
@@ -155,6 +162,9 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                 <option value="2">Tùy chọn 2</option>
               </select>
             </div>
+            <div className="d-flex">
+              <input type="checkbox" name="" id="" className="mt-3 " />
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -164,6 +174,30 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
           <Button variant="primary" onClick={handleClose}>
             Save Changes
           </Button> */}
+          <button
+            style={{
+              borderRadius: "3px",
+              border: "1px solid #06b6d4",
+              color: "#06b6d4",
+              backgroundColor: "white",
+              padding: "7px",
+              fontSize: "12px",
+            }}
+          >
+            Huỷ bỏ
+          </button>
+          <button
+            style={{
+              borderRadius: "3px",
+              border: "1px solid #06b6d4",
+              color: "white",
+              backgroundColor: "#06b6d4",
+              padding: "7px",
+              fontSize: "12px",
+            }}
+          >
+            Lưu địa chỉ
+          </button>
         </Modal.Footer>
       </Modal>
     </>

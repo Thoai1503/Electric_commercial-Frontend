@@ -193,6 +193,29 @@ const CheckOut = () => {
                     </div>
                   </div>
                 </div>
+                <div className="col-lg-6 method-item py-2">
+                  <div className="position-relative h-100">
+                    <div
+                      className="p-3 rounded h-100"
+                      style={{
+                        border: "1px solid lightgray",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div className="d-flex">
+                        <img
+                          width={20}
+                          src="/paylogo/0oxhzjmxbksr1686814746087.png"
+                        ></img>
+                        <h5 className="text mb-1">ATM nội địa</h5>
+                      </div>
+                      <p className="text mb-0">
+                        Thanh toán qua thẻ ATM nội địa
+                      </p>
+                    </div>
+                    {/* Icon checkmark for VNPAY */}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

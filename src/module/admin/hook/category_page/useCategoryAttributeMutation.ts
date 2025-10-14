@@ -83,10 +83,10 @@ export const useCategoryAttributeMutation = (
         setTimeout(() => {
           const success = Math.random() > 0.5; // 50% chance
           if (success) {
-            console.log("✅ Success case");
+            console.log("Success case");
             resolve(true);
           } else {
-            console.log("❌ Error case");
+            console.log("Error case");
             reject(new Error("Something went wrong!"));
           }
         }, 900);
