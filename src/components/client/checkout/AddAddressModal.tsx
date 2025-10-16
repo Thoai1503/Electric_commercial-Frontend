@@ -8,8 +8,13 @@ interface Prop {
   handleShow: () => void;
 }
 const AddAddressModal = ({ show, handleClose }: Prop) => {
-  const { provinceList, handleChangeProvince, districts } =
-    useAddAddressModel();
+  const {
+    provinceList,
+    handleChangeProvince,
+    districts,
+    wards,
+    handleChangeDistrict,
+  } = useAddAddressModel();
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -116,6 +121,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                       ? "pointer"
                       : "not-allowed",
                 }}
+                onChange={handleChangeDistrict}
               >
                 <option value="" style={{ color: "gray" }}>
                   Chọn
@@ -134,42 +140,45 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                 <strong>Phường/Xã</strong>
               </p>
               <select
-                disabled
+                disabled={!(wards && wards.length > 0)}
                 style={{
                   width: "100%",
                   height: "29px",
                   border: "1px solid lightgray",
                   borderRadius: "3px",
-                  color: "#000", // màu chữ bình thường
+                  color: wards && wards.length > 0 ? "#000" : "#6c757d",
+                  backgroundColor:
+                    wards && wards.length > 0 ? "white" : "#e9ecef",
+                  cursor: wards && wards.length > 0 ? "pointer" : "not-allowed",
                 }}
               >
-                <option value="" disabled style={{ color: "gray" }}>
+                <option value="" style={{ color: "gray" }}>
                   Chọn
                 </option>
-                <option value="1">Tùy chọn 1</option>
-                <option value="2">Tùy chọn 2</option>
+
+                {wards &&
+                  wards.length > 0 &&
+                  wards.map((item) => (
+                    <option value={item.id}>{item.name}</option>
+                  ))}
               </select>
             </div>
             <div className="col-lg-6">
               <p className="text">
                 <strong>Địa chỉ cụ thể</strong>
               </p>
-              <select
-                disabled
+              <input
+                className="input-placeholder"
+                type="text"
+                placeholder="  Số nhà, ngõ, tên đường"
                 style={{
                   width: "100%",
-                  height: "29px",
                   border: "1px solid lightgray",
                   borderRadius: "3px",
-                  color: "#000", // màu chữ bình thường
+                  color: "lightgray",
+                  height: "30px",
                 }}
-              >
-                <option value="" style={{ color: "gray" }}>
-                  Chọn
-                </option>
-                <option value="1">Tùy chọn 1</option>
-                <option value="2">Tùy chọn 2</option>
-              </select>
+              />
             </div>
             <div className="d-flex">
               <input type="checkbox" name="" id="" className="mt-3 " />
