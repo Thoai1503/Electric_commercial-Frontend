@@ -1,4 +1,4 @@
-import { useAddAddressModel } from "../../../module/client/hook/checkout_page/useAddAddressPage";
+import { useAddAddressModel } from "../../../module/client/hook/checkout_page/useAddAddressModel";
 import "../../../scss/client.scss";
 import Modal from "react-bootstrap/Modal";
 
@@ -8,7 +8,8 @@ interface Prop {
   handleShow: () => void;
 }
 const AddAddressModal = ({ show, handleClose }: Prop) => {
-  const { provinceList } = useAddAddressModel();
+  const { provinceList, handleChangeProvince, districts } =
+    useAddAddressModel();
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -85,9 +86,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                   borderRadius: "3px",
                   color: "#000", // màu chữ bình thường
                 }}
-                onChange={() => {
-                  alert("Chọn");
-                }}
+                onChange={handleChangeProvince}
               >
                 <option value="" style={{ color: "gray" }}>
                   Chọn
@@ -103,20 +102,29 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                 <strong>Quận/Huyện</strong>
               </p>
               <select
-                disabled
+                disabled={!(districts && districts.length > 0)}
                 style={{
                   width: "100%",
                   height: "29px",
                   border: "1px solid lightgray",
                   borderRadius: "3px",
-                  color: "#000", // màu chữ bình thường
+                  color: districts && districts.length > 0 ? "#000" : "#6c757d",
+                  backgroundColor:
+                    districts && districts.length > 0 ? "white" : "#e9ecef",
+                  cursor:
+                    districts && districts.length > 0
+                      ? "pointer"
+                      : "not-allowed",
                 }}
               >
                 <option value="" style={{ color: "gray" }}>
                   Chọn
                 </option>
-                <option value="1">Tùy chọn 1</option>
-                <option value="2">Tùy chọn 2</option>
+                {districts &&
+                  districts.length > 0 &&
+                  districts.map((item) => (
+                    <option value={item.id}>{item.name}</option>
+                  ))}
               </select>
             </div>
           </div>
@@ -126,6 +134,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                 <strong>Phường/Xã</strong>
               </p>
               <select
+                disabled
                 style={{
                   width: "100%",
                   height: "29px",
