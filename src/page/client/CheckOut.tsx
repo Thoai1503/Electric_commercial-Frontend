@@ -1,7 +1,11 @@
 import { useState } from "react";
 import AddAddressModal from "../../components/client/checkout/AddAddressModal";
+import { userAddressQuery } from "../../module/client/query/userAddress";
+import { useQuery } from "@tanstack/react-query";
 
 const CheckOut = () => {
+  const user = JSON.parse(localStorage.getItem("user")!);
+  const { data: address } = useQuery(userAddressQuery.get_by_user_id(user.id));
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -18,80 +22,119 @@ const CheckOut = () => {
             <div className="container">
               <p className="text">Thông tin nhận hàng</p>
               <div className="container row ">
-                <div className="method-item col-lg-6 py-2">
-                  <div className="position-relative h-100">
-                    <div
-                      className="p-2 px-3 rounded h-100"
-                      style={{
-                        border: "1px solid #06b6d4",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <h6 className="text">
-                        <strong>Thoai Vo Giang</strong>
-                      </h6>
-                      <p className="text mb-0">0862830787</p>
-                      <p className="text">
-                        Tổ 176 Ấp ddoong1 , xã Thới Tam Thôn, huyện Hóc Môn,
-                        TPHCM
-                      </p>
+                {address
+                  ?.filter((item) => item.is_default == true)
+                  .map((item) => (
+                    <div key={item.id} className="method-item col-lg-6 py-2">
+                      <div className="position-relative h-100">
+                        <div
+                          className="p-2 px-3 rounded h-100"
+                          style={{
+                            border: item.is_default
+                              ? "1px solid #06b6d4"
+                              : "1px solid lightgray",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <h6 className="text">
+                            <strong>{item.full_name}</strong>
+                          </h6>
+                          <p className="text mb-0">{item.phone}</p>
+                          <p className="text">
+                            {item.address_detail} , {item.wards.name},{" "}
+                            {item.districts.name}, TPHCM
+                          </p>
+                        </div>
+                        {/* Icon checkmark moved outside padding div */}
+                        {item.is_default && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              right: 0,
+                              width: "0",
+                              height: "0",
+                              borderTop: "35px solid #06b6d4",
+                              borderLeft: "35px solid transparent",
+                              borderTopRightRadius: "0.375rem",
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              fill="white"
+                              viewBox="0 0 16 16"
+                              style={{
+                                position: "absolute",
+                                top: "-28px",
+                                right: "4px",
+                              }}
+                            >
+                              <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    {/* Icon checkmark moved outside padding div */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: "0",
-                        height: "0",
-                        borderTop: "35px solid #06b6d4",
-                        borderLeft: "35px solid transparent",
-                        borderTopRightRadius: "0.375rem",
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        fill="white"
-                        viewBox="0 0 16 16"
-                        style={{
-                          position: "absolute",
-                          top: "-28px",
-                          right: "4px",
-                        }}
-                      >
-                        <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
-                      </svg>
+                  ))}
+                {address
+                  ?.filter((item) => item.is_default == false)
+                  .map((item) => (
+                    <div key={item.id} className="method-item col-lg-6 py-2">
+                      <div className="position-relative h-100">
+                        <div
+                          className="p-2 px-3 rounded h-100"
+                          style={{
+                            border: item.is_default
+                              ? "1px solid #06b6d4"
+                              : "1px solid lightgray",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <h6 className="text">
+                            <strong>{item.full_name}</strong>
+                          </h6>
+                          <p className="text mb-0">{item.phone}</p>
+                          <p className="text">
+                            {item.address_detail} , {item.wards.name},{" "}
+                            {item.districts.name}, TPHCM
+                          </p>
+                        </div>
+                        {/* Icon checkmark moved outside padding div */}
+                        {item.is_default && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              right: 0,
+                              width: "0",
+                              height: "0",
+                              borderTop: "35px solid #06b6d4",
+                              borderLeft: "35px solid transparent",
+                              borderTopRightRadius: "0.375rem",
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="14"
+                              height="14"
+                              fill="white"
+                              viewBox="0 0 16 16"
+                              style={{
+                                position: "absolute",
+                                top: "-28px",
+                                right: "4px",
+                              }}
+                            >
+                              <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 method-item py-2">
-                  <div
-                    className="p-2 px-3 rounded h-100"
-                    style={{ border: "1px solid lightgray" }}
-                  >
-                    <h6 className="text">
-                      <strong>Thoai Vo Giang</strong>
-                    </h6>
-                    <p className="text mb-0">0862830787</p>
-                    <p className="text">Tổ 176 Ấp ddoong1 , xã Thới Tam Thô</p>
-                  </div>
-                </div>
-                <div className="col-lg-6 method-item py-2 ">
-                  <div
-                    className="p-2 px-3 rounded h-100"
-                    style={{ border: "1px solid lightgray" }}
-                  >
-                    <h6 className="text">
-                      <strong>Thoai Vo Giang</strong>
-                    </h6>
-                    <p className="text mb-0">0862830787</p>
-                    <p className="text">
-                      Tổ 176 Ấp ddoong1 , xã Thới Tam Thôn, huyện Hóc Môn, TPHCM
-                    </p>
-                  </div>
-                </div>
+                  ))}
+
                 <div className="col-lg-6 method-item py-2">
                   <div
                     className="p-3 rounded h-100 d-flex justify-content-center align-items-center border"
@@ -372,6 +415,7 @@ const CheckOut = () => {
         show={show}
         handleClose={handleClose}
         handleShow={handleShow}
+        user_id={user.id}
       />
     </div>
   );

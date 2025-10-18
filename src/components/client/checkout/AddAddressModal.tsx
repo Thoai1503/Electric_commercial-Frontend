@@ -6,15 +6,19 @@ interface Prop {
   show: boolean;
   handleClose: () => void;
   handleShow: () => void;
+  user_id: number;
 }
-const AddAddressModal = ({ show, handleClose }: Prop) => {
+const AddAddressModal = ({ show, handleClose, user_id }: Prop) => {
   const {
+    address,
     provinceList,
     handleChangeProvince,
     districts,
     wards,
+    handleChange,
+    handleSubmit,
     handleChangeDistrict,
-  } = useAddAddressModel();
+  } = useAddAddressModel(user_id, handleClose);
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -31,6 +35,9 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
             <input
               className="input-placeholder"
               type="text"
+              name="full_name"
+              value={address.full_name}
+              onChange={handleChange}
               placeholder="  Vui lòng nhập tên người nhận"
               style={{
                 width: "100%",
@@ -48,6 +55,8 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
               <input
                 className="input-placeholder"
                 type="text"
+                name="phone"
+                value={address.phone}
                 placeholder="  Nhập số điện thoại"
                 style={{
                   width: "100%",
@@ -55,6 +64,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                   borderRadius: "3px",
                   height: "30px",
                 }}
+                onChange={handleChange}
               />
             </div>
             <div className="col-lg-6">
@@ -91,7 +101,11 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                   borderRadius: "3px",
                   color: "#000", // màu chữ bình thường
                 }}
-                onChange={handleChangeProvince}
+                name="province_id"
+                onChange={(event) => {
+                  handleChangeProvince(event);
+                  handleChange(event);
+                }}
               >
                 <option value="" style={{ color: "gray" }}>
                   Chọn
@@ -121,7 +135,12 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                       ? "pointer"
                       : "not-allowed",
                 }}
-                onChange={handleChangeDistrict}
+                name="district_id"
+                value={address.district_id}
+                onChange={(event) => {
+                  handleChangeDistrict(event);
+                  handleChange(event);
+                }}
               >
                 <option value="" style={{ color: "gray" }}>
                   Chọn
@@ -151,6 +170,9 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                     wards && wards.length > 0 ? "white" : "#e9ecef",
                   cursor: wards && wards.length > 0 ? "pointer" : "not-allowed",
                 }}
+                name="ward_id"
+                value={address.ward_id}
+                onChange={handleChange}
               >
                 <option value="" style={{ color: "gray" }}>
                   Chọn
@@ -178,10 +200,13 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
                   color: "lightgray",
                   height: "30px",
                 }}
+                name="address_detail"
+                value={address.address_detail}
+                onChange={handleChange}
               />
             </div>
             <div className="d-flex">
-              <input type="checkbox" name="" id="" className="mt-3 " />
+              <input type="checkbox" id="" className="mt-3 " />
             </div>
           </div>
         </Modal.Body>
@@ -213,6 +238,7 @@ const AddAddressModal = ({ show, handleClose }: Prop) => {
               padding: "7px",
               fontSize: "12px",
             }}
+            onClick={handleSubmit}
           >
             Lưu địa chỉ
           </button>
