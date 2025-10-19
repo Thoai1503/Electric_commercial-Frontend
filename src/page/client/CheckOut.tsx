@@ -2,10 +2,12 @@ import { useState } from "react";
 import AddAddressModal from "../../components/client/checkout/AddAddressModal";
 import { userAddressQuery } from "../../module/client/query/userAddress";
 import { useQuery } from "@tanstack/react-query";
+import { useCheckoutPage } from "../../module/client/hook/checkout_page/useCheckoutPage";
 
 const CheckOut = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
   const { data: address } = useQuery(userAddressQuery.get_by_user_id(user.id));
+  const { handleUpdate } = useCheckoutPage(user.id);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -25,7 +27,12 @@ const CheckOut = () => {
                 {address
                   ?.filter((item) => item.is_default == true)
                   .map((item) => (
-                    <div key={item.id} className="method-item col-lg-6 py-2">
+                    <div
+                      key={item.id}
+                      className="method-item col-lg-6 py-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => alert("Click")}
+                    >
                       <div className="position-relative h-100">
                         <div
                           className="p-2 px-3 rounded h-100"
@@ -81,7 +88,14 @@ const CheckOut = () => {
                 {address
                   ?.filter((item) => item.is_default == false)
                   .map((item) => (
-                    <div key={item.id} className="method-item col-lg-6 py-2">
+                    <div
+                      key={item.id}
+                      className="method-item col-lg-6 py-2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        handleUpdate(item.id, { ...item, is_default: true })
+                      }
+                    >
                       <div className="position-relative h-100">
                         <div
                           className="p-2 px-3 rounded h-100"

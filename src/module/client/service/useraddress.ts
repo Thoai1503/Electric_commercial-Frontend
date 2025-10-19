@@ -17,3 +17,13 @@ export const createNewAddress = async (
       throw error;
     });
 };
+export const updateAddress = async (
+  id: number,
+  addr: Partial<UserAddress>
+): Promise<number> => {
+  return await Request.put(`/api/v1/useraddress/${id}`, addr)
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
