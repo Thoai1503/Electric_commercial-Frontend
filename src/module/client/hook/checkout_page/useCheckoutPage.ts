@@ -10,11 +10,22 @@ interface PaymentInfo {
   orderId: number;
   method: string;
   bankCode?: string;
+  orderInfo: string;
 }
 
 export const useCheckoutPage = (user_id: number) => {
   const queryClient = useQueryClient();
 
+  const data = queryClient.getQueryData([
+    "user_address",
+    user_id,
+  ]) as UserAddress[];
+
+  const current_address = useMemo(
+    () => data?.filter((item) => item.is_default == true) || [],
+    [data]
+  );
+  //  alert(JSON.stringify(current_address.length));
   const { data: cartList } = useQuery(cartQuery.getByUser(user_id));
 
   const totalPrice = useMemo(() => {
@@ -26,21 +37,42 @@ export const useCheckoutPage = (user_id: number) => {
   }, [cartList]);
 
   useEffect(() => {
+    if (!cartList || cartList.length === 0 || current_address.length === 0) {
+      return;
+    }
     setPaymentInfo((prev) => ({
       ...prev,
       amount: totalPrice,
+      orderInfo: JSON.stringify(
+        cartList?.map((item, index) => {
+          if (index == 1) {
+            return {
+              id: current_address[0].id,
+              variant_id: item.variant_id,
+              quantity: item.quantity,
+              price: item.variant?.price,
+            };
+          }
+          return {
+            id: item.user_id,
+            variant_id: item.variant_id,
+            quantity: item.quantity,
+            price: item.variant?.price,
+          };
+        })
+      ),
     }));
-  }, [totalPrice]);
+  }, [totalPrice, current_address]);
 
   const paymentList = [
     {
-      head: "Thanh toán VNPAYQR",
-      title: "Thanh toán bằng mã QR VNPAY",
-      method: "VNPAYQR",
+      head: "Thanh toán VNPAYQR (chưa hỗ trợ cho môi trường test)",
+      title: "Thanh toán bằng mã QR VNPAY  ",
+      method: "NCB",
       code: "vnpay",
     },
     {
-      head: "ATM nội địa",
+      head: "ATM nội địa (test được)",
       title: "Thanh toán qua thẻ ATM nội địa",
       method: "VNBANK",
       code: "vnpay",
@@ -56,6 +88,7 @@ export const useCheckoutPage = (user_id: number) => {
     amount: totalPrice,
     orderId: Date.now(),
     method: "",
+    orderInfo: "",
   });
   const [selectedMethod, setSelectedMethod] = useState<string>("");
   interface UpdatedProp {
@@ -69,13 +102,13 @@ export const useCheckoutPage = (user_id: number) => {
         setPaymentInfo((pre) => ({ ...pre, method: method.trim() }));
         setSelectedMethod("momo");
         return;
-      case "VNPAYQR":
+      case "NCB":
         setPaymentInfo((pre) => ({
           ...pre,
           method: "vnpay",
-          bankCode: "VNPAYQR",
+          bankCode: "NCB",
         }));
-        setSelectedMethod("VNPAYQR");
+        setSelectedMethod("NCB");
         return;
       case "VNBANK":
         setPaymentInfo((pre) => ({
@@ -90,6 +123,7 @@ export const useCheckoutPage = (user_id: number) => {
           amount: totalPrice,
           orderId: Date.now(),
           method: "",
+          orderInfo: "",
         });
     }
   };
@@ -97,6 +131,7 @@ export const useCheckoutPage = (user_id: number) => {
     alert(JSON.stringify(paymentInfo));
     checkout(paymentInfo);
   };
+
   const { isPending: isPendingCheckout, mutate: checkout } = useMutation({
     mutationFn: (paymentInf: typeof paymentInfo) => createPayment(paymentInf),
     onSuccess: (data) => {

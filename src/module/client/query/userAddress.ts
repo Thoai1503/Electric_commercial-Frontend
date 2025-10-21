@@ -6,5 +6,8 @@ export const userAddressQuery = {
     queryOptions({
       queryKey: ["user_address", user_id],
       queryFn: async () => getByUserId(user_id),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+
+      refetchOnWindowFocus: false,
     }),
 };
