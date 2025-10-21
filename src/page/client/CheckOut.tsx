@@ -6,14 +6,50 @@ import { useCheckoutPage } from "../../module/client/hook/checkout_page/useCheck
 
 const CheckOut = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
-  const { data: address } = useQuery(userAddressQuery.get_by_user_id(user.id));
-  const { handleUpdate } = useCheckoutPage(user.id);
+  const {
+    data: address,
+    isPending: isPendingAddress,
+    isRefetching,
+  } = useQuery(userAddressQuery.get_by_user_id(user.id));
+  const {
+    handleUpdate,
+    selectedMethod,
+    handleSelectPaymentMethod,
+    paymentList,
+    handleCheckout,
+    isPendingCheckout,
+    isPending,
+  } = useCheckoutPage(user.id);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
-    <div className="mt-5">
+    <div
+      className={
+        isPendingCheckout || isPending || isRefetching || isPendingAddress
+          ? "mt-5 loading"
+          : "mt-5"
+      }
+    >
+      {(isPendingCheckout || isPending || isRefetching || isPendingAddress) && (
+        <div
+          className="spinner-border text-primary"
+          role="status"
+          style={{
+            opacity: 1,
+            width: "3rem",
+            height: "3rem",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            // transform: "translate(-50%, -50%)",
+            zIndex: 1000,
+          }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      )}
       <div className="row">
         <div className="col-lg-8">
           <div className="adress-info bg-white p-3 rounded">
@@ -24,130 +60,67 @@ const CheckOut = () => {
             <div className="container">
               <p className="text">Thông tin nhận hàng</p>
               <div className="container row ">
-                {address
-                  ?.filter((item) => item.is_default == true)
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      className="method-item col-lg-6 py-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => alert("Click")}
-                    >
-                      <div className="position-relative h-100">
+                {address?.map((item) => (
+                  <div
+                    key={item.id}
+                    className="method-item col-lg-6 py-2"
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                      handleUpdate(item.id, { ...item, is_default: true })
+                    }
+                  >
+                    <div className="position-relative h-100">
+                      <div
+                        className="p-2 px-3 rounded h-100"
+                        style={{
+                          border: item.is_default
+                            ? "1px solid #06b6d4"
+                            : "1px solid lightgray",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <h6 className="text">
+                          <strong>{item.full_name}</strong>
+                        </h6>
+                        <p className="text mb-0">{item.phone}</p>
+                        <p className="text">
+                          {item.address_detail} , {item.wards.name},{" "}
+                          {item.districts.name}, TPHCM
+                        </p>
+                      </div>
+                      {/* Icon checkmark moved outside padding div */}
+                      {item.is_default && (
                         <div
-                          className="p-2 px-3 rounded h-100"
                           style={{
-                            border: item.is_default
-                              ? "1px solid #06b6d4"
-                              : "1px solid lightgray",
-                            overflow: "hidden",
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            width: "0",
+                            height: "0",
+                            borderTop: "35px solid #06b6d4",
+                            borderLeft: "35px solid transparent",
+                            borderTopRightRadius: "0.375rem",
                           }}
                         >
-                          <h6 className="text">
-                            <strong>{item.full_name}</strong>
-                          </h6>
-                          <p className="text mb-0">{item.phone}</p>
-                          <p className="text">
-                            {item.address_detail} , {item.wards.name},{" "}
-                            {item.districts.name}, TPHCM
-                          </p>
-                        </div>
-                        {/* Icon checkmark moved outside padding div */}
-                        {item.is_default && (
-                          <div
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            fill="white"
+                            viewBox="0 0 16 16"
                             style={{
                               position: "absolute",
-                              top: 0,
-                              right: 0,
-                              width: "0",
-                              height: "0",
-                              borderTop: "35px solid #06b6d4",
-                              borderLeft: "35px solid transparent",
-                              borderTopRightRadius: "0.375rem",
+                              top: "-28px",
+                              right: "4px",
                             }}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="14"
-                              height="14"
-                              fill="white"
-                              viewBox="0 0 16 16"
-                              style={{
-                                position: "absolute",
-                                top: "-28px",
-                                right: "4px",
-                              }}
-                            >
-                              <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                {address
-                  ?.filter((item) => item.is_default == false)
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      className="method-item col-lg-6 py-2"
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        handleUpdate(item.id, { ...item, is_default: true })
-                      }
-                    >
-                      <div className="position-relative h-100">
-                        <div
-                          className="p-2 px-3 rounded h-100"
-                          style={{
-                            border: item.is_default
-                              ? "1px solid #06b6d4"
-                              : "1px solid lightgray",
-                            overflow: "hidden",
-                          }}
-                        >
-                          <h6 className="text">
-                            <strong>{item.full_name}</strong>
-                          </h6>
-                          <p className="text mb-0">{item.phone}</p>
-                          <p className="text">
-                            {item.address_detail} , {item.wards.name},{" "}
-                            {item.districts.name}, TPHCM
-                          </p>
+                            <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                          </svg>
                         </div>
-                        {/* Icon checkmark moved outside padding div */}
-                        {item.is_default && (
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              right: 0,
-                              width: "0",
-                              height: "0",
-                              borderTop: "35px solid #06b6d4",
-                              borderLeft: "35px solid transparent",
-                              borderTopRightRadius: "0.375rem",
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="14"
-                              height="14"
-                              fill="white"
-                              viewBox="0 0 16 16"
-                              style={{
-                                position: "absolute",
-                                top: "-28px",
-                                right: "4px",
-                              }}
-                            >
-                              <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
+                ))}
 
                 <div className="col-lg-6 method-item py-2">
                   <div
@@ -184,95 +157,62 @@ const CheckOut = () => {
                 Chọn phương thức thanh toán phù hợp với bạn
               </p>
               <div className="row container">
-                <div className="col-lg-6 method-item py-2">
-                  <div className="position-relative h-100">
-                    <div
-                      className="p-3 rounded h-100"
-                      style={{
-                        border: "1px solid #06b6d4",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div className="d-flex">
-                        <img
-                          width={20}
-                          src="/paylogo/0oxhzjmxbksr1686814746087.png"
-                        ></img>
-                        <h5 className="text mb-1">Thanh toán VNPAY</h5>
-                      </div>
-                      <p className="text mb-0">Thanh toán qua VNPAY</p>
-                    </div>
-                    {/* Icon checkmark for VNPAY */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: "0",
-                        height: "0",
-                        borderTop: "35px solid #06b6d4",
-                        borderLeft: "35px solid transparent",
-                        borderTopRightRadius: "0.375rem",
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        fill="white"
-                        viewBox="0 0 16 16"
+                {paymentList.map((item) => (
+                  <div className="col-lg-6 method-item py-2">
+                    <div className="position-relative h-100">
+                      <div
+                        className="p-3 rounded h-100"
                         style={{
-                          position: "absolute",
-                          top: "-28px",
-                          right: "4px",
+                          border:
+                            selectedMethod == item.method
+                              ? "1px solid  #06b6d4"
+                              : "1px solid  lightgray",
+                          overflow: "hidden",
                         }}
+                        onClick={() => handleSelectPaymentMethod(item.method)}
                       >
-                        <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 method-item py-2">
-                  <div
-                    className="py-3 px-3 rounded h-100"
-                    style={{ border: "1px solid lightgray" }}
-                  >
-                    {" "}
-                    <div className="d-flex">
-                      <img
-                        width={20}
-                        src="/paylogo/mini-app_design-guideline_branding-guide-2-2.jpg"
-                      ></img>
-                      <h5 className="text mb-1">Thanh toán MOMO</h5>
-                    </div>
-                    <div className="d-flex">
-                      <p className="text mb-0">Thanh toán qua ứng dụng MOMO</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 method-item py-2">
-                  <div className="position-relative h-100">
-                    <div
-                      className="p-3 rounded h-100"
-                      style={{
-                        border: "1px solid lightgray",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div className="d-flex">
-                        <img
-                          width={20}
-                          src="/paylogo/0oxhzjmxbksr1686814746087.png"
-                        ></img>
-                        <h5 className="text mb-1">ATM nội địa</h5>
+                        <div className="d-flex">
+                          <img
+                            width={20}
+                            src="/paylogo/0oxhzjmxbksr1686814746087.png"
+                          ></img>
+                          <h5 className="text mb-1">{item.head}</h5>
+                        </div>
+                        <p className="text mb-0">{item.title}</p>
                       </div>
-                      <p className="text mb-0">
-                        Thanh toán qua thẻ ATM nội địa
-                      </p>
+                      {/* Icon checkmark for VNPAY */}
+                      {selectedMethod === item.method && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                            width: "0",
+                            height: "0",
+                            borderTop: "35px solid #06b6d4",
+                            borderLeft: "35px solid transparent",
+                            borderTopRightRadius: "0.375rem",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="14"
+                            height="14"
+                            fill="white"
+                            viewBox="0 0 16 16"
+                            style={{
+                              position: "absolute",
+                              top: "-28px",
+                              right: "4px",
+                            }}
+                          >
+                            <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
-                    {/* Icon checkmark for VNPAY */}
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -418,6 +358,7 @@ const CheckOut = () => {
               <button
                 className="btn w-100 text-white"
                 style={{ backgroundColor: "#06b6d4" }}
+                onClick={handleCheckout}
               >
                 Đặt hàng
               </button>
