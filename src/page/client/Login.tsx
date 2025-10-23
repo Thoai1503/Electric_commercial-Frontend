@@ -1,5 +1,6 @@
 import { useLoginPage } from "../../hook/useLoginPage";
-
+import { useRegister } from "../../hook/useRegister";
+import "./login.css";
 import { CAlert } from "@coreui/react";
 
 const Login = () => {
@@ -14,262 +15,292 @@ const Login = () => {
 
   console.log(showError);
 
+  const { handleChangeRegiter, handleSubmitRegister, submitData } =
+    useRegister();
+
   return (
-    <div className="container" style={{ width: "400px", marginTop: "100px" }}>
-      {isPending && <h1>Login..</h1>}
-
-      <ul className="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link active"
-            id="tab-login"
-            data-mdb-pill-init
-            href="#pills-login"
-            role="tab"
-            aria-controls="pills-login"
-            aria-selected="true"
-          >
-            Login
-          </a>
-        </li>
-        <li className="nav-item" role="presentation">
-          <a
-            className="nav-link"
-            id="tab-register"
-            data-mdb-pill-init
-            href="#pills-register"
-            role="tab"
-            aria-controls="pills-register"
-            aria-selected="false"
-          >
-            Register
-          </a>
-        </li>
-      </ul>
-
-      <div className="tab-content">
-        <div
-          className="tab-pane fade show active"
-          id="pills-login"
-          role="tabpanel"
-          aria-labelledby="tab-login"
-        >
-          <form onSubmit={handleSubmit}>
-            <div className="text-center mb-3">
-              <p>Sign in with:</p>
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
-              >
-                <i className="fab fa-facebook-f"></i>
-              </button>
-
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
-              >
-                <i className="fab fa-google"></i>
-              </button>
-
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
-              >
-                <i className="fab fa-twitter"></i>
-              </button>
-
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
-              >
-                <i className="fab fa-github"></i>
-              </button>
-            </div>
-
-            <p className="text-center">or:</p>
-            {showError && (
-              <h4 style={{ color: "red" }}>
-                <CAlert color="danger" style={{ fontSize: "15px" }}>
-                  {error?.message}
-                </CAlert>
-              </h4>
-            )}
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input
-                type="email"
-                id="loginName"
-                name="email"
-                value={loginValue.email}
-                onChange={handleChange}
-                className="form-control"
-              />
-              <label className="form-label">Email or username</label>
-            </div>
-
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input
-                type="password"
-                id="loginPassword"
-                name="password"
-                value={loginValue.password}
-                onChange={handleChange}
-                className="form-control"
-              />
-              <label className="form-label">Password</label>
-            </div>
-
-            <div className="row mb-4">
-              <div className="col-md-6 d-flex justify-content-center">
-                <div className="form-check mb-3 mb-md-0">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="password"
-                    value=""
-                    id="loginCheck"
-                    checked
-                  />
-                  <label className="form-check-label"> Remember me </label>
-                </div>
-              </div>
-
-              <div className="col-md-6 d-flex justify-content-center">
-                <a href="#!">Forgot password?</a>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              data-mdb-button-init
-              data-mdb-ripple-init
-              className="btn btn-primary btn-block mb-4"
-            >
-              Sign in
-            </button>
-
-            <div className="text-center">
-              <p>
-                Not a member? <a href="#!">Register</a>
-              </p>
-            </div>
-          </form>
+    <div className="container">
+      <div className="banner-section">
+        <div className="banner-content">
+          <div className="banner-icon">📱</div>
+          <h2 className="banner-title">Phone Shop</h2>
+          <p className="banner-subtitle">
+            Discover the latest smartphones and accessories. Quality products at
+            amazing prices!
+          </p>
         </div>
-        <div
-          className="tab-pane fade"
-          id="pills-register"
-          role="tabpanel"
-          aria-labelledby="tab-register"
-        >
-          <form>
-            <div className="text-center mb-3">
-              <p>Sign up with:</p>
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
+      </div>
+      <div className="form-section">
+        {isPending && <h1>Login..</h1>}
+
+        <div>
+          <ul
+            className="nav nav-pills nav-justified mb-3"
+            id="ex1"
+            role="tablist"
+          >
+            <li className="nav-item" role="presentation">
+              <a
+                className="nav-link active"
+                id="tab-login"
+                data-mdb-pill-init
+                href="#pills-login"
+                role="tab"
+                aria-controls="pills-login"
+                aria-selected="true"
               >
-                <i className="fab fa-facebook-f"></i>
-              </button>
-
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
+                Login
+              </a>
+            </li>
+            <li className="nav-item" role="presentation">
+              <a
+                className="nav-link"
+                id="tab-register"
+                data-mdb-pill-init
+                href="#pills-register"
+                role="tab"
+                aria-controls="pills-register"
+                aria-selected="false"
               >
-                <i className="fab fa-google"></i>
-              </button>
+                Register
+              </a>
+            </li>
+          </ul>
 
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
-              >
-                <i className="fab fa-twitter"></i>
-              </button>
-
-              <button
-                type="button"
-                data-mdb-button-init
-                data-mdb-ripple-init
-                className="btn btn-link btn-floating mx-1"
-              >
-                <i className="fab fa-github"></i>
-              </button>
-            </div>
-
-            <p className="text-center">or:</p>
-
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input type="text" id="registerName" className="form-control" />
-              <label className="form-label">Name</label>
-            </div>
-
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input
-                type="text"
-                id="registerUsername"
-                className="form-control"
-              />
-              <label className="form-label">Username</label>
-            </div>
-
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input type="email" id="registerEmail" className="form-control" />
-              <label className="form-label">Email</label>
-            </div>
-
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input
-                type="password"
-                id="registerPassword"
-                className="form-control"
-              />
-              <label className="form-label">Password</label>
-            </div>
-
-            <div data-mdb-input-init className="form-outline mb-4">
-              <input
-                type="password"
-                id="registerRepeatPassword"
-                className="form-control"
-              />
-              <label className="form-label">Repeat password</label>
-            </div>
-
-            <div className="form-check d-flex justify-content-center mb-4">
-              <input
-                className="form-check-input me-2"
-                type="checkbox"
-                value=""
-                id="registerCheck"
-                checked
-                aria-describedby="registerCheckHelpText"
-              />
-              <label className="form-check-label">
-                I have read and agree to the terms
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              data-mdb-button-init
-              data-mdb-ripple-init
-              className="btn btn-primary btn-block mb-3"
+          <div className="tab-content">
+            <div
+              className="tab-pane fade "
+              id="pills-login"
+              role="tabpanel"
+              aria-labelledby="tab-login"
             >
-              Sign in
-            </button>
-          </form>
+              <form onSubmit={handleSubmit}>
+                <div className="text-center mb-3">
+                  <p>Sign in with:</p>
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-facebook-f"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-google"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-twitter"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-github"></i>
+                  </button>
+                </div>
+
+                <p className="text-center">or:</p>
+                {showError && (
+                  <h4 style={{ color: "red" }}>
+                    <CAlert color="danger" style={{ fontSize: "15px" }}>
+                      {error?.message}
+                    </CAlert>
+                  </h4>
+                )}
+                <div data-mdb-input-init className="form-outline mb-4">
+                  <input
+                    type="email"
+                    id="loginName"
+                    name="email"
+                    value={loginValue.email}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                  <label className="form-label">Email or username</label>
+                </div>
+
+                <div data-mdb-input-init className="form-outline mb-4">
+                  <input
+                    type="password"
+                    id="loginPassword"
+                    name="password"
+                    value={loginValue.password}
+                    onChange={handleChange}
+                    className="form-control"
+                  />
+                  <label className="form-label">Password</label>
+                </div>
+
+                <div className="row mb-4">
+                  <div className="col-md-6 d-flex justify-content-center">
+                    <div className="form-check mb-3 mb-md-0">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        name="password"
+                        value=""
+                        id="loginCheck"
+                        checked
+                      />
+                      <label className="form-check-label"> Remember me </label>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6 d-flex justify-content-center">
+                    <a href="#!">Forgot password?</a>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  data-mdb-button-init
+                  data-mdb-ripple-init
+                  className="btn btn-primary btn-block mb-4"
+                >
+                  Sign in
+                </button>
+
+                <div className="text-center">
+                  <p>
+                    Not a member? <a href="#!">Register</a>
+                  </p>
+                </div>
+              </form>
+            </div>
+            <div
+              className="tab-pane fade show active"
+              id="pills-register"
+              role="tabpanel"
+              aria-labelledby="tab-register"
+            >
+              <form onSubmit={handleSubmitRegister}>
+                <div className="text-center mb-3">
+                  <p>Sign up with:</p>
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-facebook-f"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-google"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-twitter"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-mdb-button-init
+                    data-mdb-ripple-init
+                    className="btn btn-link btn-floating mx-1"
+                  >
+                    <i className="fab fa-github"></i>
+                  </button>
+                </div>
+
+                <p className="text-center">or:</p>
+
+                <div data-mdb-input-init className="form-outline mb-4">
+                  <input
+                    type="text"
+                    id="registerUsername"
+                    className="form-control"
+                    name="name"
+                    value={submitData.name}
+                    onChange={handleChangeRegiter}
+                  />
+                  <label className="form-label">Username</label>
+                </div>
+
+                <div data-mdb-input-init className="form-outline mb-4">
+                  <input
+                    type="email"
+                    id="registerEmail"
+                    className="form-control"
+                    name="email"
+                    value={submitData.email}
+                    onChange={handleChangeRegiter}
+                  />
+                  <label className="form-label">Email</label>
+                </div>
+
+                <div data-mdb-input-init className="form-outline mb-4">
+                  <input
+                    type="password"
+                    id="registerPassword"
+                    className="form-control"
+                    name="password"
+                    value={submitData.password}
+                    onChange={handleChangeRegiter}
+                  />
+                  <label className="form-label">Password</label>
+                </div>
+
+                <div data-mdb-input-init className="form-outline mb-4">
+                  <input
+                    type="password"
+                    id="registerRepeatPassword"
+                    className="form-control"
+                    name="repeated_password"
+                    value={submitData.repeated_password}
+                    onChange={handleChangeRegiter}
+                  />
+                  <label className="form-label">Repeat password</label>
+                </div>
+
+                <div className="form-check d-flex justify-content-center mb-4">
+                  <input
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    value=""
+                    id="registerCheck"
+                    checked
+                    aria-describedby="registerCheckHelpText"
+                  />
+                  <label className="form-check-label">
+                    I have read and agree to the terms
+                  </label>
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-block mb-3"
+                >
+                  Sign in
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
 

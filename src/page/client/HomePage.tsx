@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -8,20 +8,46 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import "../../scss/style.scss";
-import { useQuery } from "@tanstack/react-query";
-import { productVariantQuery } from "../../module/client/query/productVariant";
+
 import Carousel from "../../components/client/home/Carousel";
 import Menu from "../../components/client/home/Menu";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../store/store";
-import { addToCartAsync } from "../../reducers/cartReducer";
+
+import type { UserDataRespone } from "../../type/User";
+
+import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 
 const Home = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector((state: RootState) => state.cart.loading);
+  const user = JSON.parse(
+    localStorage.getItem("user") || '{"id":0}'
+  ) as Partial<UserDataRespone>;
+
+  const {
+    data,
+    userCart,
+    isPending,
+    handleClickChange,
+    loading,
+    addToCartForAuthenticatedUser,
+  } = useHomePage(user.id || 0);
+
+  const product = useMemo(
+    () =>
+      data?.map((item) => {
+        const hasInCart = userCart?.some((u) => u.variant_id == item.id);
+        if (!hasInCart)
+          return { ...item, inCart: false, cart: { id: 0, quantity: 0 } };
+        const cartItem = userCart?.find((u) => u.variant_id == item.id);
+        return {
+          ...item,
+          inCart: true,
+          cart: { id: cartItem?.id, quantity: cartItem?.quantity },
+        };
+      }),
+    [userCart, user]
+  );
+
   const [activeFilter, setActiveFilter] = useState<string>("*");
 
-  const { data } = useQuery(productVariantQuery.list);
   const formatVND = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -167,7 +193,7 @@ const Home = () => {
                           <span className="visually-hidden">Loading...</span>
                         </div>
                       )}
-                      {data?.map((item) => (
+                      {product?.map((item) => (
                         <SwiperSlide key={item.id}>
                           <div style={{ padding: "0 5px" }}>
                             <div
@@ -268,18 +294,53 @@ const Home = () => {
                                 className="card-body"
                                 style={{ marginTop: "auto" }}
                               >
-                                <div className="d-flex justify-content-end align-items-center pb-2 mb-1">
-                                  <button
-                                    onClick={() =>
-                                      dispatch(addToCartAsync(item))
-                                    }
-                                    type="button"
-                                    data-mdb-button-init
-                                    data-mdb-ripple-init
-                                    className="btn btn-outline-primary btn-sm"
-                                  >
-                                    Buy now
-                                  </button>
+                                <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                                  {item.inCart && user ? (
+                                    <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                                      <div
+                                        className="decrease-btn"
+                                        onClick={() =>
+                                          handleClickChange(
+                                            item.cart.id!,
+                                            item.cart.quantity! - 1
+                                          )
+                                        }
+                                      >
+                                        -
+                                      </div>
+                                      <div>{item.cart.quantity}</div>
+                                      <div
+                                        className="increase-btn"
+                                        onClick={() =>
+                                          handleClickChange(
+                                            item.cart.id!,
+                                            item.cart.quantity! + 1
+                                          )
+                                        }
+                                      >
+                                        +
+                                      </div>
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() =>
+                                        addToCartForAuthenticatedUser({
+                                          id: 0,
+                                          user_id: user.id || 0,
+                                          variant_id: item.id,
+                                          quantity: 1,
+                                          unit_price: item.price,
+                                          variant: item,
+                                        })
+                                      }
+                                      type="button"
+                                      data-mdb-button-init
+                                      data-mdb-ripple-init
+                                      className="btn btn-outline-primary btn-sm w-100"
+                                    >
+                                      Thêm vào giỏ
+                                    </button>
+                                  )}
                                 </div>
                               </div>
                             </div>

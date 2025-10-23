@@ -6,9 +6,6 @@ const cartQuery = {
     queryOptions({
       queryKey: ["cart", user_id],
       queryFn: async () => getByUserId(user_id),
-      staleTime: 5 * 60 * 1000, // 5 minutes
-
-      refetchOnWindowFocus: false,
     }),
 };
 

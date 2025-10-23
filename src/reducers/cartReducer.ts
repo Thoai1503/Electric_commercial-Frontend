@@ -3,13 +3,15 @@ import {
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { ProductVariant } from "../type/productVariant";
 
-function loadCartFromLocalStorage(): Partial<ProductVariant>[] {
+import type { Cart } from "../type/Cart";
+import { addToUserCart } from "../module/client/service/cart";
+
+function loadCartFromLocalStorage(): Cart[] {
   try {
     const stored = localStorage.getItem("cart");
     if (stored) {
-      return JSON.parse(stored) as Partial<ProductVariant>[];
+      return JSON.parse(stored) as Cart[];
     }
   } catch (e) {
     console.error("Invalid cart data in localStorage", e);
@@ -17,7 +19,7 @@ function loadCartFromLocalStorage(): Partial<ProductVariant>[] {
   return [];
 }
 
-function saveCartToLocalStorage(cart: Partial<ProductVariant>[]) {
+function saveCartToLocalStorage(cart: Partial<Cart>[]) {
   try {
     localStorage.setItem("cart", JSON.stringify(cart));
   } catch (e) {
@@ -25,35 +27,35 @@ function saveCartToLocalStorage(cart: Partial<ProductVariant>[]) {
   }
 }
 export const addToCartAsync = createAsyncThunk<
-  Partial<ProductVariant>,
-  Partial<ProductVariant>,
+  { item: Cart; isAuthenticated: boolean },
+  Cart,
   { rejectValue: string }
 >("cart/addToCartAsync", async (item, { rejectWithValue }) => {
   try {
-    const user = localStorage.getItem("user");
     let ok = false;
+    const isAuthenticated = item.user_id != 0;
     // Gọi API check số lượng trước
-    if (!user) {
+    if (!isAuthenticated) {
       ok = await new Promise<boolean>((resolve) =>
         setTimeout(() => resolve(true), 700)
       );
+      console.log("isAuthen:" + isAuthenticated);
     } else {
-      ok = await new Promise<boolean>((resolve) =>
-        setTimeout(() => resolve(true), 700)
-      );
+      ok = (await addToUserCart(item)) != 0;
+      console.log("isAuthen else:" + ok);
     }
 
     if (!ok) {
       return rejectWithValue("Sản phẩm đã hết hàng");
     }
-    return item; // trả về item để reducer xử lý
+    return { item, isAuthenticated }; // trả về item để reducer xử lý
   } catch {
     return rejectWithValue("Không thể kiểm tra tồn kho");
   }
 });
 
 interface CartState {
-  items: Partial<ProductVariant>[];
+  items: Cart[];
   loading: boolean;
   error: string | null;
 }
@@ -68,11 +70,13 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<Partial<ProductVariant>>) {
+    addToCart(state, action: PayloadAction<Cart>) {
       alert("Added to cart");
 
       const item = action.payload;
-      const existingItem = state.items.find((i) => i.id === item.id);
+      const existingItem = state.items.find(
+        (i) => i.variant_id === item.variant_id
+      );
 
       // call api check stock (bạn có thể handle async ở middleware/thunk)
       if (existingItem) {
@@ -107,17 +111,26 @@ const cartSlice = createSlice({
       })
       .addCase(addToCartAsync.fulfilled, (state, action) => {
         state.loading = false;
-        const item = action.payload;
-        const existingItem = state.items.find((i) => i.id === item.id);
 
-        if (existingItem) {
-          existingItem.quantity = (existingItem.quantity ?? 0) + 1;
+        // Only update local cart for guest users
+        if (!action.payload.isAuthenticated) {
+          const item = action.payload.item;
+          const existingItem = state.items.find(
+            (i) => i.variant_id === item.variant_id
+          );
+
+          if (existingItem) {
+            existingItem.quantity = (existingItem.quantity ?? 0) + 1;
+          } else {
+            item.quantity = item.quantity ?? 1;
+            state.items.push(item);
+          }
+
+          saveCartToLocalStorage(state.items);
         } else {
-          item.quantity = item.quantity ?? 1;
-          state.items.push(item);
+          state.loading = false;
         }
-
-        saveCartToLocalStorage(state.items);
+        // For authenticated users, cart is managed server-side
       })
       .addCase(addToCartAsync.rejected, (state, action) => {
         state.loading = false;

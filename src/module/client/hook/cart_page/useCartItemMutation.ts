@@ -13,6 +13,7 @@ export const useCartItemMutation = (item: Cart) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     e.preventDefault();
+    alert("HandleChange");
     const { name, value } = e.target;
     setCartItem((pre) => ({ ...pre, [name]: value }));
 

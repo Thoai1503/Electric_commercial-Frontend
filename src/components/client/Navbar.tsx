@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { MouseEvent } from "react";
 import { clearUser } from "../../reducers/authenReducer";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dispatch = useDispatch();
@@ -453,7 +454,7 @@ const Navbar = () => {
               <li className="nav-item">
                 <a
                   className="nav-link"
-                  href="./cart.html"
+                  href="./cart"
                   style={{ color: "#48d6f0ff" }}
                 >
                   Cart

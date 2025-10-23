@@ -33,35 +33,31 @@ const AdminAuth = ({ children }: { children?: React.ReactNode }) => {
   useEffect(() => {
     dispatch(refreshToken());
 
-    // Check for admin role - handle both 'role' and 'rule' properties
     const userRole = user?.role || user?.rule;
 
     if (userRole !== ROLES.Admin) {
-      console.log("AdminAuth - User is not admin, redirecting to homepage");
-      // logged in but not admin → back to homepage
       navigate("/", { replace: true });
       return;
     }
-
-    console.log("AdminAuth - User is admin, allowing access");
   }, [dispatch]);
 
-  // Check for admin role - handle both 'role' and 'rule' properties
   const userRole = user?.role || user?.rule;
 
-  if (!token || userRole !== ROLES.Admin) {
+  if (userRole !== ROLES.Admin) {
     console.log(
       "AdminAuth - Rendering null, token:",
       !!token,
       "role:",
       userRole
     );
-    return null; // prevent flicker
+    navigate("/", { replace: true, state: { from: location.pathname } });
+    //   return null; // prevent flicker
   }
   if (error) {
-    navigate("/", { replace: true, state: { from: location.pathname } });
+    alert("Refresh failed");
+    navigate("/login", { replace: true, state: { from: location.pathname } });
 
-    return null;
+    //   return null;
   }
 
   console.log("AdminAuth - Rendering admin content");

@@ -18,3 +18,9 @@ export interface UserLogin {
   email: string;
   password: string;
 }
+export interface UserRegisterData {
+  name: string;
+  email: string;
+  password: string;
+  repeated_password: string;
+}

@@ -78,14 +78,14 @@ const CartPage = () => {
                       <div className="col-lg-2">
                         <img
                           width={80}
-                          src={`/uploads/${item?.product_images?.[0]?.url}`}
-                          alt={item.name}
+                          src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+                          alt={item?.variant?.name}
                         />
                       </div>
                       <div className="col-lg-6">
                         <div className="row">
                           <p className="cart-item title mb-0 text">
-                            {item.name}
+                            {item?.variant?.name}
                           </p>
                           <span
                             className="sku text"
@@ -112,7 +112,7 @@ const CartPage = () => {
                       <div className="col-lg-1">
                         <span className="item-price  d-flex justify-content-end">
                           <strong className="text">
-                            {item.price!.toLocaleString("vi-VN")}đ
+                            {item.unit_price!.toLocaleString("vi-VN")}đ
                           </strong>
                         </span>
                       </div>
@@ -134,7 +134,7 @@ const CartPage = () => {
                         <span className="item-price  d-flex justify-content-end">
                           <strong className="text">
                             {(
-                              item.price! * (item.quantity || 1)
+                              item.unit_price! * (item.quantity || 1)
                             ).toLocaleString("vi-VN")}
                             đ
                           </strong>

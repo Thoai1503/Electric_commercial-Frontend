@@ -21,7 +21,6 @@ export const refreshToken = createAsyncThunk<
   try {
     console.log("Refreshing token...");
 
-    // ✅ safely read from Redux state
     const refreshToken = localStorage.getItem("refreshToken") || "";
 
     const res = await axios.post(

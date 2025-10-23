@@ -4,6 +4,7 @@ import type { UserAddress } from "../../../../type/UserAddress";
 import { useEffect, useMemo, useState } from "react";
 import cartQuery from "../../query/cart";
 import { createPayment } from "../../service/paymentCheckout";
+import type { Cart } from "../../../../type/Cart";
 
 interface PaymentInfo {
   amount: number;
@@ -20,6 +21,7 @@ export const useCheckoutPage = (user_id: number) => {
     "user_address",
     user_id,
   ]) as UserAddress[];
+  const cartItems = queryClient.getQueryData(["cart", user_id]) as Cart[];
 
   const current_address = useMemo(
     () => data?.filter((item) => item.is_default == true) || [],
@@ -43,24 +45,7 @@ export const useCheckoutPage = (user_id: number) => {
     setPaymentInfo((prev) => ({
       ...prev,
       amount: totalPrice,
-      orderInfo: JSON.stringify(
-        cartList?.map((item, index) => {
-          if (index == 1) {
-            return {
-              id: current_address[0].id,
-              variant_id: item.variant_id,
-              quantity: item.quantity,
-              price: item.variant?.price,
-            };
-          }
-          return {
-            id: item.user_id,
-            variant_id: item.variant_id,
-            quantity: item.quantity,
-            price: item.variant?.price,
-          };
-        })
-      ),
+      orderInfo: JSON.stringify({ user_id, address_id: current_address[0].id }),
     }));
   }, [totalPrice, current_address]);
 
@@ -167,5 +152,6 @@ export const useCheckoutPage = (user_id: number) => {
     handleCheckout,
     isPendingCheckout,
     isPending,
+    cartItems,
   };
 };

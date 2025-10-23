@@ -46,7 +46,7 @@ const CartItem = ({ item }: Prop) => {
         <div className="col-lg-1">
           <span className="item-price  d-flex justify-content-end">
             <strong className="text">
-              {item?.variant?.price!.toLocaleString("vi-VN")}đ
+              {item?.unit_price?.toLocaleString("vi-VN")}đ
             </strong>
           </span>
         </div>

@@ -12,6 +12,7 @@ const CheckOut = () => {
     isRefetching,
   } = useQuery(userAddressQuery.get_by_user_id(user.id));
   const {
+    cartItems,
     handleUpdate,
     selectedMethod,
     handleSelectPaymentMethod,
@@ -228,65 +229,40 @@ const CheckOut = () => {
 
             {/* Danh sách sản phẩm */}
             <div className="order-items">
-              {/* Sản phẩm 1 */}
-              <div className="d-flex mb-3">
-                <div
-                  className="position-relative"
-                  style={{ width: "80px", height: "80px", flexShrink: 0 }}
-                >
-                  <img
-                    src="http://localhost:5173/uploads/6bc0d1b4-d459-4ace-9a70-9d4e61a2b232_asus-vivobook-go-15-e1504fa-r5-nj630w-glr-2-1-750x500.jpg?h=120&fit=crop&auto=format&dpr=2%202x?w=400&h=400&fit=crop"
-                    alt="Product"
-                    className="rounded"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+              {cartItems?.map((item) => (
+                <div className="d-flex mb-3">
+                  <div
+                    className="position-relative"
+                    style={{ width: "80px", height: "80px", flexShrink: 0 }}
+                  >
+                    <img
+                      src={
+                        item?.variant?.product_images?.[0]?.url
+                          ? `/uploads/${item?.variant?.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                          : "https://via.placeholder.com/300x225?text=No+Image"
+                      }
+                      alt="Product"
+                      className="rounded"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <div className="ms-3 flex-grow-1">
+                    <p className="text mb-1" style={{ fontSize: "14px" }}>
+                      {item.variant?.name}
+                    </p>
+                    <p className="text-muted mb-0" style={{ fontSize: "13px" }}>
+                      Màu: Xanh dương
+                    </p>
+                    <p className="text mb-0" style={{ fontSize: "14px" }}>
+                      <strong>9.990.000đ</strong>
+                    </p>
+                  </div>
                 </div>
-                <div className="ms-3 flex-grow-1">
-                  <p className="text mb-1" style={{ fontSize: "14px" }}>
-                    Tai nghe Bluetooth Sony WH-1000XM5
-                  </p>
-                  <p className="text-muted mb-0" style={{ fontSize: "13px" }}>
-                    Màu: Đen
-                  </p>
-                  <p className="text mb-0" style={{ fontSize: "14px" }}>
-                    <strong>5.990.000đ</strong>
-                  </p>
-                </div>
-              </div>
-
-              {/* Sản phẩm 2 */}
-              <div className="d-flex mb-3">
-                <div
-                  className="position-relative"
-                  style={{ width: "80px", height: "80px", flexShrink: 0 }}
-                >
-                  <img
-                    src="http://localhost:5173/uploads/bd4185f4-80d7-4f3f-a488-f5d61f752097_iphone-17-pro-max-xanh-duong-thumb-600x600.jpg?h=120&fit=crop&auto=format&dpr=2%202x?w=400&h=400&fit=crop"
-                    alt="Product"
-                    className="rounded"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-                <div className="ms-3 flex-grow-1">
-                  <p className="text mb-1" style={{ fontSize: "14px" }}>
-                    Đồng hồ thông minh Apple Watch Series 9
-                  </p>
-                  <p className="text-muted mb-0" style={{ fontSize: "13px" }}>
-                    Màu: Xanh dương
-                  </p>
-                  <p className="text mb-0" style={{ fontSize: "14px" }}>
-                    <strong>9.990.000đ</strong>
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
 
             <hr />
