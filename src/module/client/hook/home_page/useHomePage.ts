@@ -22,6 +22,7 @@ export const useHomePage = (user_id: number) => {
       try {
         const result = await dispatch(addToCartAsync(cart)).unwrap();
 
+        console.log("Result: " + result);
         queryClient.invalidateQueries(cartQuery.getByUser(cart.user_id));
 
         return { success: true };
@@ -39,7 +40,7 @@ export const useHomePage = (user_id: number) => {
   }
   const {
     isPending: isPendingUpdateCart,
-    isSuccess,
+
     mutate: updateQuantity,
   } = useMutation({
     mutationFn: ({ id, quantity }: MutateProp) =>
@@ -62,6 +63,8 @@ export const useHomePage = (user_id: number) => {
     userCart,
     isPending,
     handleClickChange,
+    isPendingUpdateCart,
+
     data,
   };
 };

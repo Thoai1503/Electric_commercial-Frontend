@@ -24,7 +24,7 @@ const Home = () => {
   const {
     data,
     userCart,
-    isPending,
+
     handleClickChange,
     loading,
     addToCartForAuthenticatedUser,
