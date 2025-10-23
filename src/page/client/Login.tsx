@@ -69,7 +69,7 @@ const Login = () => {
 
           <div className="tab-content">
             <div
-              className="tab-pane fade "
+              className="tab-pane fade show active"
               id="pills-login"
               role="tabpanel"
               aria-labelledby="tab-login"
@@ -183,7 +183,7 @@ const Login = () => {
               </form>
             </div>
             <div
-              className="tab-pane fade show active"
+              className="tab-pane fade "
               id="pills-register"
               role="tabpanel"
               aria-labelledby="tab-register"
