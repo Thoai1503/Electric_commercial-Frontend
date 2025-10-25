@@ -145,13 +145,8 @@ const CartPage = () => {
                 ))}
               </div>
             </div>
-            {/* <div className="row">
-            <h6 className="col-lg-6">Tạm tính (3 sản phẩm):</h6>
-            <p className="d-flex justify-content-end">{totalPrice}</p>
-          </div> */}
           </div>
 
-          {/* Cart Summary */}
           <div className="col-lg-4 pt-5">
             <div className="p-3 bg-white p-3 rounded">
               <p>
@@ -174,12 +169,6 @@ const CartPage = () => {
               >
                 Thanh toán
               </button>
-              {/* <button
-              onClick={checkOutVNPay}
-              className="btn btn-outline-primary w-100 mt-3"
-            >
-              Thanh toán VNPay
-            </button> */}
             </div>
           </div>
         </div>
@@ -230,13 +219,8 @@ const CartPage = () => {
               ))}
             </div>
           </div>
-          {/* <div className="row">
-            <h6 className="col-lg-6">Tạm tính (3 sản phẩm):</h6>
-            <p className="d-flex justify-content-end">{totalPrice}</p>
-          </div> */}
         </div>
 
-        {/* Cart Summary */}
         <div className="col-lg-4 pt-5">
           <div className="p-3 bg-white p-3 rounded">
             <p>
@@ -260,12 +244,6 @@ const CartPage = () => {
             <Link to="/checkout" className="btn btn-outline-primary w-100 mt-3">
               Thanh toán
             </Link>
-            {/* <button
-              onClick={checkOutVNPay}
-              className="btn btn-outline-primary w-100 mt-3"
-            >
-              Thanh toán VNPay
-            </button> */}
           </div>
         </div>
       </div>
