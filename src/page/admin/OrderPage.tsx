@@ -1,6 +1,6 @@
 import { CButton, CCol, CContainer, CRow } from "@coreui/react";
 
-import { FiBook, FiEdit, FiEye, FiInfo } from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useOrderPage } from "../../module/admin/hook/order_page/useOrderPage";
 
