@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useLoginPage } from "../../hook/useLoginPage";
 import { useRegister } from "../../hook/useRegister";
 import "./login.css";
 import { CAlert } from "@coreui/react";
 
 const Login = () => {
+  const [activeTab, setActiveTab] = useState("register"); // "login" or "register"
+
   const {
     handleChange,
     loginValue,
@@ -15,8 +18,16 @@ const Login = () => {
 
   console.log(showError);
 
-  const { handleChangeRegiter, handleSubmitRegister, submitData } =
-    useRegister();
+  const {
+    handleChangeRegiter,
+    handleSubmitRegister,
+    submitData,
+    isPendingRegister,
+  } = useRegister();
+
+  const handleTabClick = (tab: any) => {
+    setActiveTab(tab);
+  };
 
   return (
     <div className="container">
@@ -41,26 +52,32 @@ const Login = () => {
           >
             <li className="nav-item" role="presentation">
               <a
-                className="nav-link active"
+                className={`nav-link ${activeTab === "login" ? "active" : ""}`}
                 id="tab-login"
-                data-mdb-pill-init
                 href="#pills-login"
                 role="tab"
                 aria-controls="pills-login"
-                aria-selected="true"
+                aria-selected={activeTab === "login"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTabClick("login");
+                }}
               >
                 Login
               </a>
             </li>
             <li className="nav-item" role="presentation">
               <a
-                className="nav-link"
+                className={`nav-link ${activeTab === "register" ? "active" : ""}`}
                 id="tab-register"
-                data-mdb-pill-init
                 href="#pills-register"
                 role="tab"
                 aria-controls="pills-register"
-                aria-selected="false"
+                aria-selected={activeTab === "register"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTabClick("register");
+                }}
               >
                 Register
               </a>
@@ -69,7 +86,9 @@ const Login = () => {
 
           <div className="tab-content">
             <div
-              className="tab-pane fade show active"
+              className={`tab-pane fade ${
+                activeTab === "login" ? "show active" : ""
+              }`}
               id="pills-login"
               role="tabpanel"
               aria-labelledby="tab-login"
@@ -155,7 +174,7 @@ const Login = () => {
                         name="password"
                         value=""
                         id="loginCheck"
-                        checked
+                        defaultChecked
                       />
                       <label className="form-check-label"> Remember me </label>
                     </div>
@@ -177,17 +196,29 @@ const Login = () => {
 
                 <div className="text-center">
                   <p>
-                    Not a member? <a href="#!">Register</a>
+                    Not a member?{" "}
+                    <a
+                      href="#!"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleTabClick("register");
+                      }}
+                    >
+                      Register
+                    </a>
                   </p>
                 </div>
               </form>
             </div>
             <div
-              className="tab-pane fade "
+              className={`tab-pane fade ${
+                activeTab === "register" ? "show active" : ""
+              }`}
               id="pills-register"
               role="tabpanel"
               aria-labelledby="tab-register"
             >
+              {isPendingRegister && <h2>Loading..</h2>}
               <form onSubmit={handleSubmitRegister}>
                 <div className="text-center mb-3">
                   <p>Sign up with:</p>
@@ -284,7 +315,7 @@ const Login = () => {
                     type="checkbox"
                     value=""
                     id="registerCheck"
-                    checked
+                    defaultChecked
                     aria-describedby="registerCheckHelpText"
                   />
                   <label className="form-check-label">
@@ -303,21 +334,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-
-      {/* <Modal show={showError} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading for phone </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo,</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </div>
   );
 };

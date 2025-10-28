@@ -10,3 +10,8 @@ export interface Order {
   created_at: Date;
   user?: UserDataRespone;
 }
+export interface OrderPaginateResponse {
+  list: Order[];
+  page: number;
+  totalPages: number;
+}
