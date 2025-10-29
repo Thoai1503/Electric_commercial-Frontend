@@ -1,29 +1,30 @@
 import { useState } from "react";
 import type { MouseEvent } from "react";
-import { clearUser } from "../../reducers/authenReducer";
-import { useDispatch } from "react-redux";
 
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const dispatch = useDispatch();
-  const user = localStorage.getItem("user");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const user = { name: "John Doe" }; // Demo user
+
   const logout = () => {
-    // setTimeout(() => {
-    //   console.log("User logged out");
-    //   // In a real app, you would handle logout here
-    //   // localStorage.removeItem("token");
-    //   // localStorage.removeItem("user");
-    //   // navigate("/");
-    // }, 1500);
-    dispatch(clearUser());
+    console.log("User logged out");
+    // dispatch(clearUser());
   };
 
   const handleMouseEnter = (dropdown: string) => {
-    setActiveDropdown(dropdown);
+    if (window.innerWidth > 992) {
+      setActiveDropdown(dropdown);
+    }
   };
 
   const handleMouseLeave = () => {
-    setActiveDropdown(null);
+    if (window.innerWidth > 992) {
+      setActiveDropdown(null);
+    }
+  };
+
+  const toggleDropdown = (dropdown: string) => {
+    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
   const dropdownStyle: React.CSSProperties = {
@@ -59,460 +60,644 @@ const Navbar = () => {
   };
 
   return (
-    <p>
+    <>
+      <style>{`
+        @media (max-width: 992px) {
+          .mobile-dropdown {
+            position: static !important;
+            width: 100% !important;
+            margin-top: 0.5rem;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+          }
+          .mobile-menu {
+            max-height: ${mobileMenuOpen ? "1000px" : "0"};
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+          }
+          .search-input-mobile {
+            width: 100%;
+            margin: 1rem 0;
+          }
+          .user-section-mobile {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem 0;
+          }
+        }
+        .nav-item {
+          position: relative;
+        }
+        .cart-button {
+          display: inline-flex;
+          align-items: center;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border: none;
+          border-radius: 50px;
+          padding: 0;
+          cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .cart-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .cart-button:active {
+          transform: translateY(0);
+        }
+        .cart-icon {
+          padding: 0.75rem 1rem;
+          color: white;
+          font-size: 1.1rem;
+        }
+        .cart-count {
+          background: white;
+          color: #667eea;
+          font-weight: 600;
+          padding: 0.75rem 1.25rem;
+          border-radius: 50px;
+          margin-left: -5px;
+        }
+        .login-button {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border: none;
+          color: white;
+          padding: 0.6rem 1.5rem;
+          border-radius: 50px;
+          font-weight: 500;
+          transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          text-decoration: none;
+          display: inline-block;
+        }
+        .login-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+          color: white;
+        }
+        .user-greeting {
+          color: white;
+          padding: 0.6rem 1rem;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 50px;
+          font-weight: 500;
+        }
+        .user-greeting-hover:hover {
+          background: rgba(255, 255, 255, 0.15) !important;
+          transform: translateY(-1px);
+        }
+        .user-profile-dropdown {
+          position: relative;
+        }
+        @media (max-width: 992px) {
+          .user-profile-dropdown .mobile-dropdown {
+            right: 0 !important;
+          }
+        }
+      `}</style>
+
       <nav
-        className="navbar navbar-expand-lg fixed-top"
-        data-bs-theme="dark"
-        style={{ backgroundColor: "#000000ff" }}
+        style={{
+          backgroundColor: "#000000ff",
+          padding: "1rem 0",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+        }}
       >
-        <div className="container">
-          <a
-            className="navbar-brand d-flex align-items-center"
-            href="#"
-            style={{ color: "#39c9e3ff" }}
+        <div
+          style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 1rem" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            <img src="../../assets/logo.png" alt="" width="40" height="40" />
-            <span className="text-white fw-bold" style={{ color: "#48d6f0ff" }}>
-              TechStore
-            </span>
-          </a>
+            {/* Logo */}
+            <a
+              href="#"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                color: "#39c9e3ff",
+              }}
+            >
+              <div
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  background:
+                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  borderRadius: "8px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: "0.5rem",
+                }}
+              >
+                <span
+                  style={{
+                    color: "white",
+                    fontSize: "1.5rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  T
+                </span>
+              </div>
+              <span
+                style={{
+                  color: "#48d6f0ff",
+                  fontWeight: "bold",
+                  fontSize: "1.2rem",
+                }}
+              >
+                TechStore
+              </span>
+            </a>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+            {/* Mobile Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                display: "none",
+                background: "none",
+                border: "none",
+                color: "#48d6f0ff",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+              }}
+              className="mobile-toggle"
+            >
+              <style>{`
+                @media (max-width: 992px) {
+                  .mobile-toggle {
+                    display: block !important;
+                  }
+                }
+              `}</style>
+              {mobileMenuOpen ? "✕" : "☰"}
+            </button>
 
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav m-auto">
-              <li className="nav-item active">
+            {/* Desktop Menu */}
+            <div
+              className="mobile-menu"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "2rem",
+                flex: 1,
+                justifyContent: "space-between",
+                marginLeft: "2rem",
+              }}
+            >
+              <style>{`
+                @media (max-width: 992px) {
+                  .mobile-menu > div:first-child {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 0 !important;
+                  }
+                }
+              `}</style>
+
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}
+              >
                 <a
-                  className="nav-link"
                   href="./"
-                  style={{ color: "#48d6f0ff" }}
+                  style={{
+                    color: "#48d6f0ff",
+                    textDecoration: "none",
+                    fontWeight: "500",
+                  }}
                 >
                   Home
                 </a>
-              </li>
 
-              {/* Dropdown cho Top sale */}
-              <li
-                className="nav-item"
-                style={{ position: "relative" }}
-                onMouseEnter={() => handleMouseEnter("topsale")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <a
-                  className="nav-link"
-                  style={{ color: "#48d6f0ff", cursor: "pointer" }}
-                  href="./index.html#top-sale"
-                >
-                  Top sale
-                  <i
-                    className="fas fa-chevron-down ms-1"
-                    style={{ fontSize: "12px" }}
-                  ></i>
-                </a>
+                {/* Top sale Dropdown */}
                 <div
-                  style={
-                    activeDropdown === "topsale"
-                      ? activeDropdownStyle
-                      : dropdownStyle
-                  }
+                  className="nav-item"
+                  onMouseEnter={() => handleMouseEnter("topsale")}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
+                    href="./index.html#top-sale"
+                    onClick={(e) => {
+                      if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        toggleDropdown("topsale");
+                      }
+                    }}
+                    style={{
+                      color: "#48d6f0ff",
+                      cursor: "pointer",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Top sale ▾
+                  </a>
+                  <div
+                    className={
+                      window.innerWidth <= 992 ? "mobile-dropdown" : ""
                     }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
+                    style={
+                      activeDropdown === "topsale"
+                        ? activeDropdownStyle
+                        : dropdownStyle
                     }
                   >
-                    Smartphone Sale
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Laptop Sale
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Accessories Sale
-                  </a>
-                  <a
-                    href="#"
-                    style={{ ...dropdownItemStyle, borderBottom: "none" }}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Flash Deals
-                  </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Smartphone Sale
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Laptop Sale
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Accessories Sale
+                    </a>
+                    <a
+                      href="#"
+                      style={{ ...dropdownItemStyle, borderBottom: "none" }}
+                    >
+                      Flash Deals
+                    </a>
+                  </div>
                 </div>
-              </li>
 
-              {/* Dropdown cho Special Price */}
-              <li
-                className="nav-item"
-                style={{ position: "relative" }}
-                onMouseEnter={() => handleMouseEnter("special")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <a
-                  className="nav-link"
-                  href="./index.html#special-price"
-                  style={{ color: "#48d6f0ff", cursor: "pointer" }}
-                >
-                  Special Price
-                  <i
-                    className="fas fa-chevron-down ms-1"
-                    style={{ fontSize: "12px" }}
-                  ></i>
-                </a>
+                {/* Special Price Dropdown */}
                 <div
-                  style={
-                    activeDropdown === "special"
-                      ? activeDropdownStyle
-                      : dropdownStyle
-                  }
+                  className="nav-item"
+                  onMouseEnter={() => handleMouseEnter("special")}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
+                    href="./index.html#special-price"
+                    onClick={(e) => {
+                      if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        toggleDropdown("special");
+                      }
+                    }}
+                    style={{
+                      color: "#48d6f0ff",
+                      cursor: "pointer",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Special Price ▾
+                  </a>
+                  <div
+                    className={
+                      window.innerWidth <= 992 ? "mobile-dropdown" : ""
                     }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
+                    style={
+                      activeDropdown === "special"
+                        ? activeDropdownStyle
+                        : dropdownStyle
                     }
                   >
-                    Weekly Deals
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Monthly Offers
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Clearance Sale
-                  </a>
-                  <a
-                    href="#"
-                    style={{ ...dropdownItemStyle, borderBottom: "none" }}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Bundle Deals
-                  </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Weekly Deals
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Monthly Offers
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Clearance Sale
+                    </a>
+                    <a
+                      href="#"
+                      style={{ ...dropdownItemStyle, borderBottom: "none" }}
+                    >
+                      Bundle Deals
+                    </a>
+                  </div>
                 </div>
-              </li>
 
-              {/* Dropdown cho New Phones */}
-              <li
-                className="nav-item"
-                style={{ position: "relative" }}
-                onMouseEnter={() => handleMouseEnter("newphones")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <a
-                  className="nav-link"
-                  href="./index.html#new-phones"
-                  style={{ color: "#48d6f0ff", cursor: "pointer" }}
-                >
-                  New Phones
-                  <i
-                    className="fas fa-chevron-down ms-1"
-                    style={{ fontSize: "12px" }}
-                  ></i>
-                </a>
+                {/* New Phones Dropdown */}
                 <div
-                  style={
-                    activeDropdown === "newphones"
-                      ? activeDropdownStyle
-                      : dropdownStyle
-                  }
+                  className="nav-item"
+                  onMouseEnter={() => handleMouseEnter("newphones")}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
+                    href="./index.html#new-phones"
+                    onClick={(e) => {
+                      if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        toggleDropdown("newphones");
+                      }
+                    }}
+                    style={{
+                      color: "#48d6f0ff",
+                      cursor: "pointer",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    New Phones ▾
+                  </a>
+                  <div
+                    className={
+                      window.innerWidth <= 992 ? "mobile-dropdown" : ""
                     }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
+                    style={
+                      activeDropdown === "newphones"
+                        ? activeDropdownStyle
+                        : dropdownStyle
                     }
                   >
-                    iPhone Series
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Samsung Galaxy
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Xiaomi
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    OPPO
-                  </a>
-                  <a
-                    href="#"
-                    style={{ ...dropdownItemStyle, borderBottom: "none" }}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Vivo
-                  </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      iPhone Series
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Samsung Galaxy
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Xiaomi
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      OPPO
+                    </a>
+                    <a
+                      href="#"
+                      style={{ ...dropdownItemStyle, borderBottom: "none" }}
+                    >
+                      Vivo
+                    </a>
+                  </div>
                 </div>
-              </li>
 
-              {/* Dropdown cho Blogs */}
-              <li
-                className="nav-item"
-                style={{ position: "relative" }}
-                onMouseEnter={() => handleMouseEnter("blogs")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <a
-                  className="nav-link"
-                  href="./index.html#blogs"
-                  style={{ color: "#48d6f0ff", cursor: "pointer" }}
-                >
-                  Blogs
-                  <i
-                    className="fas fa-chevron-down ms-1"
-                    style={{ fontSize: "12px" }}
-                  ></i>
-                </a>
+                {/* Blogs Dropdown */}
                 <div
-                  style={
-                    activeDropdown === "blogs"
-                      ? activeDropdownStyle
-                      : dropdownStyle
-                  }
+                  className="nav-item"
+                  onMouseEnter={() => handleMouseEnter("blogs")}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
+                    href="./index.html#blogs"
+                    onClick={(e) => {
+                      if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        toggleDropdown("blogs");
+                      }
+                    }}
+                    style={{
+                      color: "#48d6f0ff",
+                      cursor: "pointer",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    Blogs ▾
+                  </a>
+                  <div
+                    className={
+                      window.innerWidth <= 992 ? "mobile-dropdown" : ""
                     }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
+                    style={
+                      activeDropdown === "blogs"
+                        ? activeDropdownStyle
+                        : dropdownStyle
                     }
                   >
-                    Tech News
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Reviews
-                  </a>
-                  <a
-                    href="#"
-                    style={dropdownItemStyle}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Tutorials
-                  </a>
-                  <a
-                    href="#"
-                    style={{ ...dropdownItemStyle, borderBottom: "none" }}
-                    onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "#333")
-                    }
-                    onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
-                      ((e.target as HTMLAnchorElement).style.backgroundColor =
-                        "transparent")
-                    }
-                  >
-                    Tips & Tricks
-                  </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Tech News
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Reviews
+                    </a>
+                    <a href="#" style={dropdownItemStyle}>
+                      Tutorials
+                    </a>
+                    <a
+                      href="#"
+                      style={{ ...dropdownItemStyle, borderBottom: "none" }}
+                    >
+                      Tips & Tricks
+                    </a>
+                  </div>
                 </div>
-              </li>
 
-              <li className="nav-item">
                 <a
-                  className="nav-link"
                   href="./cart"
-                  style={{ color: "#48d6f0ff" }}
+                  style={{
+                    color: "#48d6f0ff",
+                    textDecoration: "none",
+                    fontWeight: "500",
+                  }}
                 >
                   Cart
                 </a>
-              </li>
 
-              <li
-                className="nav-item"
-                style={{ color: "#48d6f0ff" }}
-                onClick={logout}
+                {/* Search Input */}
+                <input
+                  type="text"
+                  className="search-input-mobile"
+                  style={{
+                    backgroundColor: "#454545",
+                    color: "white",
+                    borderRadius: "25px",
+                    padding: "0.6rem 1.2rem",
+                    border: "none",
+                    outline: "none",
+                    minWidth: "200px",
+                  }}
+                  placeholder="Search products..."
+                />
+              </div>
+
+              {/* User Section */}
+              <div
+                className="user-section-mobile"
+                style={{ display: "flex", alignItems: "center", gap: "1rem" }}
               >
-                <a className="nav-link" href="#" style={{ color: "#48d6f0ff" }}>
-                  Coming Soon
-                </a>
-              </li>
+                <button onClick={logout} className="cart-button">
+                  <span className="cart-icon">🛒</span>
+                  <div className="cart-count">0</div>
+                </button>
 
-              <input
-                type="text"
-                style={{
-                  backgroundColor: "#454545",
-                  color: "black",
-                  borderRadius: "7px",
-                  marginLeft: "10px",
-                  padding: "5px 10px",
-                  border: "none",
-                }}
-                placeholder="Bạn muốn.."
-              />
-            </ul>
+                {user ? (
+                  <div
+                    className="nav-item user-profile-dropdown"
+                    onMouseEnter={() => handleMouseEnter("userprofile")}
+                    onMouseLeave={handleMouseLeave}
+                    style={{ position: "relative" }}
+                  >
+                    <div
+                      onClick={() => {
+                        if (window.innerWidth <= 992) {
+                          toggleDropdown("userprofile");
+                        }
+                      }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        cursor: "pointer",
+                        padding: "0.6rem 1rem",
+                        background: "rgba(255, 255, 255, 0.1)",
+                        borderRadius: "50px",
+                        transition: "all 0.3s ease",
+                      }}
+                      className="user-greeting-hover"
+                    >
+                      <div
+                        style={{
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "50%",
+                          background:
+                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "white",
+                          fontWeight: "bold",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <span style={{ color: "white", fontWeight: "500" }}>
+                        {user.name}
+                      </span>
+                      <span style={{ color: "#48d6f0ff", fontSize: "0.8rem" }}>
+                        ▾
+                      </span>
+                    </div>
 
-            <div className="font-size-12">
-              <button
-                onClick={() => {
-                  logout();
-                }}
-                className="d-flex align-items-center rounded-pill bg-primary"
-              >
-                <span className="font-size-14 px-2 py-2 text-white">
-                  <i className="fas fa-shopping-cart" aria-hidden="true"></i>
-                </span>
-                <div className="px-3 py-2 font-size-14 rounded-pill text-black bg-white">
-                  0
-                </div>
-              </button>
-              {user ? (
-                <span className="text-white mx-3">
-                  Hello, {JSON.parse(user).name}
-                </span>
-              ) : (
-                <a href="./login" className="btn btn-primary text-white">
-                  Login
-                </a>
-              )}
+                    <div
+                      className={
+                        window.innerWidth <= 992 ? "mobile-dropdown" : ""
+                      }
+                      style={{
+                        ...(activeDropdown === "userprofile"
+                          ? activeDropdownStyle
+                          : dropdownStyle),
+                        right: 0,
+                        left: "auto",
+                        minWidth: "220px",
+                      }}
+                    >
+                      <a
+                        href="#profile"
+                        style={dropdownItemStyle}
+                        onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "#333")
+                        }
+                        onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "transparent")
+                        }
+                      >
+                        <span style={{ marginRight: "0.5rem" }}>👤</span> My
+                        Profile
+                      </a>
+                      <a
+                        href="#orders"
+                        style={dropdownItemStyle}
+                        onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "#333")
+                        }
+                        onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "transparent")
+                        }
+                      >
+                        <span style={{ marginRight: "0.5rem" }}>📦</span> My
+                        Orders
+                      </a>
+                      <a
+                        href="#wishlist"
+                        style={dropdownItemStyle}
+                        onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "#333")
+                        }
+                        onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "transparent")
+                        }
+                      >
+                        <span style={{ marginRight: "0.5rem" }}>❤️</span>{" "}
+                        Wishlist
+                      </a>
+                      <a
+                        href="#settings"
+                        style={dropdownItemStyle}
+                        onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "#333")
+                        }
+                        onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "transparent")
+                        }
+                      >
+                        <span style={{ marginRight: "0.5rem" }}>⚙️</span>{" "}
+                        Settings
+                      </a>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          logout();
+                        }}
+                        style={{
+                          ...dropdownItemStyle,
+                          borderBottom: "none",
+                          color: "#ff6b6b",
+                        }}
+                        onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "#333")
+                        }
+                        onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
+                          ((
+                            e.target as HTMLAnchorElement
+                          ).style.backgroundColor = "transparent")
+                        }
+                      >
+                        <span style={{ marginRight: "0.5rem" }}>🚪</span> Logout
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <a href="./login" className="login-button">
+                    Login
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </nav>
-    </p>
+
+      {/* Spacer to prevent content from going under fixed navbar */}
+      <div style={{ height: "80px" }}></div>
+    </>
   );
 };
 

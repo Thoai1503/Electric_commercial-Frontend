@@ -6,6 +6,7 @@ import CartPage from "../../page/client/CartPage";
 import CheckOut from "../../page/client/CheckOut";
 
 import SuccessfulCheckout from "../../page/client/SuccessfulCheckout";
+import Product from "../../page/client/Product";
 
 export const clientRoutes = [
   {
@@ -21,6 +22,10 @@ export const clientRoutes = [
       {
         path: "/cart",
         element: <CartPage />,
+      },
+      {
+        path: "/f/:category",
+        element: <Product />,
       },
       { path: "/checkout", element: <CheckOut /> },
       { path: "/successful", element: <SuccessfulCheckout /> },

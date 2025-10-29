@@ -1,5 +1,5 @@
 import { Request } from "../../../api/http";
-import type { Order, OrderPaginateResponse } from "../../../type/Order";
+import type { OrderPaginateResponse } from "../../../type/Order";
 
 export const getAllOrder = async (
   search: string,
