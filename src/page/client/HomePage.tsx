@@ -253,12 +253,13 @@ const Home = () => {
                                         marginBottom: "0.25rem",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        lineHeight: "1.4",
                                       }}
                                     >
-                                      <p className="">
-                                        {item.name || "Product Name"}
-                                      </p>
+                                      {item.name || "Product Name"}
                                     </p>
                                     <p className="small text-muted">Laptops</p>
                                   </div>
@@ -379,17 +380,12 @@ const Home = () => {
               return (
                 <div
                   key={item.id}
-                  className={`col-6 col-sm-4 col-md-3 col-lg-2 py-3 product-filter-item   ${!visible ? "filter-hidden" : "filter-visible"}`}
-                  style={{ borderRadius: "8px", width: "300px" }}
+                  className={`col-6 col-sm-4  col-md-3 col-lg-2 py-3 product-filter-item   ${!visible ? "filter-hidden" : "filter-visible"}`}
+                  style={{ width: "300px" }}
                 >
-                  <div
-                    className="card h-100 "
-                    style={{
-                      borderRadius: "12px",
-                    }}
-                  >
+                  <div className="card h-100 bg-white ">
                     <div
-                      className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
+                      className="bg-image hover-overlay ripple ripple-surface ripple-surface-light bg-white"
                       data-mdb-ripple-color="light"
                       style={{
                         position: "relative",
@@ -436,7 +432,10 @@ const Home = () => {
                               marginBottom: "0.25rem",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              lineHeight: "1.4",
                             }}
                           >
                             <a href="#!" className="text-dark">
@@ -462,48 +461,71 @@ const Home = () => {
                       </div>
                     </div>
 
-                    <hr className="my-0" />
-
                     <div
                       className="card-body pb-0"
                       style={{ minHeight: "70px" }}
                     >
                       <div className="d-flex justify-content-between">
-                        <h5
+                        <h6
                           className="text-dark"
                           style={{ color: "rgba(200, 9, 9, 0)" }}
                         >
                           <strong> {formatVND(item.price || 0)}</strong>
-                        </h5>
+                        </h6>
 
                         <p className="text-dark"> 8787</p>
                       </div>
                     </div>
 
-                    <hr className="my-0" />
-
                     {/* Action buttons - Moved to right */}
                     <div className="card-body" style={{ marginTop: "auto" }}>
-                      <div className="d-flex justify-content-end align-items-center pb-2 mb-1">
-                        <button
-                          type="button"
-                          data-mdb-button-init
-                          data-mdb-ripple-init
-                          className="btn btn-outline-primary btn-sm"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            className="bi bi-cart2"
-                            viewBox="0 0 16 16"
+                      <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                        {item.inCart && user ? (
+                          <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                            <div
+                              className="decrease-btn"
+                              onClick={() =>
+                                handleClickChange(
+                                  item.cart.id!,
+                                  item.cart.quantity! - 1
+                                )
+                              }
+                            >
+                              -
+                            </div>
+                            <div>{item.cart.quantity}</div>
+                            <div
+                              className="increase-btn"
+                              onClick={() =>
+                                handleClickChange(
+                                  item.cart.id!,
+                                  item.cart.quantity! + 1
+                                )
+                              }
+                            >
+                              +
+                            </div>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() =>
+                              addToCartForAuthenticatedUser({
+                                id: 0,
+                                user_id: user.id || 0,
+                                variant_id: item.id,
+                                quantity: 1,
+                                unit_price: item.price,
+                                variant: item,
+                              })
+                            }
+                            type="button"
+                            data-mdb-button-init
+                            data-mdb-ripple-init
+                            className="btn btn-outline-primary btn-sm w-100"
                           >
-                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
-                          </svg>
-                          {"    "}
-                          Buy
-                        </button>
+                            Thêm vào giỏ
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

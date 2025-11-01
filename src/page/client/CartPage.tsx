@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 const CartPage = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
   const { CartList, totalPrice } = useCartPage(user?.id);
-  // alert("User in cart page: " + JSON.stringify(list));
   const isLoggedIn = !!user;
 
   const cartList = useSelector((state: RootState) => state.cart.items);
@@ -32,12 +31,13 @@ const CartPage = () => {
     const url = result.data.url;
     window.location.href = url;
   };
+
   if (!isLoggedIn) {
     return (
-      <div className="container mt-5 mb-5 ">
+      <div className="container">
         <Breadcrumbs />
-        <div className="row mt-4 ">
-          <div className="col-lg-8 mb-4  ">
+        <div className="row mt-4">
+          <div className="col-12 col-lg-8 mb-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5>
                 <strong>Giỏ hàng ({cartList.length})</strong>
@@ -54,8 +54,9 @@ const CartPage = () => {
               </p>
             </div>
             <div className="bg-white p-3 rounded">
+              {/* Header - Desktop only */}
               <div
-                className=" row mb-3"
+                className="row mb-3 d-none d-lg-flex"
                 style={{ borderBottom: "1px solid lightgray" }}
               >
                 <div className="col-lg-7 text">
@@ -71,10 +72,12 @@ const CartPage = () => {
                   <strong>Thành tiền</strong>
                 </div>
               </div>
-              <div style={{}}>
+
+              <div>
                 {cartList.map((item) => (
                   <div key={item.id} className="cart-item pb-3 mb-3">
-                    <div className="row align-items-center">
+                    {/* Desktop Layout */}
+                    <div className="row align-items-center d-none d-lg-flex">
                       <div className="col-lg-2">
                         <img
                           width={80}
@@ -82,7 +85,7 @@ const CartPage = () => {
                           alt={item?.variant?.name}
                         />
                       </div>
-                      <div className="col-lg-6">
+                      <div className="col-lg-5">
                         <div className="row">
                           <p className="cart-item title mb-0 text">
                             {item?.variant?.name}
@@ -109,8 +112,8 @@ const CartPage = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-lg-1">
-                        <span className="item-price  d-flex justify-content-end">
+                      <div className="col-lg-2">
+                        <span className="item-price d-flex justify-content-end">
                           <strong className="text">
                             {item.unit_price!.toLocaleString("vi-VN")}đ
                           </strong>
@@ -123,15 +126,11 @@ const CartPage = () => {
                           min="1"
                           className="form-control"
                           style={{ width: "50px" }}
-                          onChange={
-                            (e) => e
-                            //    handleQuantityChange(item.id!, parseInt(e.target.value))
-                          }
+                          onChange={(e) => e}
                         />
                       </div>
-
                       <div className="col-lg-1">
-                        <span className="item-price  d-flex justify-content-end">
+                        <span className="item-price d-flex justify-content-end">
                           <strong className="text">
                             {(
                               item.unit_price! * (item.quantity || 1)
@@ -141,14 +140,80 @@ const CartPage = () => {
                         </span>
                       </div>
                     </div>
+
+                    {/* Mobile Layout */}
+                    <div className="d-lg-none">
+                      <div className="d-flex gap-3 mb-2">
+                        <img
+                          width={80}
+                          height={80}
+                          style={{ objectFit: "contain" }}
+                          src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+                          alt={item?.variant?.name}
+                        />
+                        <div className="flex-grow-1">
+                          <p className="mb-1">
+                            <strong>{item?.variant?.name}</strong>
+                          </p>
+                          <p
+                            className="text-muted mb-1"
+                            style={{ fontSize: "12px" }}
+                          >
+                            SKU: 123456
+                          </p>
+                          <span
+                            className="p-1"
+                            style={{
+                              backgroundColor: "#f3f3f3ff",
+                              fontSize: "12px",
+                              borderRadius: "3px",
+                            }}
+                          >
+                            Màu bạc + 64 GB
+                          </span>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center mt-2">
+                        <div>
+                          <p className="mb-0" style={{ fontSize: "14px" }}>
+                            Đơn giá:
+                          </p>
+                          <strong>
+                            {item.unit_price!.toLocaleString("vi-VN")}đ
+                          </strong>
+                        </div>
+                        <div className="d-flex align-items-center gap-2">
+                          <span style={{ fontSize: "14px" }}>SL:</span>
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            min="1"
+                            className="form-control"
+                            style={{ width: "60px" }}
+                            onChange={(e) => e}
+                          />
+                        </div>
+                        <div className="text-end">
+                          <p className="mb-0" style={{ fontSize: "14px" }}>
+                            Thành tiền:
+                          </p>
+                          <strong style={{ color: "#1586ddff" }}>
+                            {(
+                              item.unit_price! * (item.quantity || 1)
+                            ).toLocaleString("vi-VN")}
+                            đ
+                          </strong>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="col-lg-4 pt-5">
-            <div className="p-3 bg-white p-3 rounded">
+          <div className="col-12 col-lg-4">
+            <div className="p-3 bg-white rounded">
               <p>
                 <strong>Thanh toán</strong>
               </p>
@@ -175,11 +240,12 @@ const CartPage = () => {
       </div>
     );
   }
+
   return (
-    <div className="container mt-5 mb-5 ">
+    <div className="container mt-3 mt-lg-5 mb-5">
       <Breadcrumbs />
-      <div className="row mt-4 ">
-        <div className="col-lg-8 mb-4  ">
+      <div className="row mt-4">
+        <div className="col-12 col-lg-8 mb-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5>
               <strong>Giỏ hàng ({CartList?.length})</strong>
@@ -196,8 +262,9 @@ const CartPage = () => {
             </p>
           </div>
           <div className="bg-white p-3 rounded">
+            {/* Header - Desktop only */}
             <div
-              className=" row mb-3"
+              className="row mb-3 d-none d-lg-flex"
               style={{ borderBottom: "1px solid lightgray" }}
             >
               <div className="col-lg-7 text">
@@ -213,22 +280,94 @@ const CartPage = () => {
                 <strong>Thành tiền</strong>
               </div>
             </div>
-            <div style={{}}>
+
+            <div>
               {CartList?.map((item) => (
-                <CartItem item={item} />
+                <div key={item.id}>
+                  {/* Desktop view */}
+                  <div className="d-none d-lg-block">
+                    <CartItem item={item} />
+                  </div>
+
+                  {/* Mobile view */}
+                  <div className="d-lg-none cart-item pb-3 mb-3">
+                    <div className="d-flex gap-3 mb-2">
+                      <img
+                        width={80}
+                        height={80}
+                        style={{ objectFit: "contain" }}
+                        src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+                        alt={item?.variant?.name}
+                      />
+                      <div className="flex-grow-1">
+                        <p className="mb-1">
+                          <strong>{item?.variant?.name}</strong>
+                        </p>
+                        <p
+                          className="text-muted mb-1"
+                          style={{ fontSize: "12px" }}
+                        >
+                          SKU: 123456
+                        </p>
+                        <span
+                          className="p-1"
+                          style={{
+                            backgroundColor: "#f3f3f3ff",
+                            fontSize: "12px",
+                            borderRadius: "3px",
+                          }}
+                        >
+                          Màu bạc + 64 GB
+                        </span>
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center mt-2">
+                      <div>
+                        <p className="mb-0" style={{ fontSize: "14px" }}>
+                          Đơn giá:
+                        </p>
+                        <strong>
+                          {/* {item.unit_price!.toLocaleString("vi-VN")}đ */}
+                        </strong>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <span style={{ fontSize: "14px" }}>SL:</span>
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          min="1"
+                          className="form-control"
+                          style={{ width: "60px" }}
+                          readOnly
+                        />
+                      </div>
+                      <div className="text-end">
+                        <p className="mb-0" style={{ fontSize: "14px" }}>
+                          Thành tiền:
+                        </p>
+                        <strong style={{ color: "#1586ddff" }}>
+                          {(
+                            item.unit_price! * (item.quantity || 1)
+                          ).toLocaleString("vi-VN")}
+                          đ
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="col-lg-4 pt-5">
-          <div className="p-3 bg-white p-3 rounded">
+        <div className="col-12 col-lg-4">
+          <div className="p-3 bg-white rounded">
             <p>
               <strong>Thanh toán</strong>
             </p>
             <div className="d-flex justify-content-between align-items-center">
               <h6>Tạm tính:</h6>
-              <p>{totalPrice?.toLocaleString("vi-VN")}đ</p>
+              <p>{totalPrice?.toLocaleString("vi-VN") || 0}đ</p>
             </div>
             <div className="d-flex justify-content-between align-items-center">
               <h6>Thành tiền:</h6>

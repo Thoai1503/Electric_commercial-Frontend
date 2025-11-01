@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLoginPage } from "../../hook/useLoginPage";
 import { useRegister } from "../../hook/useRegister";
-import "./login.css";
+
 import { CAlert } from "@coreui/react";
 
 const Login = () => {

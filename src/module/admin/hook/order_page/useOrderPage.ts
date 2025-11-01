@@ -12,11 +12,11 @@ export const useOrderPage = () => {
   ) => {
     const { name, value } = e.target;
     console.log(name, value);
+    setPage(1);
     setQuery(value);
   };
   const changePage = (newPage: number) => {
     setPage(newPage);
-    // (Không cần invalidateQueries vì useQuery tự refetch khi page đổi)
   };
   return {
     orderList,
