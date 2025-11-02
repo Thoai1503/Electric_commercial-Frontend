@@ -3,11 +3,14 @@ import appSlice from "../reducers/adminThemeReducer";
 import authenSlice from "../reducers/authenReducer";
 import cartSlice from "../reducers/cartReducer";
 
+import filterProductSlice from "../reducers/filterReducer";
+
 export const store = configureStore({
   reducer: {
     app: appSlice,
     authen: authenSlice,
     cart: cartSlice,
+    filterProduct: filterProductSlice,
   },
 });
 
