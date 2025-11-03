@@ -7,7 +7,7 @@ interface FilterState {
   variant: ProductVariant[];
   loading: boolean;
   current_length: number;
-  filter_state?: {
+  filter_state: {
     title: string;
     sortBy?: string;
     order?: string;
@@ -18,15 +18,36 @@ interface FetchProductVariantParams {
   take: number;
   order?: string;
   sortBy?: string;
+  title?: string;
 }
 
 export const fetchProductVariant = createAsyncThunk(
   "filter/fetchProductVariant",
-  async ({ skip, take, order, sortBy }: FetchProductVariantParams) => {
+  async ({ skip, take, title, order, sortBy }: FetchProductVariantParams) => {
     const response = await catalogRequest.get<ProductVariant[]>(
-      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}`
+      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}`,
+      {
+        onUploadProgress: (progressEvent) => {
+          const progress = (progressEvent.loaded / progressEvent.total!) * 100;
+          alert(`Upload Progress: ${progress}%`);
+        },
+        onDownloadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const progress = (progressEvent.loaded / progressEvent.total) * 100;
+            console.log(`Download Progress: ${progress.toFixed(2)}%`);
+          }
+        },
+      }
     );
-    return { data: response.data, skip };
+    return {
+      data: response.data,
+      skip,
+      filter_state: {
+        title,
+        sortBy,
+        order,
+      },
+    };
   }
 );
 
@@ -35,8 +56,8 @@ const initialState: FilterState = {
   loading: false,
   current_length: 0,
   filter_state: {
-    title: "Mặc định",
-    sortBy: "created_at",
+    title: "Giá tăng dần",
+    sortBy: "price",
     order: "asc",
   },
 };
@@ -59,9 +80,19 @@ const filterProductSlice = createSlice({
         // If skip is 0, reset the array (new search/filter)
         if (action.payload.skip === 0) {
           state.variant = action.payload.data;
+          state.filter_state = {
+            ...action.payload.filter_state,
+            title:
+              action.payload.filter_state.title || state.filter_state.title,
+          };
         } else {
           // Otherwise, append new items (load more)
           state.variant = [...state.variant, ...action.payload.data];
+          state.filter_state = {
+            ...action.payload.filter_state,
+            title:
+              action.payload.filter_state.title || state.filter_state.title,
+          };
         }
         state.current_length = state.variant.length;
       })

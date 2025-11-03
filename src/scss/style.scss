@@ -21,6 +21,11 @@ body {
 .bg-white {
   background-color: white !important;
 }
+
+.filter-btn:disabled {
+  color: black;
+}
+
 .decrease-btn:hover {
   cursor: pointer;
   background-color: #06b6d4;

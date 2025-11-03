@@ -3,7 +3,7 @@ import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
 import type { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
 import { fetchProductVariant } from "../../reducers/filterReducer";
-import { setFilterState } from "../../reducers/filterReducer";
+
 const Product = () => {
   const dispatch = useDispatch<AppDispatch>();
   const ProductList = useSelector(
@@ -18,16 +18,18 @@ const Product = () => {
   const filterState = useSelector(
     (state: RootState) => state.filterProduct.filter_state
   );
+
   useEffect(() => {
     dispatch(
       fetchProductVariant({
         skip: 0,
         take: 4,
+        title: filterState?.title,
         sortBy: filterState?.sortBy,
         order: filterState?.order,
       })
     );
-  }, [dispatch, filterState]);
+  }, [dispatch]);
 
   console.log("Length: " + ProductList.length);
   return (
@@ -108,76 +110,226 @@ const Product = () => {
           <div className="p-3 bg-white rounded mb-1">
             <div className="head d-flex">
               <div>Sắp xếp theo:</div>
-              <div
-                className="position-relative mx-2 rounded p-2 text"
+              <button
+                className="position-relative mx-2 rounded p-2 text filter-btn"
                 style={{
-                  border: "1px solid #06b6d4",
+                  border:
+                    filterState?.title == "Giá tăng dần"
+                      ? "1px solid #06b6d4"
+                      : "1px solid lightgray",
+                  backgroundColor: "white",
                 }}
+                disabled={filterState?.title == "Giá tăng dần"}
                 onClick={() =>
-                  dispatch(setFilterState({ sortBy: "price", order: "asc" }))
+                  dispatch(
+                    fetchProductVariant({
+                      skip: 0,
+                      take: 4,
+                      title: "Giá tăng dần",
+                      sortBy: "price",
+                      order: "asc",
+                    })
+                  )
                 }
               >
                 Giá tăng dần
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: "0",
-                    height: "0",
-                    borderTop: "25px solid #06b6d4",
-                    borderLeft: "25px solid transparent",
-                    borderTopRightRadius: "0.375rem",
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="11"
-                    fill="white"
-                    viewBox="0 0 16 16"
+                {filterState?.title == "Giá tăng dần" && (
+                  <div
                     style={{
                       position: "absolute",
-                      top: "-22px",
-                      right: "4px",
+                      top: 0,
+                      right: 0,
+                      width: "0",
+                      height: "0",
+                      borderTop: "25px solid #06b6d4",
+                      borderLeft: "25px solid transparent",
+                      borderTopRightRadius: "0.375rem",
                     }}
                   >
-                    <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
-                  </svg>
-                </div>
-              </div>
-              <div
-                className="mx-2 rounded p-2 text"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="11"
+                      fill="white"
+                      viewBox="0 0 16 16"
+                      style={{
+                        position: "absolute",
+                        top: "-22px",
+                        right: "4px",
+                      }}
+                    >
+                      <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+              <button
+                className="position-relative  mx-2 rounded p-2 text filter-btn"
                 style={{
-                  border: "1px solid lightgray",
+                  border:
+                    filterState?.title == "Giá giảm dần"
+                      ? "1px solid #06b6d4"
+                      : "1px solid lightgray",
+                  backgroundColor: "white",
                 }}
+                disabled={filterState?.title == "Giá giảm dần"}
                 onClick={() =>
-                  dispatch(setFilterState({ sortBy: "price", order: "desc" }))
+                  dispatch(
+                    fetchProductVariant({
+                      skip: 0,
+                      take: 4,
+                      title: "Giá giảm dần",
+                      sortBy: "price",
+                      order: "desc",
+                    })
+                  )
                 }
               >
                 Giá giảm dần
-              </div>
-              <div
-                className="mx-2 rounded p-2 text"
+                {filterState?.title == "Giá giảm dần" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      width: "0",
+                      height: "0",
+                      borderTop: "25px solid #06b6d4",
+                      borderLeft: "25px solid transparent",
+                      borderTopRightRadius: "0.375rem",
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="11"
+                      fill="white"
+                      viewBox="0 0 16 16"
+                      style={{
+                        position: "absolute",
+                        top: "-22px",
+                        right: "4px",
+                      }}
+                    >
+                      <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+              <button
+                className="position-relative mx-2 rounded p-2 text"
                 style={{
-                  border: "1px solid lightgray",
+                  border:
+                    filterState?.title == "Mới nhất"
+                      ? "1px solid #06b6d4"
+                      : "1px solid lightgray",
+                  backgroundColor: "white",
                 }}
                 onClick={() =>
                   dispatch(
-                    setFilterState({ sortBy: "created_at", order: "desc" })
+                    fetchProductVariant({
+                      skip: 0,
+                      take: 4,
+                      title: "Mới nhất",
+                      sortBy: "created_at",
+                      order: "desc",
+                    })
                   )
                 }
               >
                 Mới nhất
-              </div>
-              <div
+                {filterState?.title == "Mới nhất" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      width: "0",
+                      height: "0",
+                      borderTop: "25px solid #06b6d4",
+                      borderLeft: "25px solid transparent",
+                      borderTopRightRadius: "0.375rem",
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="11"
+                      fill="white"
+                      viewBox="0 0 16 16"
+                      style={{
+                        position: "absolute",
+                        top: "-22px",
+                        right: "4px",
+                      }}
+                    >
+                      <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+              {/* <div
                 className="mx-2 rounded p-2 text"
                 style={{
                   border: "1px solid lightgray",
                 }}
               >
                 Bán chạy nhất
-              </div>
+              </div> */}
+
+              <button
+                className="position-relative mx-2 rounded p-2 text filter-btn"
+                style={{
+                  border:
+                    filterState?.title == "Bán chạy nhất"
+                      ? "1px solid #06b6d4"
+                      : "1px solid lightgray",
+                  backgroundColor: "white",
+                }}
+                disabled={filterState?.title == "Bán chạy nhất"}
+                onClick={() =>
+                  dispatch(
+                    fetchProductVariant({
+                      skip: 0,
+                      take: 4,
+                      title: "Bán chạy nhất",
+                      sortBy: "sold",
+                      order: "desc",
+                    })
+                  )
+                }
+              >
+                Bán chạy nhất
+                {filterState?.title == "Bán chạy nhất" && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      width: "0",
+                      height: "0",
+                      borderTop: "25px solid #06b6d4",
+                      borderLeft: "25px solid transparent",
+                      borderTopRightRadius: "0.375rem",
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="11"
+                      fill="white"
+                      viewBox="0 0 16 16"
+                      style={{
+                        position: "absolute",
+                        top: "-22px",
+                        right: "4px",
+                      }}
+                    >
+                      <path d="M13.485 1.929a.75.75 0 0 1 .09 1.06l-7 8a.75.75 0 0 1-1.08.04l-3-3a.75.75 0 0 1 1.06-1.06l2.47 2.47 6.47-7.41a.75.75 0 0 1 1.06-.1z" />
+                    </svg>
+                  </div>
+                )}
+              </button>
             </div>
           </div>
           <div className=" bg-white ">
