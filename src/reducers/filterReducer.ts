@@ -7,6 +7,11 @@ interface FilterState {
   variant: ProductVariant[];
   loading: boolean;
   current_length: number;
+  filter_state?: {
+    title: string;
+    sortBy?: string;
+    order?: string;
+  };
 }
 interface FetchProductVariantParams {
   skip: number;
@@ -29,12 +34,21 @@ const initialState: FilterState = {
   variant: [],
   loading: false,
   current_length: 0,
+  filter_state: {
+    title: "Mặc định",
+    sortBy: "created_at",
+    order: "asc",
+  },
 };
 
 const filterProductSlice = createSlice({
   name: "product-filter",
   initialState,
-  reducers: {},
+  reducers: {
+    setFilterState: (state, action) => {
+      state.filter_state = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProductVariant.pending, (state) => {
@@ -56,5 +70,5 @@ const filterProductSlice = createSlice({
       });
   },
 });
-//export const {} = filterProductSlice.actions;
+export const { setFilterState } = filterProductSlice.actions;
 export default filterProductSlice.reducer;

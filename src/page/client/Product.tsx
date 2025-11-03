@@ -3,7 +3,7 @@ import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
 import type { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
 import { fetchProductVariant } from "../../reducers/filterReducer";
-
+import { setFilterState } from "../../reducers/filterReducer";
 const Product = () => {
   const dispatch = useDispatch<AppDispatch>();
   const ProductList = useSelector(
@@ -15,9 +15,19 @@ const Product = () => {
   const isLoading = useSelector(
     (state: RootState) => state.filterProduct.loading
   );
+  const filterState = useSelector(
+    (state: RootState) => state.filterProduct.filter_state
+  );
   useEffect(() => {
-    dispatch(fetchProductVariant({ skip: 0, take: 4 }));
-  }, [dispatch]);
+    dispatch(
+      fetchProductVariant({
+        skip: 0,
+        take: 4,
+        sortBy: filterState?.sortBy,
+        order: filterState?.order,
+      })
+    );
+  }, [dispatch, filterState]);
 
   console.log("Length: " + ProductList.length);
   return (
@@ -104,7 +114,7 @@ const Product = () => {
                   border: "1px solid #06b6d4",
                 }}
                 onClick={() =>
-                  dispatch(fetchProductVariant({ skip: 0, take: 4 }))
+                  dispatch(setFilterState({ sortBy: "price", order: "asc" }))
                 }
               >
                 Giá tăng dần
@@ -141,6 +151,9 @@ const Product = () => {
                 style={{
                   border: "1px solid lightgray",
                 }}
+                onClick={() =>
+                  dispatch(setFilterState({ sortBy: "price", order: "desc" }))
+                }
               >
                 Giá giảm dần
               </div>
@@ -151,12 +164,7 @@ const Product = () => {
                 }}
                 onClick={() =>
                   dispatch(
-                    fetchProductVariant({
-                      skip: 0,
-                      take: 4,
-                      sortBy: "created_at",
-                      order: "desc",
-                    })
+                    setFilterState({ sortBy: "created_at", order: "desc" })
                   )
                 }
               >
@@ -174,56 +182,6 @@ const Product = () => {
           </div>
           <div className=" bg-white ">
             <div className="row mx-0">
-              {/* {Array.from({ length: 5 }, (_, i) => (
-                <div
-                  className="col-lg-3 pb-3 m"
-                  style={{ marginRight: "0px", padding: "3px", width: "240px" }}
-                >
-                  <div className="card h-100" style={{ borderRadius: "0px" }}>
-                    <img
-                      src="/images/asus-vivobook-go-15-e1504fa-r5-nj630w-glr-14-750x500.jpg?h=120&fit=crop&auto=format&dpr=2 2x"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                      }}
-                      alt="df"
-                    />
-                    <div
-                      className="card-body pb-0"
-                      style={{ minHeight: "100px" }}
-                    >
-                      <div>
-                        <p className="text">
-                          Asus Vivobook Go 15 E1504FA R5 - NJ630W
-                        </p>
-                        <p className="small text-muted">Laptops</p>
-                      </div>
-                    </div>
-                    <div className="card-body pb-0">
-                      <div className="d-flex justify-content-between">
-                        <p>
-                          <span style={{ color: "#1a96e2ff" }}>
-                            <strong> 1.000.000 vnđ</strong>
-                          </span>
-                        </p>
-                        <p className="text-dark"> 8787</p>
-                      </div>
-                      <p className="small text-muted">VISA Platinum</p>
-                    </div>
-                    <div className="card-body" style={{ marginTop: "auto" }}>
-                      <button
-                        type="button"
-                        data-mdb-button-init
-                        data-mdb-ripple-init
-                        className="btn btn-outline-primary btn-sm w-100"
-                      >
-                        Thêm vào giỏ
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))} */}
               {ProductList.length > 0 &&
                 ProductList?.map((item) => (
                   <div
@@ -292,7 +250,14 @@ const Product = () => {
               className="text bg-white p-1 px-5 mt-3"
               style={{ cursor: "pointer", opacity: isLoading ? 0.5 : 1 }}
               onClick={() =>
-                dispatch(fetchProductVariant({ skip: count, take: 4 }))
+                dispatch(
+                  fetchProductVariant({
+                    skip: count,
+                    take: 4,
+                    sortBy: filterState?.sortBy,
+                    order: filterState?.order,
+                  })
+                )
               }
             >
               Xem thêm sản phẩm
