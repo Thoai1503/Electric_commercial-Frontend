@@ -19,13 +19,21 @@ interface FetchProductVariantParams {
   order?: string;
   sortBy?: string;
   title?: string;
+  category?: string;
 }
 
 export const fetchProductVariant = createAsyncThunk(
   "filter/fetchProductVariant",
-  async ({ skip, take, title, order, sortBy }: FetchProductVariantParams) => {
+  async ({
+    skip,
+    take,
+    title,
+    order,
+    sortBy,
+    category = "",
+  }: FetchProductVariantParams) => {
     const response = await catalogRequest.get<ProductVariant[]>(
-      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}`,
+      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}`,
       {
         onUploadProgress: (progressEvent) => {
           const progress = (progressEvent.loaded / progressEvent.total!) * 100;

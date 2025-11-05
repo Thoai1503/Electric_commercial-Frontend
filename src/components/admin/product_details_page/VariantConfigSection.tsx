@@ -15,7 +15,7 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
   const { handleChange, handleSubmit, variants, categoryAttributes } =
     useVariantConfigSection(id);
 
-  console.log("Variant Attribute :" + JSON.stringify(variants));
+  console.log("Variant  :" + JSON.stringify(variants));
   // const en = variants && variants[0]?.variant_attributes;
   //alert(JSON.stringify(en));
 

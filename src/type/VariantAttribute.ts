@@ -1,4 +1,5 @@
 import type { Attribute } from "./Attribute";
+import type { AttributeValue } from "./AttributeValue";
 
 export interface VariantAttribute {
   id: number;
@@ -7,5 +8,7 @@ export interface VariantAttribute {
   value_int: string;
   value_text: string;
   value_decimal: string;
+  attribute_value_id: number | null;
+  attribute_value: AttributeValue | null;
   attribute: Attribute;
 }

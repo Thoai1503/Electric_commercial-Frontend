@@ -4,6 +4,8 @@ import type { ProductVariant } from "../../../../type/productVariant";
 import type { VariantAttribute } from "../../../../type/VariantAttribute";
 import { useVariantAttributeMutation } from "../../../../module/admin/hook/product_detail_page/useVariantAttributeMutation";
 
+import VariantAttributeComboBox from "./CheckBox/VariantAttributeComboBox";
+
 interface Prop {
   item: Partial<ProductVariant>;
   index: number;
@@ -34,13 +36,16 @@ const VariantItem = ({ item, index }: Prop) => {
 
   const handleSubmit = () => {
     console.log("Data: " + JSON.stringify(variantAttributeList));
+    //  alert("Submitting..." + JSON.stringify(variantAttributeList));
     // return;
     updateVariant(productVariant);
     update(variantAttributeList);
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
     id: number
   ) => {
     const { name, value } = e.target;
@@ -56,15 +61,16 @@ const VariantItem = ({ item, index }: Prop) => {
           ? {
               ...attr,
               value_text:
-                attr.attribute.data_type === "nvarchar"
+                attr.attribute?.data_type === "nvarchar"
                   ? value
                   : attr.value_text,
               value_int:
-                attr.attribute.data_type === "int" ? value : attr.value_int,
+                attr.attribute?.data_type === "int" ? value : attr.value_int,
               value_decimal:
-                attr.attribute.data_type === "decimal"
+                attr.attribute?.data_type === "decimal"
                   ? value
                   : attr.value_decimal,
+              attribute_value_id: value != "0" ? Number(value) : null,
             }
           : attr
       )
@@ -79,21 +85,16 @@ const VariantItem = ({ item, index }: Prop) => {
         <td>{item.price}</td>
         {variantAttributeList
           .sort((a, b) => a.attribute_id - b.attribute_id)
-          .map((e) => (
-            <td>
-              <input
-                placeholder={
-                  e.attribute.id.toString() + "&" + e.attribute.data_type
-                }
-                value={e.value_decimal || e.value_int || e.value_text}
-                name={e.attribute.name}
-                onChange={(ev) => handleChange(ev, e.id)}
-                style={{
-                  width: e.attribute.data_type == "int" ? "40px" : "auto",
-                }}
-              />
-            </td>
-          ))}
+          .map((e) => {
+            return (
+              <td>
+                <VariantAttributeComboBox
+                  attribute_id={e.attribute_id}
+                  attribute_value_id={e.attribute_value_id || null}
+                />
+              </td>
+            );
+          })}
         <td>
           <button
             className="btn btn-outline-info"
@@ -157,16 +158,24 @@ const VariantItem = ({ item, index }: Prop) => {
         .sort((a, b) => a.attribute_id - b.attribute_id)
         .map((e) => (
           <td>
-            <input
+            {/* <input
               placeholder={
-                e.attribute.id.toString() + "&" + e.attribute.data_type
+                e.attribute?.id.toString() + "&" + e.attribute?.data_type
               }
               value={e.value_decimal || e.value_int || e.value_text}
-              name={e.attribute.name}
+              name={e.attribute?.name}
               onChange={(ev) => handleChange(ev, e.id)}
               style={{
-                width: e.attribute.data_type == "int" ? "40px" : "auto",
+                width: e.attribute?.data_type == "int" ? "40px" : "auto",
               }}
+            /> */}
+
+            <VariantAttributeComboBox
+              attribute_id={e.attribute_id}
+              attribute_value_id={e.attribute_value_id || null}
+              handleChange={(ev: React.ChangeEvent<HTMLSelectElement>) =>
+                handleChange(ev, e.id)
+              }
             />
           </td>
         ))}

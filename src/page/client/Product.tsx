@@ -3,8 +3,12 @@ import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
 import type { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
 import { fetchProductVariant } from "../../reducers/filterReducer";
+import { useFilterPage } from "../../module/client/hook/filter_page/useFilterPage";
+import { useParams } from "react-router-dom";
 
 const Product = () => {
+  const { category } = useParams();
+  console.log("Category: " + category);
   const dispatch = useDispatch<AppDispatch>();
   const ProductList = useSelector(
     (state: RootState) => state.filterProduct.variant
@@ -18,6 +22,7 @@ const Product = () => {
   const filterState = useSelector(
     (state: RootState) => state.filterProduct.filter_state
   );
+  const { handleChange } = useFilterPage();
 
   useEffect(() => {
     dispatch(
@@ -27,6 +32,7 @@ const Product = () => {
         title: filterState?.title,
         sortBy: filterState?.sortBy,
         order: filterState?.order,
+        category: category,
       })
     );
   }, [dispatch]);
@@ -84,7 +90,13 @@ const Product = () => {
             <div className="row  mb-3">
               <span className="text col-lg-6">
                 {" "}
-                <input type="checkbox" /> Core i5
+                <input
+                  id="1"
+                  name="tt"
+                  type="checkbox"
+                  onChange={handleChange}
+                />{" "}
+                Core i5
               </span>
               <span className="text col-lg-6">
                 {" "}
@@ -128,6 +140,7 @@ const Product = () => {
                       title: "Giá tăng dần",
                       sortBy: "price",
                       order: "asc",
+                      category: category,
                     })
                   )
                 }
@@ -181,6 +194,7 @@ const Product = () => {
                       title: "Giá giảm dần",
                       sortBy: "price",
                       order: "desc",
+                      category: category,
                     })
                   )
                 }
@@ -233,6 +247,7 @@ const Product = () => {
                       title: "Mới nhất",
                       sortBy: "created_at",
                       order: "desc",
+                      category: category,
                     })
                   )
                 }
@@ -295,6 +310,7 @@ const Product = () => {
                       title: "Bán chạy nhất",
                       sortBy: "sold",
                       order: "desc",
+                      category: category,
                     })
                   )
                 }
@@ -408,6 +424,7 @@ const Product = () => {
                     take: 4,
                     sortBy: filterState?.sortBy,
                     order: filterState?.order,
+                    category: category,
                   })
                 )
               }
