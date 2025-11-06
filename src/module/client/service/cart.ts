@@ -30,3 +30,25 @@ export const addToUserCart = async (item: Partial<Cart>): Promise<number> => {
       throw error;
     });
 };
+
+export const addManyToUserCart = async (
+  user_id: number,
+  items: Partial<Cart>[]
+): Promise<boolean> => {
+  return Request.post<boolean>("/api/v1/cart/batch", {
+    user_id: user_id,
+    items: items,
+  })
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const removeCartItem = async (id: number): Promise<boolean> => {
+  return Request.delete<boolean>(`/api/v1/cart/${id}`)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err;
+    });
+};

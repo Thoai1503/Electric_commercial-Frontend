@@ -7,6 +7,7 @@ interface FilterState {
   variant: ProductVariant[];
   loading: boolean;
   current_length: number;
+  progress: number;
   filter_state: {
     title: string;
     sortBy?: string;
@@ -24,29 +25,31 @@ interface FetchProductVariantParams {
 
 export const fetchProductVariant = createAsyncThunk(
   "filter/fetchProductVariant",
-  async ({
-    skip,
-    take,
-    title,
-    order,
-    sortBy,
-    category = "",
-  }: FetchProductVariantParams) => {
+  async (
+    {
+      skip,
+      take,
+      title,
+      order,
+      sortBy,
+      category = "",
+    }: FetchProductVariantParams,
+    { dispatch }
+  ) => {
+    dispatch(setProgress(0));
+
+    const progressInterval = setInterval(() => {
+      dispatch(incrementProgress(10));
+    }, 200);
+
     const response = await catalogRequest.get<ProductVariant[]>(
-      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}`,
-      {
-        onUploadProgress: (progressEvent) => {
-          const progress = (progressEvent.loaded / progressEvent.total!) * 100;
-          alert(`Upload Progress: ${progress}%`);
-        },
-        onDownloadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            const progress = (progressEvent.loaded / progressEvent.total) * 100;
-            console.log(`Download Progress: ${progress.toFixed(2)}%`);
-          }
-        },
-      }
+      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}`
     );
+
+    clearInterval(progressInterval);
+    dispatch(setProgress(90));
+    dispatch(setProgress(100));
+
     return {
       data: response.data,
       skip,
@@ -63,6 +66,7 @@ const initialState: FilterState = {
   variant: [],
   loading: false,
   current_length: 0,
+  progress: 0,
   filter_state: {
     title: "Giá tăng dần",
     sortBy: "price",
@@ -76,6 +80,12 @@ const filterProductSlice = createSlice({
   reducers: {
     setFilterState: (state, action) => {
       state.filter_state = action.payload;
+    },
+    setProgress: (state, action) => {
+      state.progress = Math.min(action.payload, 100);
+    },
+    incrementProgress: (state, action) => {
+      state.progress += Math.min(state.progress + action.payload, 90);
     },
   },
   extraReducers: (builder) => {
@@ -109,5 +119,6 @@ const filterProductSlice = createSlice({
       });
   },
 });
-export const { setFilterState } = filterProductSlice.actions;
+export const { setFilterState, setProgress, incrementProgress } =
+  filterProductSlice.actions;
 export default filterProductSlice.reducer;

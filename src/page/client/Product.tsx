@@ -22,6 +22,9 @@ const Product = () => {
   const filterState = useSelector(
     (state: RootState) => state.filterProduct.filter_state
   );
+  const progress = useSelector(
+    (state: RootState) => state.filterProduct.progress
+  );
   const { handleChange } = useFilterPage();
 
   useEffect(() => {
@@ -41,7 +44,7 @@ const Product = () => {
   return (
     <div className="container mt-0">
       <Breadcrumbs />
-
+      {progress}
       <div className="content row">
         <div className="col-lg-2  py-2">
           <div className="bg-white rounded p-3">
@@ -348,7 +351,7 @@ const Product = () => {
               </button>
             </div>
           </div>
-          <div className=" bg-white ">
+          <div className=" bg-white " style={{ opacity: isLoading ? 0.4 : 1 }}>
             <div className="row mx-0">
               {ProductList.length > 0 &&
                 ProductList?.map((item) => (
