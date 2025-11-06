@@ -15,35 +15,49 @@ import Menu from "../../components/client/home/Menu";
 import type { UserDataRespone } from "../../type/User";
 
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
+import type { Cart } from "../../type/Cart";
 
 const Home = () => {
-  const user = JSON.parse(
-    localStorage.getItem("user") || '{"id":0}'
-  ) as Partial<UserDataRespone>;
+  const user = ((): Partial<UserDataRespone> => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch {
+      return {};
+    }
+  })();
 
   const {
     data,
     userCart,
-
     handleClickChange,
     loading,
     addToCartForAuthenticatedUser,
-  } = useHomePage(user.id || 0);
+  } = useHomePage(user?.id || 0);
+
+  const guestCart: Cart[] = ((): Cart[] => {
+    try {
+      return JSON.parse(localStorage.getItem("cart") || "[]");
+    } catch {
+      return [];
+    }
+  })();
+
+  const effectiveCart: Cart[] = (user?.id ? userCart : guestCart) || [];
 
   const product = useMemo(
     () =>
-      data?.map((item) => {
-        const hasInCart = userCart?.some((u) => u.variant_id == item.id);
-        if (!hasInCart)
+      data?.map((item: any) => {
+        const cartItem = effectiveCart.find((c) => c.variant_id === item.id);
+        if (!cartItem) {
           return { ...item, inCart: false, cart: { id: 0, quantity: 0 } };
-        const cartItem = userCart?.find((u) => u.variant_id == item.id);
+        }
         return {
           ...item,
           inCart: true,
-          cart: { id: cartItem?.id, quantity: cartItem?.quantity },
+          cart: { id: cartItem.id, quantity: cartItem.quantity },
         };
       }),
-    [userCart, user]
+    [effectiveCart, data]
   );
 
   const [activeFilter, setActiveFilter] = useState<string>("*");
@@ -297,6 +311,32 @@ const Home = () => {
                               >
                                 <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
                                   {item.inCart && user ? (
+                                    <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                                      <div
+                                        className="decrease-btn"
+                                        onClick={() =>
+                                          handleClickChange(
+                                            item.cart.id!,
+                                            item.cart.quantity! - 1
+                                          )
+                                        }
+                                      >
+                                        -
+                                      </div>
+                                      <div>{item.cart.quantity}</div>
+                                      <div
+                                        className="increase-btn"
+                                        onClick={() =>
+                                          handleClickChange(
+                                            item.cart.id!,
+                                            item.cart.quantity! + 1
+                                          )
+                                        }
+                                      >
+                                        +
+                                      </div>
+                                    </button>
+                                  ) : item.inCart ? (
                                     <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
                                       <div
                                         className="decrease-btn"
