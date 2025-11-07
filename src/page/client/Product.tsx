@@ -5,10 +5,16 @@ import { useEffect } from "react";
 import { fetchProductVariant } from "../../reducers/filterReducer";
 import { useFilterPage } from "../../module/client/hook/filter_page/useFilterPage";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { categoryAttributeQuery } from "../../module/client/query/categoryAttribute";
 
 const Product = () => {
   const { category } = useParams();
-  console.log("Category: " + category);
+  // console.log("Category: " + category);
+  const { data: categoryAttribute } = useQuery(
+    categoryAttributeQuery.category_slug(category || "")
+  );
+
   const dispatch = useDispatch<AppDispatch>();
   const ProductList = useSelector(
     (state: RootState) => state.filterProduct.variant
@@ -22,10 +28,10 @@ const Product = () => {
   const filterState = useSelector(
     (state: RootState) => state.filterProduct.filter_state
   );
-  const progress = useSelector(
-    (state: RootState) => state.filterProduct.progress
-  );
-  const { handleChange } = useFilterPage();
+  // const progress = useSelector(
+  //   (state: RootState) => state.filterProduct.progress
+  // );
+  const { handleChangeFilter } = useFilterPage(category || "");
 
   useEffect(() => {
     dispatch(
@@ -40,11 +46,11 @@ const Product = () => {
     );
   }, [dispatch]);
 
-  console.log("Length: " + ProductList.length);
+  // console.log("Length: " + ProductList.length);
   return (
     <div className="container mt-0">
       <Breadcrumbs />
-      {progress}
+
       <div className="content row">
         <div className="col-lg-2  py-2">
           <div className="bg-white rounded p-3">
@@ -62,58 +68,58 @@ const Product = () => {
               </span>
             </div>
             <p className="text text-danger ">Xoá bộ lọc</p>
-            <hr />
-            <strong>
-              {" "}
-              <p className="text">Thương hiệu</p>
-            </strong>
-            <div className="row mb-3">
-              <span className="text col-lg-6">
+            <div>
+              <hr />
+              <strong>
                 {" "}
-                <input type="checkbox" /> Samsung
-              </span>
-              <span className="text col-lg-6">
-                {" "}
-                <input type="checkbox" /> Acer
-              </span>
-              <span className="text col-lg-6">
-                {" "}
-                <input type="checkbox" /> Asus
-              </span>
-              <span className="text col-lg-6">
-                {" "}
-                <input type="checkbox" /> Dell
-              </span>
+                <p className="text">Thương hiệu</p>
+              </strong>
+              <div className="row mb-3">
+                <span className="text col-lg-6">
+                  {" "}
+                  <input type="checkbox" /> Samsung
+                </span>
+                <span className="text col-lg-6">
+                  {" "}
+                  <input type="checkbox" /> Acer
+                </span>
+                <span className="text col-lg-6">
+                  {" "}
+                  <input type="checkbox" /> Asus
+                </span>
+                <span className="text col-lg-6">
+                  {" "}
+                  <input type="checkbox" /> Dell
+                </span>
+              </div>
             </div>
             <hr />
-            <strong>
-              {" "}
-              <p className="text">CPU</p>
-            </strong>
-            <div className="row  mb-3">
-              <span className="text col-lg-6">
-                {" "}
-                <input
-                  id="1"
-                  name="tt"
-                  type="checkbox"
-                  onChange={handleChange}
-                />{" "}
-                Core i5
-              </span>
-              <span className="text col-lg-6">
-                {" "}
-                <input type="checkbox" /> Core i7
-              </span>
-              <span className="text col-lg-6">
-                {" "}
-                <input type="checkbox" /> Core Ultra 5
-              </span>
-              <span className="text col-lg-6">
-                {" "}
-                <input type="checkbox" /> Core Ultra 7
-              </span>
-            </div>
+            {categoryAttribute &&
+              categoryAttribute?.map((attr) => (
+                <div key={attr.id}>
+                  <strong>
+                    {" "}
+                    <p className="text">{attr.attribute.name}</p>
+                  </strong>
+                  <div className="row mb-3">
+                    {attr.attribute.attribute_values &&
+                      attr.attribute.attribute_values.map((value) => (
+                        <span className="text col-lg-6" key={value.id}>
+                          {" "}
+                          <input
+                            id={attr.id.toString()}
+                            name={attr.attribute.id.toString()}
+                            type="checkbox"
+                            value={value.id}
+                            onChange={handleChangeFilter}
+                          />{" "}
+                          {value.value}
+                        </span>
+                      ))}
+                  </div>
+                  <hr />
+                </div>
+              ))}
           </div>
         </div>
 
@@ -144,6 +150,7 @@ const Product = () => {
                       sortBy: "price",
                       order: "asc",
                       category: category,
+                      filters: filterState?.filters,
                     })
                   )
                 }
@@ -198,6 +205,7 @@ const Product = () => {
                       sortBy: "price",
                       order: "desc",
                       category: category,
+                      filters: filterState?.filters,
                     })
                   )
                 }
@@ -251,6 +259,7 @@ const Product = () => {
                       sortBy: "created_at",
                       order: "desc",
                       category: category,
+                      filters: filterState?.filters,
                     })
                   )
                 }
@@ -314,6 +323,7 @@ const Product = () => {
                       sortBy: "sold",
                       order: "desc",
                       category: category,
+                      filters: filterState?.filters,
                     })
                   )
                 }

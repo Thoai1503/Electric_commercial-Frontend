@@ -59,3 +59,17 @@ export const createAttributeForCategory = async (
       throw error; // Propagate the error to be handled by the caller
     });
 };
+
+export const getCategoryAttributesByCategory = async (
+  category_id: string
+): Promise<CategoryAttribute[]> => {
+  return await catalogRequest
+    .get(`/categoryattribute/category/${category_id}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      console.log("Error fetching attributes by category ID:", error);
+      throw error; // Propagate the error to be handled by the caller
+    });
+};

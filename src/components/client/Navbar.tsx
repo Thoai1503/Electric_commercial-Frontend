@@ -1,11 +1,15 @@
 import { useState } from "react";
 import type { MouseEvent } from "react";
+import { useLogout } from "../../hook/useLogout";
 
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const user = { name: "John Doe" }; // Demo user
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : null;
 
+  const { handleLogout } = useLogout();
   const logout = () => {
     console.log("User logged out");
     // dispatch(clearUser());
@@ -272,7 +276,7 @@ const Navbar = () => {
                 style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}
               >
                 <a
-                  href="./"
+                  href="/"
                   style={{
                     color: "#48d6f0ff",
                     textDecoration: "none",
@@ -662,7 +666,7 @@ const Navbar = () => {
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          logout();
+                          handleLogout();
                         }}
                         style={{
                           ...dropdownItemStyle,

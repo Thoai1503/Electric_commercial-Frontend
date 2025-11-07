@@ -38,3 +38,12 @@ export const userRegisterService = async (
     throw error;
   }
 };
+
+export const logout = async (): Promise<void> => {
+  try {
+    const result = await http.post("/api/v1/auth/logout");
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
+};

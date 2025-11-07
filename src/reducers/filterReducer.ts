@@ -12,6 +12,7 @@ interface FilterState {
     title: string;
     sortBy?: string;
     order?: string;
+    filters?: Record<string, (string | number)[]>;
   };
 }
 interface FetchProductVariantParams {
@@ -21,6 +22,7 @@ interface FetchProductVariantParams {
   sortBy?: string;
   title?: string;
   category?: string;
+  filters?: Record<string, (string | number)[]>;
 }
 
 export const fetchProductVariant = createAsyncThunk(
@@ -33,6 +35,10 @@ export const fetchProductVariant = createAsyncThunk(
       order,
       sortBy,
       category = "",
+      filters = {
+        // "attributes.NL_dongsanpham": ["laptop", "desktop"],
+        // "attributes.laptop_series": ["apple", "dell", "asus"],
+      },
     }: FetchProductVariantParams,
     { dispatch }
   ) => {
@@ -41,9 +47,20 @@ export const fetchProductVariant = createAsyncThunk(
     const progressInterval = setInterval(() => {
       dispatch(incrementProgress(10));
     }, 200);
+    const filterQuery = Object.entries(filters)
+      .map(([key, values]) => {
+        if (!values || (Array.isArray(values) && values.length === 0))
+          return null;
+        return `${encodeURIComponent(key)}=${encodeURIComponent(values.join(","))}`;
+      })
+      .filter(Boolean)
+      .join("&");
+    console.log("filterQuery", filterQuery);
 
     const response = await catalogRequest.get<ProductVariant[]>(
-      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}`
+      `/api/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
+        filterQuery ? `&${filterQuery}` : ""
+      }`
     );
 
     clearInterval(progressInterval);
@@ -57,6 +74,7 @@ export const fetchProductVariant = createAsyncThunk(
         title,
         sortBy,
         order,
+        filters,
       },
     };
   }
@@ -79,7 +97,25 @@ const filterProductSlice = createSlice({
   initialState,
   reducers: {
     setFilterState: (state, action) => {
-      state.filter_state = action.payload;
+      state.filter_state = { ...state.filter_state, ...action.payload };
+    },
+
+    toggleAttributeValue: (
+      state,
+      action: { payload: { key: string; value: string | number } }
+    ) => {
+      const { key, value } = action.payload;
+      const currentValues = state.filter_state.filters?.[key] || [];
+      const exists = currentValues.includes(value);
+
+      const newValues = exists
+        ? currentValues.filter((v) => v !== value) // bỏ tick
+        : [...currentValues, value]; // tick thêm
+
+      state.filter_state.filters = {
+        ...state.filter_state.filters,
+        [key]: newValues,
+      };
     },
     setProgress: (state, action) => {
       state.progress = Math.min(action.payload, 100);

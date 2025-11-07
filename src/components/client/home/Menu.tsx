@@ -135,13 +135,15 @@ const Menu = () => {
             }`}
             onMouseEnter={() => setHoveredId(cat.id)} // hover vào item thì hiện panel
           >
-            <span
-              className="d-flex align-items-center gap-2"
-              style={{ color: "black" }}
-            >
-              <span style={{ color: "#06b6d4" }}> {cat.icon}</span>{" "}
-              <strong>{cat.name}</strong>
-            </span>
+            <a href="/f/laptop" className="flex-grow-1 text-decoration-none">
+              <span
+                className="d-flex align-items-center gap-2"
+                style={{ color: "black" }}
+              >
+                <span style={{ color: "#06b6d4" }}> {cat.icon}</span>{" "}
+                <strong>{cat.name}</strong>
+              </span>
+            </a>
           </li>
         ))}
       </ul>
