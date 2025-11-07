@@ -58,7 +58,7 @@ export const fetchProductVariant = createAsyncThunk(
     console.log("filterQuery", filterQuery);
 
     const response = await catalogRequest.get<ProductVariant[]>(
-      `/api/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
+      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
         filterQuery ? `&${filterQuery}` : ""
       }`
     );
