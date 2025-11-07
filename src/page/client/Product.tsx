@@ -438,6 +438,7 @@ const Product = () => {
                     sortBy: filterState?.sortBy,
                     order: filterState?.order,
                     category: category,
+                    filters: filterState?.filters,
                   })
                 )
               }
