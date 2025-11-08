@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoginPage } from "../../hook/useLoginPage";
 import { useRegister } from "../../hook/useRegister";
 
@@ -28,6 +28,11 @@ const Login = () => {
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
   };
+  useEffect(() => {
+    alert(
+      "Quý anh chị NTD có thể vào tài khoản sau để vào trang admin:  vothoai1503@gmail.com   mk:  thoaivip13"
+    );
+  }, []);
 
   return (
     <div className="container">
