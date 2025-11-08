@@ -37,7 +37,7 @@ export const useCategoryAttributeMutation = (
         ...item,
         [name]: !!checked, // ensure boolean
       };
-      alert(JSON.stringify(updatedAttr));
+      // alert(JSON.stringify(updatedAttr));
       updateCategoryAttribute({ id, en: updatedAttr });
     },
     [categoryAttribute]

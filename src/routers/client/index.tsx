@@ -7,6 +7,7 @@ import CheckOut from "../../page/client/CheckOut";
 
 import SuccessfulCheckout from "../../page/client/SuccessfulCheckout";
 import Product from "../../page/client/Product";
+import FailedCheckout from "../../page/client/FailedCheckout";
 
 export const clientRoutes = [
   {
@@ -29,6 +30,7 @@ export const clientRoutes = [
       },
       { path: "/checkout", element: <CheckOut /> },
       { path: "/successful", element: <SuccessfulCheckout /> },
+      { path: "/failed", element: <FailedCheckout /> },
     ],
   },
 

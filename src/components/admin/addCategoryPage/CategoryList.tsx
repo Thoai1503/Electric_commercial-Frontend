@@ -171,8 +171,8 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                             .map((attr: CategoryAttribute) => (
                               <tr key={attr.id}>
                                 <td>{attr.id}</td>
-                                <td>{attr.attribute.name}</td>
-                                <td>{attr.attribute.slug || "N/A"}</td>
+                                <td>{attr.attribute?.name}</td>
+                                <td>{attr.attribute?.slug || "N/A"}</td>
                                 <td>
                                   {attr.is_filterable ? (
                                     <input

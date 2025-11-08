@@ -35,10 +35,7 @@ export const fetchProductVariant = createAsyncThunk(
       order,
       sortBy,
       category = "",
-      filters = {
-        // "attributes.NL_dongsanpham": ["laptop", "desktop"],
-        // "attributes.laptop_series": ["apple", "dell", "asus"],
-      },
+      filters = {},
     }: FetchProductVariantParams,
     { dispatch }
   ) => {
@@ -58,7 +55,7 @@ export const fetchProductVariant = createAsyncThunk(
     console.log("filterQuery", filterQuery);
 
     const response = await catalogRequest.get<ProductVariant[]>(
-      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
+      `/api/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
         filterQuery ? `&${filterQuery}` : ""
       }`
     );
