@@ -9,6 +9,8 @@ import SuccessfulCheckout from "../../page/client/SuccessfulCheckout";
 import Product from "../../page/client/Product";
 import FailedCheckout from "../../page/client/FailedCheckout";
 
+import OrderHistory from "../../page/client/OrderHistory";
+
 export const clientRoutes = [
   {
     path: "/",
@@ -31,6 +33,7 @@ export const clientRoutes = [
       { path: "/checkout", element: <CheckOut /> },
       { path: "/successful", element: <SuccessfulCheckout /> },
       { path: "/failed", element: <FailedCheckout /> },
+      { path: "/order-history", element: <OrderHistory /> },
     ],
   },
 

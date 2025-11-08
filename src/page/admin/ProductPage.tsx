@@ -1,10 +1,13 @@
 import { CButton, CCol, CContainer, CRow } from "@coreui/react";
 import { ProductList } from "../../components/admin/productManagement/productList";
 import CIcon from "@coreui/icons-react";
-import { cilPlus } from "@coreui/icons";
+
 import { AddProductModal } from "../../components/admin/productManagement/addProductModal";
 
+import { useState } from "react";
+
 const ProductPage = () => {
+  const [visible, setVisible] = useState(false);
   return (
     <>
       <CContainer fluid className="px-4">
@@ -22,15 +25,18 @@ const ProductPage = () => {
                 size="sm"
                 className="border-0"
                 style={{ color: "white" }}
+                onClick={() => {
+                  setVisible(!visible);
+                }}
               >
-                <CIcon icon={cilPlus} className="me-1" />
+                <CIcon className="me-1" />
                 Thêm mới
               </CButton>
             </div>
           </CCol>
         </CRow>
         <ProductList />
-        <AddProductModal />
+        <AddProductModal visible={visible} />
       </CContainer>
     </>
   );

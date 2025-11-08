@@ -494,7 +494,7 @@ const Navbar = () => {
                 </div>
 
                 <a
-                  href="./cart"
+                  href="/cart"
                   style={{
                     color: "#48d6f0ff",
                     textDecoration: "none",
@@ -612,7 +612,7 @@ const Navbar = () => {
                         Profile
                       </a>
                       <a
-                        href="#orders"
+                        href="/order-history"
                         style={dropdownItemStyle}
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((

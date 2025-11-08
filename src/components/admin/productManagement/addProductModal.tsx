@@ -14,8 +14,11 @@ import {
 } from "@coreui/react";
 
 import { useAddProductModal } from "../../../module/admin/hook/product_page/useAddProductModal";
+interface Prop {
+  visible: boolean;
+}
 
-export const AddProductModal = () => {
+export const AddProductModal = ({ visible }: Prop) => {
   // Mock data cho brands và categories - thay thế bằng data thực tế
   const {
     brands,
@@ -25,17 +28,16 @@ export const AddProductModal = () => {
     formData,
     handleClose,
     handleSubmit,
-    visible,
-    setVisible,
+
     imagePreview,
     isPending,
   } = useAddProductModal();
 
   return (
     <>
-      <CButton color="primary" onClick={() => setVisible(!visible)}>
+      {/* <CButton color="primary" onClick={() => setVisible(!visible)}>
         Thêm sản phẩm mới
-      </CButton>
+      </CButton> */}
 
       <CModal
         alignment="center"

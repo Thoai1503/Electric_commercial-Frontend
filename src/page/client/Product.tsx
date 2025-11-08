@@ -64,7 +64,7 @@ const Product = () => {
 
   // console.log("Length: " + ProductList.length);
   return (
-    <div className="container mt-0">
+    <div className="container mt-0 mb-5">
       <Breadcrumbs />
 
       <div className="content row">
