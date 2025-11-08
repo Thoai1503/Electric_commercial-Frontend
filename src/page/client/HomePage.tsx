@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -15,7 +15,7 @@ import Menu from "../../components/client/home/Menu";
 import type { UserDataRespone } from "../../type/User";
 
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
-import type { Cart } from "../../type/Cart";
+
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 
 const Home = () => {

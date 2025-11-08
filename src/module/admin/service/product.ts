@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type { Product } from "../../../type/Product";
 
 export const getAllProduct = async (): Promise<Partial<Product>[]> => {
