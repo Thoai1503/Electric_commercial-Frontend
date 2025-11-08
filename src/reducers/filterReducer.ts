@@ -50,6 +50,7 @@ export const fetchProductVariant = createAsyncThunk(
           return null;
         return `${encodeURIComponent(key)}=${encodeURIComponent(values.join(","))}`;
       })
+
       .filter(Boolean)
       .join("&");
     console.log("filterQuery", filterQuery);

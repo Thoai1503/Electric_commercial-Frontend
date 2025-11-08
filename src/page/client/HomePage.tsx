@@ -16,6 +16,7 @@ import type { UserDataRespone } from "../../type/User";
 
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 import type { Cart } from "../../type/Cart";
+import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 
 const Home = () => {
   const user = ((): Partial<UserDataRespone> => {
@@ -28,37 +29,13 @@ const Home = () => {
 
   const {
     data,
-    userCart,
+
     handleClickChange,
     loading,
     addToCartForAuthenticatedUser,
   } = useHomePage(user?.id || 0);
 
-  const guestCart: Cart[] = ((): Cart[] => {
-    try {
-      return JSON.parse(localStorage.getItem("cart") || "[]");
-    } catch {
-      return [];
-    }
-  })();
-
-  const effectiveCart: Cart[] = (user?.id ? userCart : guestCart) || [];
-
-  const product = useMemo(
-    () =>
-      data?.map((item: any) => {
-        const cartItem = effectiveCart.find((c) => c.variant_id === item.id);
-        if (!cartItem) {
-          return { ...item, inCart: false, cart: { id: 0, quantity: 0 } };
-        }
-        return {
-          ...item,
-          inCart: true,
-          cart: { id: cartItem.id, quantity: cartItem.quantity },
-        };
-      }),
-    [effectiveCart, data]
-  );
+  const { product } = useGuestOrUserView(user?.id || 0, data);
 
   const [activeFilter, setActiveFilter] = useState<string>("*");
 

@@ -7,8 +7,18 @@ import { useFilterPage } from "../../module/client/hook/filter_page/useFilterPag
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { categoryAttributeQuery } from "../../module/client/query/categoryAttribute";
+import type { UserDataRespone } from "../../type/User";
+import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
+import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 
 const Product = () => {
+  const user = ((): Partial<UserDataRespone> => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch {
+      return {};
+    }
+  })();
   const { category } = useParams();
   // console.log("Category: " + category);
   const { data: categoryAttribute } = useQuery(
@@ -31,13 +41,19 @@ const Product = () => {
   // const progress = useSelector(
   //   (state: RootState) => state.filterProduct.progress
   // );
+  const { product } = useGuestOrUserView(user?.id || 0, ProductList);
   const { handleChangeFilter } = useFilterPage(category || "");
+  const {
+    handleClickChange,
+
+    addToCartForAuthenticatedUser,
+  } = useHomePage(user?.id || 0);
 
   useEffect(() => {
     dispatch(
       fetchProductVariant({
         skip: 0,
-        take: 4,
+        take: 8,
         title: filterState?.title,
         sortBy: filterState?.sortBy,
         order: filterState?.order,
@@ -145,7 +161,7 @@ const Product = () => {
                   dispatch(
                     fetchProductVariant({
                       skip: 0,
-                      take: 4,
+                      take: 8,
                       title: "Giá tăng dần",
                       sortBy: "price",
                       order: "asc",
@@ -200,7 +216,7 @@ const Product = () => {
                   dispatch(
                     fetchProductVariant({
                       skip: 0,
-                      take: 4,
+                      take: 8,
                       title: "Giá giảm dần",
                       sortBy: "price",
                       order: "desc",
@@ -254,7 +270,7 @@ const Product = () => {
                   dispatch(
                     fetchProductVariant({
                       skip: 0,
-                      take: 4,
+                      take: 8,
                       title: "Mới nhất",
                       sortBy: "created_at",
                       order: "desc",
@@ -318,7 +334,7 @@ const Product = () => {
                   dispatch(
                     fetchProductVariant({
                       skip: 0,
-                      take: 4,
+                      take: 8,
                       title: "Bán chạy nhất",
                       sortBy: "sold",
                       order: "desc",
@@ -363,8 +379,9 @@ const Product = () => {
           </div>
           <div className=" bg-white " style={{ opacity: isLoading ? 0.4 : 1 }}>
             <div className="row mx-0">
-              {ProductList.length > 0 &&
-                ProductList?.map((item) => (
+              {product &&
+                product?.length > 0 &&
+                product?.map((item) => (
                   <div
                     className="col-lg-3 pb-3 m"
                     style={{
@@ -412,14 +429,80 @@ const Product = () => {
                         <p className="small text-muted">VISA Platinum</p>
                       </div>
                       <div className="card-body" style={{ marginTop: "auto" }}>
-                        <button
-                          type="button"
-                          data-mdb-button-init
-                          data-mdb-ripple-init
-                          className="btn btn-outline-primary btn-sm w-100"
-                        >
-                          Thêm vào giỏ
-                        </button>
+                        <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                          {item.inCart && user ? (
+                            <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                              <div
+                                className="decrease-btn"
+                                onClick={() =>
+                                  handleClickChange(
+                                    item.cart.id!,
+                                    item.cart.quantity! - 1
+                                  )
+                                }
+                              >
+                                -
+                              </div>
+                              <div>{item.cart.quantity}</div>
+                              <div
+                                className="increase-btn"
+                                onClick={() =>
+                                  handleClickChange(
+                                    item.cart.id!,
+                                    item.cart.quantity! + 1
+                                  )
+                                }
+                              >
+                                +
+                              </div>
+                            </button>
+                          ) : item.inCart ? (
+                            <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                              <div
+                                className="decrease-btn"
+                                onClick={() =>
+                                  handleClickChange(
+                                    item.cart.id!,
+                                    item.cart.quantity! - 1
+                                  )
+                                }
+                              >
+                                -
+                              </div>
+                              <div>{item.cart.quantity}</div>
+                              <div
+                                className="increase-btn"
+                                onClick={() =>
+                                  handleClickChange(
+                                    item.cart.id!,
+                                    item.cart.quantity! + 1
+                                  )
+                                }
+                              >
+                                +
+                              </div>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                addToCartForAuthenticatedUser({
+                                  id: 0,
+                                  user_id: user.id || 0,
+                                  variant_id: item.id,
+                                  quantity: 1,
+                                  unit_price: item.price,
+                                  variant: item,
+                                })
+                              }
+                              type="button"
+                              data-mdb-button-init
+                              data-mdb-ripple-init
+                              className="btn btn-outline-primary btn-sm w-100"
+                            >
+                              Thêm vào giỏ
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -434,7 +517,7 @@ const Product = () => {
                 dispatch(
                   fetchProductVariant({
                     skip: count,
-                    take: 4,
+                    take: 8,
                     sortBy: filterState?.sortBy,
                     order: filterState?.order,
                     category: category,

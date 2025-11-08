@@ -6,7 +6,7 @@ const FailedCheckout = () => {
           <div className="message-box _success _failed">
             <i className="fa fa-times-circle" aria-hidden="true"></i>
             <h2> Your payment failed </h2>
-            <p> Try again later </p>
+            <p> Đơn đặt hàng đã huỷ, vì bạn đã huỷ thanh toán </p>
           </div>
         </div>
       </div>

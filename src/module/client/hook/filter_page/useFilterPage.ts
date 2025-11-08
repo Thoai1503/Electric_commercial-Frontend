@@ -54,7 +54,7 @@ export const useFilterPage = (category: string) => {
     dispatch(
       fetchProductVariant({
         skip: 0,
-        take: 4,
+        take: 8,
         sortBy: filterState?.sortBy,
         order: filterState?.order,
         category: category,
