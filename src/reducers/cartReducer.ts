@@ -54,6 +54,32 @@ export const addToCartAsync = createAsyncThunk<
   }
 });
 
+export const changeItemQuantityAsync = createAsyncThunk<
+  { variant_id: number; quantity: number },
+  any,
+  { rejectValue: string }
+>(
+  "cart/changeItemQuantityAsync",
+  async ({ variant_id, quantity }, { rejectWithValue }) => {
+    try {
+      // Gọi API check số lượng trước
+      const ok = await new Promise<boolean>((resolve) =>
+        setTimeout(() => resolve(true), 700)
+      );
+
+      if (!ok) {
+        return rejectWithValue("Sản phẩm đã hết hàng");
+      }
+      return {
+        variant_id,
+        quantity,
+      };
+    } catch {
+      return rejectWithValue("Không thể kiểm tra tồn kho");
+    }
+  }
+);
+
 interface CartState {
   items: Cart[];
   loading: boolean;
@@ -135,6 +161,27 @@ const cartSlice = createSlice({
       .addCase(addToCartAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Không thể thêm sản phẩm";
+      });
+
+    builder
+      .addCase(changeItemQuantityAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changeItemQuantityAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        const { variant_id, quantity } = action.payload;
+        const existingItem = state.items.find(
+          (i) => i.variant_id === variant_id
+        );
+        if (existingItem) {
+          existingItem.quantity = quantity;
+          saveCartToLocalStorage(state.items);
+        }
+      })
+      .addCase(changeItemQuantityAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Không thể cập nhật số lượng";
       });
   },
 });

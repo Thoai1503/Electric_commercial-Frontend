@@ -14,7 +14,7 @@ export const useHomePage = (user_id: number) => {
   const { data: userCart, isPending } = useQuery(
     cartQuery.getByUser(user_id || 0)
   );
-  const { data } = useQuery(productVariantQuery.list);
+  const { data, isPending: isPendingList } = useQuery(productVariantQuery.list);
   const loading = useSelector((state: RootState) => state.cart.loading);
 
   const addToCartForAuthenticatedUser = useCallback(
@@ -64,7 +64,7 @@ export const useHomePage = (user_id: number) => {
     isPending,
     handleClickChange,
     isPendingUpdateCart,
-
+    isPendingList,
     data,
   };
 };

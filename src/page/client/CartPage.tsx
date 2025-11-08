@@ -7,14 +7,23 @@ import useCartPage from "../../module/client/hook/cart_page/useCartPage";
 import CartItem from "../../components/client/cart/CartItem";
 import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 
 const CartPage = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
-  const { CartList, totalPrice } = useCartPage(user?.id);
+  const { CartList, totalPrice, handleChange } = useCartPage(user?.id);
   const isLoggedIn = !!user;
 
   const cartList = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  const totalGuestPrice = useMemo(
+    () =>
+      cartList.reduce(
+        (sum, item) => sum + item.unit_price! * item.quantity!,
+        0
+      ),
+    [cartList]
+  );
 
   const checkOut = async () => {
     const user = localStorage.getItem("user");
@@ -119,15 +128,38 @@ const CartPage = () => {
                           </strong>
                         </span>
                       </div>
-                      <div className="col-lg-2">
-                        <input
-                          type="number"
-                          value={item.quantity}
-                          min="1"
-                          className="form-control"
-                          style={{ width: "50px" }}
-                          onChange={(e) => e}
-                        />
+                      <div className="col-lg-2 d-flex justify-content-center">
+                        {/* {create a d-flex div with 2 change quantity button and the quantity that not input} */}
+                        <div className="d-flex align-items-center gap-2">
+                          <button
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={() =>
+                              handleChange({
+                                target: {
+                                  id: item.variant_id!.toString(),
+                                  value: (item.quantity! - 1).toString(),
+                                },
+                              } as React.ChangeEvent<HTMLInputElement>)
+                            }
+                            disabled={item.quantity! <= 1}
+                          >
+                            -
+                          </button>
+                          <span>{item.quantity}</span>
+                          <button
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={() =>
+                              handleChange({
+                                target: {
+                                  id: item.variant_id!.toString(),
+                                  value: (item.quantity! + 1).toString(),
+                                },
+                              } as React.ChangeEvent<HTMLInputElement>)
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                       <div className="col-lg-1">
                         <span className="item-price d-flex justify-content-end">
@@ -218,11 +250,16 @@ const CartPage = () => {
                 <strong>Thanh toán</strong>
               </p>
               <div className="d-flex justify-content-between align-items-center">
+                <h6>Tạm tính:</h6>
+                <p>{totalGuestPrice.toLocaleString("vi-VN")}đ</p>
+              </div>
+              <div className="d-flex justify-content-between align-items-center">
                 <h6>Thành tiền:</h6>
                 <h6 style={{ color: "#1586ddff" }}>
-                  {totalPrice?.toLocaleString("vi-VN")}đ
+                  {totalGuestPrice.toLocaleString("vi-VN")}đ
                 </h6>
               </div>
+
               <hr />
               <p style={{ fontSize: "14px", color: "gray" }}>
                 Giá đã bao gồm VAT (nếu có)
