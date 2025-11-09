@@ -17,7 +17,6 @@ import type { UserDataRespone } from "../../type/User";
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
-import type { ProductVariant } from "../../type/productVariant";
 
 const Home = () => {
   const user = ((): Partial<UserDataRespone> => {
