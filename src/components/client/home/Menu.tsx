@@ -16,6 +16,7 @@ const Menu = () => {
       name: "Điện thoại, Tablet",
       count: 14,
       icon: <FaMobileAlt />,
+      link: "dien-thoai",
       children: [
         { name: "iPhone", icon: <FaApple /> },
         { name: "Samsung", icon: <FaMobileAlt /> },
@@ -27,6 +28,7 @@ const Menu = () => {
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
+      link: "laptop",
       children: [
         { name: "MacBook", icon: <FaApple /> },
         { name: "Dell", icon: <FaWindows /> },
@@ -38,6 +40,7 @@ const Menu = () => {
       name: "Phụ kiện, đồ chơi",
       count: 20,
       icon: <FaHeadphones />,
+      link: "dien-thoai",
       children: [
         { name: "Chuột", icon: <FaKeyboard /> },
         { name: "Bàn phím", icon: <FaKeyboard /> },
@@ -49,6 +52,7 @@ const Menu = () => {
       name: "Điện thoại",
       count: 14,
       icon: <FaMobileAlt />,
+      link: "dien-thoai",
       // children: [
       //   { name: "iPhone", icon: <FaApple /> },
       //   { name: "Samsung", icon: <FaMobileAlt /> },
@@ -60,6 +64,7 @@ const Menu = () => {
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
+      link: "laptop",
       // children: [
       //   { name: "MacBook", icon: <FaApple /> },
       //   { name: "Dell", icon: <FaWindows /> },
@@ -71,6 +76,7 @@ const Menu = () => {
       name: "Phụ kiện",
       count: 20,
       icon: <FaHeadphones />,
+      link: "laptop",
       // children: [
       //   { name: "Chuột", icon: <FaKeyboard /> },
       //   { name: "Bàn phím", icon: <FaKeyboard /> },
@@ -82,6 +88,7 @@ const Menu = () => {
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
+      link: "dien-thoai",
       // children: [
       //   { name: "MacBook", icon: <FaApple /> },
       //   { name: "Dell", icon: <FaWindows /> },
@@ -93,6 +100,7 @@ const Menu = () => {
       name: "Phụ kiện",
       count: 20,
       icon: <FaHeadphones />,
+      link: "laptop",
       children: [
         { name: "Chuột", icon: <FaKeyboard /> },
         { name: "Bàn phím", icon: <FaKeyboard /> },
@@ -104,6 +112,7 @@ const Menu = () => {
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
+      link: "laptop",
       children: [
         { name: "MacBook", icon: <FaApple /> },
         { name: "Dell", icon: <FaWindows /> },
@@ -135,7 +144,10 @@ const Menu = () => {
             }`}
             onMouseEnter={() => setHoveredId(cat.id)} // hover vào item thì hiện panel
           >
-            <a href="/f/laptop" className="flex-grow-1 text-decoration-none">
+            <a
+              href={`/f/${cat.link}`}
+              className="flex-grow-1 text-decoration-none"
+            >
               <span
                 className="d-flex align-items-center gap-2"
                 style={{ color: "black" }}

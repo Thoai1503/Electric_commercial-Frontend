@@ -1,9 +1,11 @@
+import type { Product } from "./Product";
 import type { ProductImage } from "./ProductImage";
 import type { VariantAttribute } from "./VariantAttribute";
 
 export interface ProductVariant {
   id: number;
   product_id: number;
+  product?: Product;
   name: string;
   sku: string;
   price: number;

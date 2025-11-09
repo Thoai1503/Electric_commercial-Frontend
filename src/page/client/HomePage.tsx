@@ -17,6 +17,7 @@ import type { UserDataRespone } from "../../type/User";
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
+import type { ProductVariant } from "../../type/productVariant";
 
 const Home = () => {
   const user = ((): Partial<UserDataRespone> => {
@@ -37,6 +38,10 @@ const Home = () => {
   } = useHomePage(user?.id || 0);
 
   const { product } = useGuestOrUserView(user?.id || 0, data);
+  const phone = product?.filter(
+    (item) => item.product.category.slug == "dien-thoai"
+  );
+  console.log(phone);
 
   const [activeFilter, setActiveFilter] = useState<string>("*");
 
@@ -398,7 +403,7 @@ const Home = () => {
               ))}
             </div>
             <div className="product-filter row">
-              {data?.map((item: any) => {
+              {phone?.map((item: any) => {
                 const visible =
                   activeFilter === "*" || item.brand === activeFilter;
                 return (

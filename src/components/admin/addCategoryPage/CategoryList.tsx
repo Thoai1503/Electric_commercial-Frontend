@@ -8,6 +8,7 @@ import categoryAttributeQuery from "../../../module/admin/query/categoryAttribut
 import type { CategoryAttribute } from "../../../type/CategoryAttribute";
 
 import { useCategoryAttributeMutation } from "../../../module/admin/hook/category_page/useCategoryAttributeMutation";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 // import { cilPencil, cilTrash } from "@coreui/icons";
 // import CIcon from "@coreui/icons-react";
 
@@ -120,12 +121,19 @@ export const CategoryList = ({ category }: CategoryListProps) => {
           show_details: (item: Category) => (
             <td>
               <CButton
+                style={{ marginRight: "5px", marginLeft: "5px" }}
                 color="primary"
                 variant="outline"
+                shape="square"
                 size="sm"
                 onClick={() => toggleDetails(item.id)}
               >
-                {details.includes(item.id) ? "Hide" : "Chọn "}
+                {" "}
+                {details.includes(item.id) ? (
+                  <FiChevronUp />
+                ) : (
+                  <FiChevronDown />
+                )}
               </CButton>
               {/* <CButton color="info" variant="outline" size="sm" className="m-2">
                 Chọn thuộc tính
@@ -134,7 +142,7 @@ export const CategoryList = ({ category }: CategoryListProps) => {
                 className="btn btn-sm btn-info "
                 onClick={() => handleShow(item.id)}
               >
-                Chọn thuộc tính
+                Chọn
               </button>
             </td>
           ),

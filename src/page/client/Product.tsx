@@ -10,6 +10,7 @@ import { categoryAttributeQuery } from "../../module/client/query/categoryAttrib
 import type { UserDataRespone } from "../../type/User";
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
+import { categoryBrandQuery } from "../../module/client/query/categoryBrand";
 
 const Product = () => {
   const user = ((): Partial<UserDataRespone> => {
@@ -24,6 +25,7 @@ const Product = () => {
   const { data: categoryAttribute } = useQuery(
     categoryAttributeQuery.category_slug(category || "")
   );
+  const { data } = useQuery(categoryBrandQuery.category_slug(category!));
 
   const dispatch = useDispatch<AppDispatch>();
   const ProductList = useSelector(
@@ -91,22 +93,12 @@ const Product = () => {
                 <p className="text">Thương hiệu</p>
               </strong>
               <div className="row mb-3">
-                <span className="text col-lg-6">
-                  {" "}
-                  <input type="checkbox" /> Samsung
-                </span>
-                <span className="text col-lg-6">
-                  {" "}
-                  <input type="checkbox" /> Acer
-                </span>
-                <span className="text col-lg-6">
-                  {" "}
-                  <input type="checkbox" /> Asus
-                </span>
-                <span className="text col-lg-6">
-                  {" "}
-                  <input type="checkbox" /> Dell
-                </span>
+                {data?.map((item) => (
+                  <span className="text col-lg-6 mb-1">
+                    {" "}
+                    <input type="checkbox" /> {item.brand.name}
+                  </span>
+                ))}
               </div>
             </div>
             <hr />
