@@ -1,4 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { orderQuery } from "../../module/client/query/order";
+
 const OrderHistory = () => {
+  const user = JSON.parse(localStorage.getItem("user")!);
+  const { data } = useQuery(orderQuery.get_by_user_id(user.id));
   return (
     <div className="container-fluid mt-5 mb-3">
       <div className="row align-items-center">
@@ -166,7 +171,35 @@ const OrderHistory = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="odd">
+                        {data?.map((item, index) => {
+                          const created_date = new Date(
+                            item.created_at
+                          ).toLocaleString("vi-VN");
+                          return (
+                            <tr className={index % 2 != 0 ? "even" : "odd"}>
+                              <td className="sorting_1 dtr-control">
+                                <a href="#" className="font-weight-bold">
+                                  #{item.id}
+                                </a>
+                              </td>
+                              <td>{item.total.toLocaleString("vi-VN")} VNĐ</td>
+                              <td>{created_date}</td>
+                              <td>
+                                <i className="fab fa-cc-amex text-muted font-size-20"></i>{" "}
+                              </td>
+                              <td>Lasse C. Overgaard</td>
+                              <td>
+                                <span className="badge bg-success-subtle text-success">
+                                  Paid
+                                </span>
+                              </td>
+                              <td>
+                                <button>Chi tiết</button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                        {/* <tr className="odd">
                           <td className="sorting_1 dtr-control">
                             <a href="#" className="font-weight-bold">
                               #12354781
@@ -245,8 +278,8 @@ const OrderHistory = () => {
                               <i className="mdi mdi-close font-size-18"></i>
                             </a>
                           </td>
-                        </tr>
-                        <tr className="odd">
+                        </tr> */}
+                        {/* <tr className="odd">
                           <td className="dtr-control sorting_1">
                             <a href="#" className="font-weight-bold">
                               #23145216
@@ -565,7 +598,7 @@ const OrderHistory = () => {
                               <i className="mdi mdi-close font-size-18"></i>
                             </a>
                           </td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
                   </div>
