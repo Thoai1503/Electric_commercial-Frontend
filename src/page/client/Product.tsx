@@ -96,7 +96,13 @@ const Product = () => {
                 {data?.map((item) => (
                   <span className="text col-lg-6 mb-1">
                     {" "}
-                    <input type="checkbox" /> {item.brand.name}
+                    <input
+                      type="checkbox"
+                      name="0"
+                      value={item.brand_id}
+                      onChange={handleChangeFilter}
+                    />{" "}
+                    {item.brand.name}
                   </span>
                 ))}
               </div>
