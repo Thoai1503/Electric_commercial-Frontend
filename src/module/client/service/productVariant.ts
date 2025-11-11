@@ -3,8 +3,8 @@ import type { ProductVariant } from "../../../type/productVariant";
 
 export const getAllProductVariant = async (): Promise<ProductVariant[]> => {
   return await catalogRequest
-    .get<ProductVariant[]>("/productvariant")
-    .then((res) => res.data)
+    .get("/productvariant")
+    .then((res) => res.data.data)
     .catch((error) => {
       throw error;
     });
