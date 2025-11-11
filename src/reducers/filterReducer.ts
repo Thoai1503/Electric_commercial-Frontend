@@ -7,6 +7,7 @@ interface FilterState {
   variant: ProductVariant[];
   loading: boolean;
   current_length: number;
+  count: number;
   progress: number;
   filter_state: {
     title: string;
@@ -55,19 +56,21 @@ export const fetchProductVariant = createAsyncThunk(
       .join("&");
     console.log("filterQuery", filterQuery);
 
-    const response = await catalogRequest.get<ProductVariant[]>(
+    const response = await catalogRequest.get(
       `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
         filterQuery ? `&${filterQuery}` : ""
       }`
     );
+    console.log("fetch count:" + response.data.count);
 
     clearInterval(progressInterval);
     dispatch(setProgress(90));
     dispatch(setProgress(100));
 
     return {
-      data: response.data,
+      data: response.data.data,
       skip,
+      count: response.data.count,
       filter_state: {
         title,
         sortBy,
@@ -80,6 +83,7 @@ export const fetchProductVariant = createAsyncThunk(
 
 const initialState: FilterState = {
   variant: [],
+  count: 0,
   loading: false,
   current_length: 0,
   progress: 0,
@@ -131,6 +135,7 @@ const filterProductSlice = createSlice({
         state.loading = false;
         // If skip is 0, reset the array (new search/filter)
         if (action.payload.skip === 0) {
+          state.count = action.payload.count;
           state.variant = action.payload.data;
           state.filter_state = {
             ...action.payload.filter_state,
@@ -139,6 +144,7 @@ const filterProductSlice = createSlice({
           };
         } else {
           // Otherwise, append new items (load more)
+          state.count = action.payload.data.count;
           state.variant = [...state.variant, ...action.payload.data];
           state.filter_state = {
             ...action.payload.filter_state,

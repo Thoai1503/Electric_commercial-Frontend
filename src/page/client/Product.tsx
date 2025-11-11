@@ -34,6 +34,7 @@ const Product = () => {
   const count = useSelector(
     (state: RootState) => state.filterProduct.current_length
   );
+  const c = useSelector((state: RootState) => state.filterProduct.count);
   const isLoading = useSelector(
     (state: RootState) => state.filterProduct.loading
   );
@@ -43,6 +44,7 @@ const Product = () => {
   // const progress = useSelector(
   //   (state: RootState) => state.filterProduct.progress
   // );
+  console.log("count: " + c);
   const { product } = useGuestOrUserView(user?.id || 0, ProductList);
   const { handleChangeFilter } = useFilterPage(category || "");
   const {
@@ -66,7 +68,7 @@ const Product = () => {
 
   // console.log("Length: " + ProductList.length);
   return (
-    <div className="container mt-0 mb-5">
+    <div className="container mt-5 mb-5">
       <Breadcrumbs />
 
       <div className="content row">
@@ -140,7 +142,7 @@ const Product = () => {
         <div className="col-lg-9  ">
           <div className="p-3 bg-white rounded mb-2">
             {" "}
-            <h4>Laptop (26 sản phẩm)</h4>
+            <h4>Laptop ({c} sản phẩm)</h4>
           </div>
           <div className="p-3 bg-white rounded mb-1">
             <div className="head d-flex">
