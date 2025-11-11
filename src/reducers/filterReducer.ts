@@ -144,7 +144,7 @@ const filterProductSlice = createSlice({
           };
         } else {
           // Otherwise, append new items (load more)
-          state.count = action.payload.data.count;
+          state.count = action.payload.count;
           state.variant = [...state.variant, ...action.payload.data];
           state.filter_state = {
             ...action.payload.filter_state,
