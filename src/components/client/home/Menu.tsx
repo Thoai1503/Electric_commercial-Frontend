@@ -40,7 +40,7 @@ const Menu = () => {
       name: "Phụ kiện, đồ chơi",
       count: 20,
       icon: <FaHeadphones />,
-      link: "dien-thoai",
+      link: "laptop",
       children: [
         { name: "Chuột", icon: <FaKeyboard /> },
         { name: "Bàn phím", icon: <FaKeyboard /> },
@@ -76,7 +76,7 @@ const Menu = () => {
       name: "Phụ kiện",
       count: 20,
       icon: <FaHeadphones />,
-      link: "laptop",
+      link: "dien-thoai",
       // children: [
       //   { name: "Chuột", icon: <FaKeyboard /> },
       //   { name: "Bàn phím", icon: <FaKeyboard /> },
@@ -88,7 +88,7 @@ const Menu = () => {
       name: "Laptop",
       count: 8,
       icon: <FaLaptop />,
-      link: "dien-thoai",
+      link: "laptop",
       // children: [
       //   { name: "MacBook", icon: <FaApple /> },
       //   { name: "Dell", icon: <FaWindows /> },
@@ -100,7 +100,7 @@ const Menu = () => {
       name: "Phụ kiện",
       count: 20,
       icon: <FaHeadphones />,
-      link: "laptop",
+      link: "dien-thoai",
       children: [
         { name: "Chuột", icon: <FaKeyboard /> },
         { name: "Bàn phím", icon: <FaKeyboard /> },

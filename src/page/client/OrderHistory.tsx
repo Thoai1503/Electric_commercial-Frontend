@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { orderQuery } from "../../module/client/query/order";
+import { useMemo } from "react";
 
 const OrderHistory = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
   const { data } = useQuery(orderQuery.get_by_user_id(user.id));
+  const list = useMemo(() => data?.sort((a, b) => b.id - a.id), [data]);
   return (
     <div className="container-fluid mt-5 mb-3">
       <div className="row align-items-center">
@@ -171,7 +173,25 @@ const OrderHistory = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {data?.map((item, index) => {
+                        {list?.map((item, index) => {
+                          let data = {
+                            status: "",
+                            badge: "",
+                          };
+                          switch (item.status) {
+                            case 3:
+                              data.status = "Đã huỷ";
+                              data.badge = "danger";
+                              break;
+                            case 2:
+                              data.status = "Hoàn thành";
+                              data.badge = "success";
+                              break;
+                            case 1:
+                              data.status = "Đang thanh toán";
+                              data.badge = "warning";
+                              break;
+                          }
                           const created_date = new Date(
                             item.created_at
                           ).toLocaleString("vi-VN");
@@ -189,8 +209,10 @@ const OrderHistory = () => {
                               </td>
                               <td>Lasse C. Overgaard</td>
                               <td>
-                                <span className="badge bg-success-subtle text-success">
-                                  Paid
+                                <span
+                                  className={`badge bg-${data.badge}-subtle text-${data.badge}`}
+                                >
+                                  {data.status}
                                 </span>
                               </td>
                               <td>

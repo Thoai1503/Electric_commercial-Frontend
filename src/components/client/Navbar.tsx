@@ -293,7 +293,7 @@ const Navbar = () => {
                   onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="./index.html#top-sale"
+                    href="/f/laptop"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
@@ -319,17 +319,17 @@ const Navbar = () => {
                         : dropdownStyle
                     }
                   >
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Smartphone Sale
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Laptop Sale
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Accessories Sale
                     </a>
                     <a
-                      href="#"
+                      href="/f/laptop"
                       style={{ ...dropdownItemStyle, borderBottom: "none" }}
                     >
                       Flash Deals
@@ -344,7 +344,7 @@ const Navbar = () => {
                   onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="./index.html#special-price"
+                    href="/f/laptop"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
@@ -370,17 +370,17 @@ const Navbar = () => {
                         : dropdownStyle
                     }
                   >
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Weekly Deals
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Monthly Offers
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Clearance Sale
                     </a>
                     <a
-                      href="#"
+                      href="/f/laptop"
                       style={{ ...dropdownItemStyle, borderBottom: "none" }}
                     >
                       Bundle Deals
@@ -395,7 +395,7 @@ const Navbar = () => {
                   onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="./index.html#new-phones"
+                    href="/f/laptop"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
@@ -421,20 +421,20 @@ const Navbar = () => {
                         : dropdownStyle
                     }
                   >
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       iPhone Series
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Samsung Galaxy
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Xiaomi
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       OPPO
                     </a>
                     <a
-                      href="#"
+                      href="/f/laptop"
                       style={{ ...dropdownItemStyle, borderBottom: "none" }}
                     >
                       Vivo
@@ -449,7 +449,7 @@ const Navbar = () => {
                   onMouseLeave={handleMouseLeave}
                 >
                   <a
-                    href="./index.html#blogs"
+                    href="/f/laptop"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
@@ -475,17 +475,17 @@ const Navbar = () => {
                         : dropdownStyle
                     }
                   >
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Tech News
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Reviews
                     </a>
-                    <a href="#" style={dropdownItemStyle}>
+                    <a href="/f/laptop" style={dropdownItemStyle}>
                       Tutorials
                     </a>
                     <a
-                      href="#"
+                      href="/f/dien-thoai"
                       style={{ ...dropdownItemStyle, borderBottom: "none" }}
                     >
                       Tips & Tricks
