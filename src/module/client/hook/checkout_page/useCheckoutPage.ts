@@ -5,10 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import cartQuery from "../../query/cart";
 import { createPayment } from "../../service/paymentCheckout";
 import type { Cart } from "../../../../type/Cart";
+import { userAddressQuery } from "../../query/userAddress";
 
 interface PaymentInfo {
   amount: number;
   orderId: number;
+  user_id: number;
+  address_id: number | null;
   method: string;
   bankCode?: string;
   orderInfo: string;
@@ -17,6 +20,13 @@ interface PaymentInfo {
 export const useCheckoutPage = (user_id: number) => {
   const queryClient = useQueryClient();
 
+  const { data: addresses } = useQuery(
+    userAddressQuery.get_by_user_id(user_id)
+  );
+  const defaultAddress = useMemo(
+    () => addresses?.find((item) => item.is_default == true),
+    [addresses]
+  );
   const data = queryClient.getQueryData([
     "user_address",
     user_id,
@@ -46,8 +56,9 @@ export const useCheckoutPage = (user_id: number) => {
       ...prev,
       amount: totalPrice,
       orderInfo: JSON.stringify({ user_id, address_id: current_address[0].id }),
+      address_id: defaultAddress?.id || null,
     }));
-  }, [totalPrice, current_address]);
+  }, [totalPrice, current_address, addresses]);
 
   const paymentList = [
     {
@@ -72,6 +83,8 @@ export const useCheckoutPage = (user_id: number) => {
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
     amount: totalPrice,
     orderId: Date.now(),
+    address_id: defaultAddress?.id || null,
+    user_id: user_id,
     method: "",
     orderInfo: "",
   });
@@ -107,13 +120,23 @@ export const useCheckoutPage = (user_id: number) => {
         setPaymentInfo({
           amount: totalPrice,
           orderId: Date.now(),
+          address_id: defaultAddress?.id || null,
           method: "",
+          user_id,
           orderInfo: "",
         });
     }
   };
   const handleCheckout = () => {
     alert(JSON.stringify(paymentInfo));
+    if (addresses?.length == 0) {
+      alert("Vui lòng thêm địa chỉ");
+      return;
+    }
+    if (paymentInfo.address_id == null) {
+      alert("Vui lòng chọn địa chỉ mặc định");
+      return;
+    }
     checkout(paymentInfo);
   };
 
@@ -136,9 +159,15 @@ export const useCheckoutPage = (user_id: number) => {
 
   const { isPending, mutate: update } = useMutation({
     mutationFn: ({ id, data }: UpdatedProp) => updateAddress(id, data),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data)
-        queryClient.invalidateQueries({ queryKey: ["user_address", user_id] });
+        await queryClient.invalidateQueries({
+          queryKey: ["user_address", user_id],
+        });
+      setPaymentInfo((pre) => ({
+        ...pre,
+        address_id: defaultAddress?.id || null,
+      }));
     },
     onError: (error) => {
       alert(error);

@@ -108,89 +108,90 @@ const Home = () => {
             <Carousel />
           </div>
         </div>
-        {data && (
-          <div className="row mt-2">
-            <section>
-              <div
-                className="container py-5 "
-                style={{
-                  backgroundColor: "black",
-                  backgroundImage:
-                    "url('/images/7510236c-c858-4cab-a779-c3aaf12a5643.png')",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  minHeight: "70vh",
-                  height: "auto",
-                  width: "100%",
-                }}
-              >
-                <div className="row">
-                  <h4
-                    style={{
-                      color: "#48d6f0ff",
-                      borderBottom: "1px solid #48d6f0ff",
-                    }}
-                  >
-                    SẢN PHẨM NỔI BẬT
-                  </h4>{" "}
-                  <div className="col-md-12 mt-4">
-                    <div className="row justify-content-center">
-                      <Swiper
-                        modules={[Navigation, Autoplay]}
-                        navigation
-                        spaceBetween={15}
-                        slidesPerView={5}
-                        loop={true}
-                        autoplay={{
-                          delay: 2000,
-                          disableOnInteraction: false,
-                        }}
-                        breakpoints={{
-                          80: {
-                            slidesPerView: 1,
-                            spaceBetween: 10,
-                          },
-                          480: {
-                            slidesPerView: 2,
-                            spaceBetween: 10,
-                          },
-                          640: {
-                            slidesPerView: 3,
-                            spaceBetween: 12,
-                          },
-                          768: {
-                            slidesPerView: 3,
-                            spaceBetween: 15,
-                          },
-                          1024: {
-                            slidesPerView: 4,
-                            spaceBetween: 15,
-                          },
-                          1280: {
-                            slidesPerView: 5,
-                            spaceBetween: 15,
-                          },
-                        }}
-                      >
-                        {loading && (
-                          <div
-                            className="spinner-border text-primary"
-                            role="status"
-                            style={{
-                              width: "3rem",
-                              height: "3rem",
-                              position: "absolute",
-                              top: "50%",
-                              left: "50%",
-                              // transform: "translate(-50%, -50%)",
-                              zIndex: 1000,
-                            }}
-                          >
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                        )}
-                        {product?.map((item) => (
+
+        <div className="row mt-2">
+          <section>
+            <div
+              className="container py-5 "
+              style={{
+                backgroundColor: "black",
+                backgroundImage:
+                  "url('/images/7510236c-c858-4cab-a779-c3aaf12a5643.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                minHeight: "70vh",
+                height: "auto",
+                width: "100%",
+              }}
+            >
+              <div className="row">
+                <h4
+                  style={{
+                    color: "#48d6f0ff",
+                    borderBottom: "1px solid #48d6f0ff",
+                  }}
+                >
+                  SẢN PHẨM NỔI BẬT
+                </h4>{" "}
+                <div className="col-md-12 mt-4">
+                  <div className="row justify-content-center">
+                    <Swiper
+                      modules={[Navigation, Autoplay]}
+                      navigation
+                      spaceBetween={15}
+                      slidesPerView={5}
+                      loop={true}
+                      autoplay={{
+                        delay: 2000,
+                        disableOnInteraction: false,
+                      }}
+                      breakpoints={{
+                        80: {
+                          slidesPerView: 1,
+                          spaceBetween: 10,
+                        },
+                        480: {
+                          slidesPerView: 2,
+                          spaceBetween: 10,
+                        },
+                        640: {
+                          slidesPerView: 3,
+                          spaceBetween: 12,
+                        },
+                        768: {
+                          slidesPerView: 3,
+                          spaceBetween: 15,
+                        },
+                        1024: {
+                          slidesPerView: 4,
+                          spaceBetween: 15,
+                        },
+                        1280: {
+                          slidesPerView: 5,
+                          spaceBetween: 15,
+                        },
+                      }}
+                    >
+                      {loading && (
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                          style={{
+                            width: "3rem",
+                            height: "3rem",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            // transform: "translate(-50%, -50%)",
+                            zIndex: 1000,
+                          }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      )}
+                      {data &&
+                        product?.map((item) => (
                           <SwiperSlide key={item.id}>
                             <div style={{ padding: "0 5px" }}>
                               <div
@@ -373,14 +374,13 @@ const Home = () => {
                             </div>
                           </SwiperSlide>
                         ))}
-                      </Swiper>
-                    </div>
+                    </Swiper>
                   </div>
                 </div>
               </div>
-            </section>
-          </div>
-        )}
+            </div>
+          </section>
+        </div>
 
         <section id="special-price" className="mt-5">
           <div className="container mt-5">
