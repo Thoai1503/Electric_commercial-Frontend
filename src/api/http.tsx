@@ -17,7 +17,7 @@ export const catalogRequestTesting = axios.create({
 
 export const http = axios.create({
   baseURL: API_URL_BASE,
-
+  withCredentials: true,
   timeout: 10000, // 10 seconds timeout
 });
 
