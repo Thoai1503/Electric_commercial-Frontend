@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/catalog/:path*",
-      "destination": "http://electriccatalogstoreapi123456789.somee.com/api/:path*"
+      "destination": "http://electriccatalogapi9898989.somee.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "http://electriccatalogstoreapi123456789.somee.com/uploads/:path*"
+      "destination": "http://electriccatalogapi9898989.somee.com/uploads/:path*"
     },
     {
       "source": "/(.*)",
