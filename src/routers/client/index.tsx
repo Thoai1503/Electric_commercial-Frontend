@@ -11,6 +11,8 @@ import FailedCheckout from "../../page/client/FailedCheckout";
 
 import OrderHistory from "../../page/client/OrderHistory";
 
+import ProductDetail from "../../page/client/ProductDetail";
+
 export const clientRoutes = [
   {
     path: "/",
@@ -21,6 +23,10 @@ export const clientRoutes = [
       {
         path: "/products",
         element: <p>Product List</p>,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail />,
       },
       {
         path: "/cart",

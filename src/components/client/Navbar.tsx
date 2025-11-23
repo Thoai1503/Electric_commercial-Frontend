@@ -571,7 +571,7 @@ const Navbar = () => {
                           fontSize: "0.9rem",
                         }}
                       >
-                        {user.name.charAt(0).toUpperCase()}
+                        {user?.name?.charAt(0).toUpperCase()}
                       </div>
                       <span style={{ color: "white", fontWeight: "500" }}>
                         {user.name}

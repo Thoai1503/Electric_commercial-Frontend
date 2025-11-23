@@ -17,6 +17,7 @@ import type { UserDataRespone } from "../../type/User";
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const user = ((): Partial<UserDataRespone> => {
@@ -193,185 +194,187 @@ const Home = () => {
                       {data &&
                         product?.map((item) => (
                           <SwiperSlide key={item.id}>
-                            <div style={{ padding: "0 5px" }}>
-                              <div
-                                className="card"
-                                style={{
-                                  borderRadius: "0px",
-                                  height: "100%",
-                                  display: "flex",
-                                  flexDirection: "column",
-                                }}
-                              >
+                            <Link to={`/product/${item.id}`}>
+                              <div style={{ padding: "0 5px" }}>
                                 <div
-                                  className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
-                                  data-mdb-ripple-color="light"
+                                  className="card"
                                   style={{
-                                    position: "relative",
-                                    width: "100%",
-                                    paddingTop: "75%",
-                                    overflow: "hidden",
-                                    borderTopLeftRadius: "15px",
-                                    borderTopRightRadius: "15px",
-                                    backgroundColor: "#f8f9fa",
+                                    borderRadius: "0px",
+                                    height: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
                                   }}
                                 >
-                                  <img
-                                    src={
-                                      item?.product_images?.[0]?.url
-                                        ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
-                                        : "https://via.placeholder.com/300x225?text=No+Image"
-                                    }
+                                  <div
+                                    className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
+                                    data-mdb-ripple-color="light"
                                     style={{
-                                      position: "absolute",
-                                      top: "50%",
-                                      left: "50%",
-                                      transform: "translate(-50%, -50%)",
+                                      position: "relative",
                                       width: "100%",
-                                      height: "100%",
-                                      objectFit: "contain",
-                                      padding: "10px",
+                                      paddingTop: "75%",
+                                      overflow: "hidden",
+                                      borderTopLeftRadius: "15px",
+                                      borderTopRightRadius: "15px",
+                                      backgroundColor: "#f8f9fa",
                                     }}
-                                    className="img-fluid"
-                                    alt={item.name || "Product"}
-                                  />
-                                  <a href="#!">
-                                    <div className="mask"></div>
-                                  </a>
-                                </div>
+                                  >
+                                    <img
+                                      src={
+                                        item?.product_images?.[0]?.url
+                                          ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                          : "https://via.placeholder.com/300x225?text=No+Image"
+                                      }
+                                      style={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "contain",
+                                        padding: "10px",
+                                      }}
+                                      className="img-fluid"
+                                      alt={item.name || "Product"}
+                                    />
+                                    <a href="#!">
+                                      <div className="mask"></div>
+                                    </a>
+                                  </div>
 
-                                <div
-                                  className="card-body pb-0"
-                                  style={{ minHeight: "100px" }}
-                                >
-                                  <div className="d-flex justify-content-between align-items-start">
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                      <p
-                                        style={{
-                                          marginBottom: "0.25rem",
-                                          overflow: "hidden",
-                                          textOverflow: "ellipsis",
-                                          display: "-webkit-box",
-                                          WebkitLineClamp: 2,
-                                          WebkitBoxOrient: "vertical",
-                                          lineHeight: "1.4",
-                                        }}
-                                      >
-                                        {item.name || "Product Name"}
+                                  <div
+                                    className="card-body pb-0"
+                                    style={{ minHeight: "100px" }}
+                                  >
+                                    <div className="d-flex justify-content-between align-items-start">
+                                      <div style={{ flex: 1, minWidth: 0 }}>
+                                        <p
+                                          style={{
+                                            marginBottom: "0.25rem",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: "vertical",
+                                            lineHeight: "1.4",
+                                          }}
+                                        >
+                                          {item.name || "Product Name"}
+                                        </p>
+                                        <p className="small text-muted">
+                                          Laptops
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* <hr className="my-0" /> */}
+
+                                  <div
+                                    className="card-body pb-0"
+                                    style={{ minHeight: "70px" }}
+                                  >
+                                    <div className="d-flex justify-content-between">
+                                      <p>
+                                        <span style={{ color: "#1a96e2ff" }}>
+                                          <strong>
+                                            {" "}
+                                            {formatVND(item.price || 0)}
+                                          </strong>
+                                        </span>
                                       </p>
-                                      <p className="small text-muted">
-                                        Laptops
-                                      </p>
+                                      <p className="text-dark"> 8787</p>
+                                    </div>
+                                    <p className="small text-muted">
+                                      VISA Platinum
+                                    </p>
+                                  </div>
+                                  {/* 
+                                  <hr className="my-0" /> */}
+
+                                  {/* Action buttons - Moved to right */}
+                                  <div
+                                    className="card-body"
+                                    style={{ marginTop: "auto" }}
+                                  >
+                                    <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                                      {item.inCart && user ? (
+                                        <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                                          <div
+                                            className="decrease-btn"
+                                            onClick={() =>
+                                              handleClickChange(
+                                                item.cart.id!,
+                                                item.cart.quantity! - 1
+                                              )
+                                            }
+                                          >
+                                            -
+                                          </div>
+                                          <div>{item.cart.quantity}</div>
+                                          <div
+                                            className="increase-btn"
+                                            onClick={() =>
+                                              handleClickChange(
+                                                item.cart.id!,
+                                                item.cart.quantity! + 1
+                                              )
+                                            }
+                                          >
+                                            +
+                                          </div>
+                                        </button>
+                                      ) : item.inCart ? (
+                                        <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                                          <div
+                                            className="decrease-btn"
+                                            onClick={() =>
+                                              handleClickChange(
+                                                item.cart.id!,
+                                                item.cart.quantity! - 1
+                                              )
+                                            }
+                                          >
+                                            -
+                                          </div>
+                                          <div>{item.cart.quantity}</div>
+                                          <div
+                                            className="increase-btn"
+                                            onClick={() =>
+                                              handleClickChange(
+                                                item.cart.id!,
+                                                item.cart.quantity! + 1
+                                              )
+                                            }
+                                          >
+                                            +
+                                          </div>
+                                        </button>
+                                      ) : (
+                                        <button
+                                          onClick={() =>
+                                            addToCartForAuthenticatedUser({
+                                              id: 0,
+                                              user_id: user.id || 0,
+                                              variant_id: item.id,
+                                              quantity: 1,
+                                              unit_price: item.price,
+                                              variant: item,
+                                            })
+                                          }
+                                          type="button"
+                                          data-mdb-button-init
+                                          data-mdb-ripple-init
+                                          className="btn btn-outline-primary btn-sm w-100"
+                                        >
+                                          Thêm vào giỏ
+                                        </button>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-
-                                {/* <hr className="my-0" /> */}
-
-                                <div
-                                  className="card-body pb-0"
-                                  style={{ minHeight: "70px" }}
-                                >
-                                  <div className="d-flex justify-content-between">
-                                    <p>
-                                      <span style={{ color: "#1a96e2ff" }}>
-                                        <strong>
-                                          {" "}
-                                          {formatVND(item.price || 0)}
-                                        </strong>
-                                      </span>
-                                    </p>
-                                    <p className="text-dark"> 8787</p>
-                                  </div>
-                                  <p className="small text-muted">
-                                    VISA Platinum
-                                  </p>
-                                </div>
-                                {/* 
-                                <hr className="my-0" /> */}
-
-                                {/* Action buttons - Moved to right */}
-                                <div
-                                  className="card-body"
-                                  style={{ marginTop: "auto" }}
-                                >
-                                  <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
-                                    {item.inCart && user ? (
-                                      <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
-                                        <div
-                                          className="decrease-btn"
-                                          onClick={() =>
-                                            handleClickChange(
-                                              item.cart.id!,
-                                              item.cart.quantity! - 1
-                                            )
-                                          }
-                                        >
-                                          -
-                                        </div>
-                                        <div>{item.cart.quantity}</div>
-                                        <div
-                                          className="increase-btn"
-                                          onClick={() =>
-                                            handleClickChange(
-                                              item.cart.id!,
-                                              item.cart.quantity! + 1
-                                            )
-                                          }
-                                        >
-                                          +
-                                        </div>
-                                      </button>
-                                    ) : item.inCart ? (
-                                      <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
-                                        <div
-                                          className="decrease-btn"
-                                          onClick={() =>
-                                            handleClickChange(
-                                              item.cart.id!,
-                                              item.cart.quantity! - 1
-                                            )
-                                          }
-                                        >
-                                          -
-                                        </div>
-                                        <div>{item.cart.quantity}</div>
-                                        <div
-                                          className="increase-btn"
-                                          onClick={() =>
-                                            handleClickChange(
-                                              item.cart.id!,
-                                              item.cart.quantity! + 1
-                                            )
-                                          }
-                                        >
-                                          +
-                                        </div>
-                                      </button>
-                                    ) : (
-                                      <button
-                                        onClick={() =>
-                                          addToCartForAuthenticatedUser({
-                                            id: 0,
-                                            user_id: user.id || 0,
-                                            variant_id: item.id,
-                                            quantity: 1,
-                                            unit_price: item.price,
-                                            variant: item,
-                                          })
-                                        }
-                                        type="button"
-                                        data-mdb-button-init
-                                        data-mdb-ripple-init
-                                        className="btn btn-outline-primary btn-sm w-100"
-                                      >
-                                        Thêm vào giỏ
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
                               </div>
-                            </div>
+                            </Link>
                           </SwiperSlide>
                         ))}
                     </Swiper>
@@ -412,99 +415,100 @@ const Home = () => {
                     style={{ width: "300px" }}
                   >
                     <div className="card h-100 bg-white ">
-                      <div
-                        className="bg-image hover-overlay ripple ripple-surface ripple-surface-light bg-white"
-                        data-mdb-ripple-color="light"
-                        style={{
-                          position: "relative",
-                          width: "100%",
-                          paddingTop: "75%",
-                          overflow: "hidden",
-                          borderTopLeftRadius: "15px",
-                          borderTopRightRadius: "15px",
-                          backgroundColor: "#f8f9fa",
-                        }}
-                      >
-                        <img
-                          src={
-                            item?.product_images?.[0]?.url
-                              ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
-                              : "https://via.placeholder.com/300x225?text=No+Image"
-                          }
+                      <Link to={`/product/${item.id}`}>
+                        <div
+                          className="bg-image hover-overlay ripple ripple-surface ripple-surface-light bg-white"
+                          data-mdb-ripple-color="light"
                           style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
+                            position: "relative",
                             width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                            padding: "10px",
+                            paddingTop: "75%",
+                            overflow: "hidden",
+                            borderTopLeftRadius: "15px",
+                            borderTopRightRadius: "15px",
+                            backgroundColor: "#f8f9fa",
                           }}
-                          className="img-fluid"
-                          alt={item.name || "Product"}
-                        />
-                        <a href="#!">
-                          <div className="mask"></div>
-                        </a>
-                      </div>
+                        >
+                          <img
+                            src={
+                              item?.product_images?.[0]?.url
+                                ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                : "https://via.placeholder.com/300x225?text=No+Image"
+                            }
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              transform: "translate(-50%, -50%)",
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "contain",
+                              padding: "10px",
+                            }}
+                            className="img-fluid"
+                            alt={item.name || "Product"}
+                          />
+                          <a href="#!">
+                            <div className="mask"></div>
+                          </a>
+                        </div>
 
-                      <div
-                        className="card-body pb-0"
-                        style={{ minHeight: "100px" }}
-                      >
-                        <div className="d-flex justify-content-between align-items-start">
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <p
-                              style={{
-                                marginBottom: "0.25rem",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                                lineHeight: "1.4",
-                              }}
-                            >
-                              <a href="#!" className="text-dark">
-                                {item.name || "Product Name"}
-                              </a>
-                            </p>
-                            <p className="small text-muted">Laptops</p>
-                          </div>
-                          <div style={{ marginLeft: "10px" }}>
-                            <div className="d-flex flex-row justify-content-end mt-1 mb-2 text-danger">
-                              <i className="fas fa-star"></i>
-                              <i className="fas fa-star"></i>
-                              <i className="fas fa-star"></i>
-                              <i className="fas fa-star"></i>
+                        <div
+                          className="card-body pb-0"
+                          style={{ minHeight: "100px" }}
+                        >
+                          <div className="d-flex justify-content-between align-items-start">
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <p
+                                style={{
+                                  marginBottom: "0.25rem",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical",
+                                  lineHeight: "1.4",
+                                }}
+                              >
+                                <a href="#!" className="text-dark">
+                                  {item.name || "Product Name"}
+                                </a>
+                              </p>
+                              <p className="small text-muted">Laptops</p>
                             </div>
-                            <p
-                              className="small text-muted"
-                              style={{ fontSize: "0.7rem" }}
-                            >
-                              Rated 4.0/5
-                            </p>
+                            <div style={{ marginLeft: "10px" }}>
+                              <div className="d-flex flex-row justify-content-end mt-1 mb-2 text-danger">
+                                <i className="fas fa-star"></i>
+                                <i className="fas fa-star"></i>
+                                <i className="fas fa-star"></i>
+                                <i className="fas fa-star"></i>
+                              </div>
+                              <p
+                                className="small text-muted"
+                                style={{ fontSize: "0.7rem" }}
+                              >
+                                Rated 4.0/5
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div
-                        className="card-body pb-0"
-                        style={{ minHeight: "70px" }}
-                      >
-                        <div className="d-flex justify-content-between">
-                          <h6
-                            className="text-dark"
-                            style={{ color: "rgba(200, 9, 9, 0)" }}
-                          >
-                            <strong> {formatVND(item.price || 0)}</strong>
-                          </h6>
+                        <div
+                          className="card-body pb-0"
+                          style={{ minHeight: "70px" }}
+                        >
+                          <div className="d-flex justify-content-between">
+                            <h6
+                              className="text-dark"
+                              style={{ color: "rgba(200, 9, 9, 0)" }}
+                            >
+                              <strong> {formatVND(item.price || 0)}</strong>
+                            </h6>
 
-                          <p className="text-dark"> 8787</p>
+                            <p className="text-dark"> 8787</p>
+                          </div>
                         </div>
-                      </div>
-
+                      </Link>
                       {/* Action buttons - Moved to right */}
                       <div className="card-body" style={{ marginTop: "auto" }}>
                         <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
