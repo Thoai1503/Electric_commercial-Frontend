@@ -12,7 +12,7 @@ export const addCategoryService = async (
   category: Partial<Category>
 ): Promise<Partial<Category>> => {
   try {
-    const res = await http.post<Category>("/api/v1/category", category);
+    const res = await http.post<Category>("/category", category);
 
     return res.data;
   } catch (error) {
@@ -36,7 +36,7 @@ export const updateCategory = async (
   }
 
   try {
-    const res = await http.post(`/api/v1/category/${id}`, cate);
+    const res = await http.post(`/category/${id}`, cate);
     console.log("Update res:" + JSON.stringify(res.data));
     return res.data?.success;
   } catch (error) {
