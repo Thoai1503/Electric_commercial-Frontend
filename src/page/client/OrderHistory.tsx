@@ -184,7 +184,7 @@ const OrderHistory = () => {
                               data.badge = "danger";
                               break;
                             case 2:
-                              data.status = "Hoàn thành";
+                              data.status = "Đã thanh toán";
                               data.badge = "success";
                               break;
                             case 1:

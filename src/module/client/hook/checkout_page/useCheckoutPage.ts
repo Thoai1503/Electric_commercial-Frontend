@@ -128,7 +128,18 @@ export const useCheckoutPage = (user_id: number) => {
     }
   };
   const handleCheckout = () => {
-    alert(JSON.stringify(paymentInfo));
+    // alert(JSON.stringify(paymentInfo));
+
+    if (!cartList || cartList.length === 0) {
+      alert("Giỏ hàng trống");
+      return;
+    }
+
+    if (paymentInfo.method == "" || paymentInfo.method == null) {
+      alert("Vui lòng chọn phương thức thanh toán");
+      return;
+    }
+
     if (addresses?.length == 0) {
       alert("Vui lòng thêm địa chỉ");
       return;
