@@ -11,6 +11,14 @@ const SuccessfulCheckout = () => {
               Thank you for your payment. we will <br />
               be in contact with more details shortly{" "}
             </p>
+            <button
+              className="btn btn-primary w-70 mt-3"
+              onClick={() => {
+                window.location.href = "/order-history";
+              }}
+            >
+              Go to your order histories
+            </button>
           </div>
         </div>
       </div>
