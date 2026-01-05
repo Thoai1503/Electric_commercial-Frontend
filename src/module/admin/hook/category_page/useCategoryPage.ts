@@ -37,8 +37,8 @@ export const useCategoryPage = () => {
       return;
     }
     console.log("Submited");
-    setCate({ id: 0, name: "", parent_id: 0 });
     addNew(cate);
+    setCate({ id: 0, name: "", parent_id: 0 });
   };
 
   const handleChange = useCallback(
