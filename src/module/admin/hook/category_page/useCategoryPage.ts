@@ -10,6 +10,7 @@ export const useCategoryPage = () => {
     id: 0,
     name: "",
     parent_id: 0,
+    slug: "",
   });
   const [toggleSection, setToggleSection] = useState(true);
 
