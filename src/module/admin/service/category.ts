@@ -1,5 +1,5 @@
 import type { NodeModel } from "@minoru/react-dnd-treeview";
-import { catalogRequest, http } from "../../../api/http";
+import { catalogRequest } from "../../../api/http";
 import type {
   Category,
   CategoryReponse,
