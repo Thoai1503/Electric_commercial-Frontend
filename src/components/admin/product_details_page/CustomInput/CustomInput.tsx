@@ -60,7 +60,7 @@ const CustomInput = ({ item, isHavingValuable, vl, handleSubmit }: Prop) => {
             }
           </div>
         );
-      case "string":
+      case "nvarchar":
         return (
           <div className="col-4">
             {
