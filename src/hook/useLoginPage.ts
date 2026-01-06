@@ -17,7 +17,7 @@ export const useLoginPage = () => {
     email: "",
     password: "",
   });
-  const [showError, setShowError] = useState(false);
+  const [showError] = useState(false);
   const [formErrors, setFormErrors] = useState<{
     email?: string;
     password?: string;
