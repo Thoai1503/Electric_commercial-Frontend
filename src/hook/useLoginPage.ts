@@ -18,6 +18,10 @@ export const useLoginPage = () => {
     password: "",
   });
   const [showError, setShowError] = useState(false);
+  const [formErrors, setFormErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
 
   const login = async () => {
     // alert("Path: " + location.pathname);
@@ -70,6 +74,10 @@ export const useLoginPage = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    // client-side validation before calling server
+    const isValid = validate();
+    if (!isValid) return;
+
     console.log("Registering user:", loginValue);
     console.log("Pending: " + isPending);
     loginProcess();
@@ -81,7 +89,31 @@ export const useLoginPage = () => {
     const { name, value: input } = e.target;
     console.log("Name :" + name);
     setLoginValue((pre) => ({ ...pre, [name]: input }));
+    // clear field-specific error on change
+    setFormErrors((prev) => ({ ...prev, [name]: undefined }));
     console.log(loginValue);
+  };
+  const validate = () => {
+    const errors: { email?: string; password?: string } = {};
+    const email = (loginValue.email || "").trim();
+    const password = loginValue.password || "";
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || email == "" || email.length === 0) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(email)) {
+      errors.email = "Enter a valid email address";
+    }
+
+    if (!password || password == "" || password.length === 0) {
+      errors.password = "Password is required";
+    } else if (password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    setFormErrors(errors);
+    const isValid = Object.keys(errors).length === 0;
+    return isValid;
   };
   return {
     handleChange,
@@ -91,5 +123,7 @@ export const useLoginPage = () => {
     isError,
     error,
     showError,
+    formErrors,
+    validate,
   };
 };

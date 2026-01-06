@@ -326,3 +326,25 @@ a {
   line-height: "40px";
   color: gray;
 }
+
+/* Validation & login alert styles */
+.is-invalid {
+  border-color: #e3342f !important;
+  box-shadow: 0 0 0 0.15rem rgba(227, 52, 47, 0.12) !important;
+}
+
+.invalid-feedback.d-block {
+  color: #e3342f;
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+}
+
+.login-alert {
+  background: linear-gradient(180deg, #fff5f5 0%, #fff 100%);
+  border: 1px solid rgba(227, 52, 47, 0.15);
+  color: #7a1f1f;
+}
+
+.login-alert svg {
+  color: #c92a2a;
+}
