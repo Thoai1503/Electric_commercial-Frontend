@@ -41,6 +41,7 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
         name: _options.dragSource?.text ?? "",
         parent_id:
           typeof _options.dropTargetId === "number" ? _options.dropTargetId : 0,
+        slug: "updated-slug",
       },
     });
 

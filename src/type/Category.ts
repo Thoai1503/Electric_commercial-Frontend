@@ -26,4 +26,5 @@ export interface CategoryTree {
 export interface UpdatedCategory {
   name: string;
   parent_id: number;
+  slug: string;
 }
