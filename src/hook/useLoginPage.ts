@@ -64,11 +64,12 @@ export const useLoginPage = () => {
       return navigate("/");
     },
     onError: (error) => {
-      console.error("Login error:", error);
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 2000);
+      //   alert("Login error:" + error.message);
+      //  setShowError(true);
+      window.location.href = "/login?error=" + error.message;
+      // setTimeout(() => {
+      //   setShowError(false);
+      // }, 7000);
     },
   });
 

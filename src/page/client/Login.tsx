@@ -9,10 +9,12 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
-
+  const errorParam = searchParams.get("error");
   const {
     handleChange,
     loginValue,
@@ -69,6 +71,9 @@ const Login = () => {
                     <h3 className="fw-bold text-dark">TechZone</h3>
                   </div>
 
+                  <h3 className="mb-4 fw-bold text-center text-dark">
+                    Chào mừng đến với TechZone
+                  </h3>
                   {/* Tabs */}
                   <ul className="nav nav-pills nav-fill mb-5 border-0 shadow-sm rounded-pill overflow-hidden bg-light">
                     <li className="nav-item">
@@ -104,7 +109,7 @@ const Login = () => {
                       className="needs-validation"
                       noValidate
                     >
-                      {showError && (
+                      {(showError || errorParam) && (
                         <div
                           className="alert alert-danger login-alert d-flex align-items-center rounded-3 mb-4"
                           role="alert"
