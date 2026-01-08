@@ -8,7 +8,10 @@ import { addToCartAsync } from "../../../../reducers/cartReducer";
 import { useCallback } from "react";
 import { updateCartItemQuantity } from "../../service/cart";
 
-export const useHomePage = (user_id: number) => {
+export const useHomePage = (
+  user_id: number,
+  onSuccessCallback?: () => void
+) => {
   const dispatch = useDispatch<AppDispatch>();
   const queryClient = useQueryClient();
   const { data: userCart, isPending } = useQuery(
@@ -25,6 +28,10 @@ export const useHomePage = (user_id: number) => {
         console.log("Result: " + result);
         queryClient.invalidateQueries(cartQuery.getByUser(cart.user_id));
 
+        if (onSuccessCallback) {
+          //   alert("Thêm vào giỏ hàng thành công");
+          onSuccessCallback();
+        }
         return { success: true };
       } catch (err) {
         // Handles rejection from the thunk
@@ -48,6 +55,8 @@ export const useHomePage = (user_id: number) => {
     onSuccess: (data) => {
       console.log(data);
       queryClient.invalidateQueries({ queryKey: ["cart", user_id] });
+
+      onSuccessCallback && onSuccessCallback();
     },
     onError: (error) => {
       alert("Lỗi cập nhật giỏ hàng: " + error.message);
