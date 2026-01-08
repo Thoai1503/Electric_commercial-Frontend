@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -18,8 +18,33 @@ import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 import { Link } from "react-router-dom";
+import { CToast, CToastBody, CToaster, CToastHeader } from "@coreui/react";
 
 const Home = () => {
+  const [toast, addToast] = useState<any>();
+  const toaster = useRef(null);
+  const exampleToast = (message = "default") => (
+    <CToast>
+      <CToastHeader closeButton>
+        <svg
+          className="rounded me-2"
+          width="20"
+          height="20"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid slice"
+          focusable="false"
+          role="img"
+        >
+          <rect width="100%" height="100%" fill="#007aff"></rect>
+        </svg>
+        <div className="fw-bold me-auto">CoreUI for React.js</div>
+        <small>7 min ago</small>
+      </CToastHeader>
+      <CToastBody>
+        <div dangerouslySetInnerHTML={{ __html: message }}></div>
+      </CToastBody>
+    </CToast>
+  );
   const user = ((): Partial<UserDataRespone> => {
     try {
       return JSON.parse(localStorage.getItem("user") || "{}");
@@ -32,10 +57,17 @@ const Home = () => {
     data,
     isPending,
     isPendingList,
+    isPendingUpdateCart,
     handleClickChange,
     loading,
     addToCartForAuthenticatedUser,
-  } = useHomePage(user?.id || 0);
+  } = useHomePage(user?.id || 0, () => {
+    addToast(
+      exampleToast(
+        "Thêm vào giỏ hàng thành công" + ` <a href="/cart">Xem giỏ hàng</a>`
+      )
+    );
+  });
 
   const { product } = useGuestOrUserView(user?.id || 0, data);
   const phone = product?.filter(
@@ -117,6 +149,38 @@ const Home = () => {
 
   return (
     <>
+      <style>{`
+        .product-card-link {
+          text-decoration: none;
+          color: inherit;
+        }
+        .product-card-link:hover {
+          text-decoration: none;
+          color: inherit;
+        }
+      `}</style>
+      {isPendingUpdateCart && (
+        <div
+          className="loading-overlay d-flex justify-content-center align-items-center"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            className="spinner-border text-light"
+            role="status"
+            style={{ width: "5rem", height: "5rem" }}
+          >
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       <div style={{ opacity: isPending && isPendingList ? 0.3 : 1 }}>
         <div className="d-flex row justify-content-center">
           <div className="d-flex col-md-3">
@@ -201,7 +265,6 @@ const Home = () => {
                             position: "absolute",
                             top: "50%",
                             left: "50%",
-                            // transform: "translate(-50%, -50%)",
                             zIndex: 1000,
                           }}
                         >
@@ -211,16 +274,19 @@ const Home = () => {
                       {data &&
                         product?.map((item) => (
                           <SwiperSlide key={item.id}>
-                            <Link to={`/product/${item.id}`}>
-                              <div style={{ padding: "0 5px" }}>
-                                <div
-                                  className="card"
-                                  style={{
-                                    borderRadius: "0px",
-                                    height: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                  }}
+                            <div style={{ padding: "0 5px" }}>
+                              <div
+                                className="card"
+                                style={{
+                                  borderRadius: "0px",
+                                  height: "100%",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <Link
+                                  to={`/product/${item.id}`}
+                                  className="product-card-link"
                                 >
                                   <div
                                     className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
@@ -254,9 +320,6 @@ const Home = () => {
                                       className="img-fluid"
                                       alt={item.name || "Product"}
                                     />
-                                    <a href="#!">
-                                      <div className="mask"></div>
-                                    </a>
                                   </div>
 
                                   <div
@@ -285,8 +348,6 @@ const Home = () => {
                                     </div>
                                   </div>
 
-                                  {/* <hr className="my-0" /> */}
-
                                   <div
                                     className="card-body pb-0"
                                     style={{ minHeight: "70px" }}
@@ -306,92 +367,106 @@ const Home = () => {
                                       VISA Platinum
                                     </p>
                                   </div>
-                                  {/* 
-                                  <hr className="my-0" /> */}
+                                </Link>
 
-                                  {/* Action buttons - Moved to right */}
-                                  <div
-                                    className="card-body"
-                                    style={{ marginTop: "auto" }}
-                                  >
-                                    <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
-                                      {item.inCart && user ? (
-                                        <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
-                                          <div
-                                            className="decrease-btn"
-                                            onClick={() =>
-                                              handleClickChange(
-                                                item.cart.id!,
-                                                item.cart.quantity! - 1
-                                              )
-                                            }
-                                          >
-                                            -
-                                          </div>
-                                          <div>{item.cart.quantity}</div>
-                                          <div
-                                            className="increase-btn"
-                                            onClick={() =>
-                                              handleClickChange(
-                                                item.cart.id!,
-                                                item.cart.quantity! + 1
-                                              )
-                                            }
-                                          >
-                                            +
-                                          </div>
-                                        </button>
-                                      ) : item.inCart ? (
-                                        <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
-                                          <div
-                                            className="decrease-btn"
-                                            onClick={() =>
-                                              handleClickChange(
-                                                item.cart.id!,
-                                                item.cart.quantity! - 1
-                                              )
-                                            }
-                                          >
-                                            -
-                                          </div>
-                                          <div>{item.cart.quantity}</div>
-                                          <div
-                                            className="increase-btn"
-                                            onClick={() =>
-                                              handleClickChange(
-                                                item.cart.id!,
-                                                item.cart.quantity! + 1
-                                              )
-                                            }
-                                          >
-                                            +
-                                          </div>
-                                        </button>
-                                      ) : (
-                                        <button
-                                          onClick={() =>
-                                            addToCartForAuthenticatedUser({
-                                              id: 0,
-                                              user_id: user.id || 0,
-                                              variant_id: item.id,
-                                              quantity: 1,
-                                              unit_price: item.price,
-                                              variant: item,
-                                            })
-                                          }
-                                          type="button"
-                                          data-mdb-button-init
-                                          data-mdb-ripple-init
-                                          className="btn btn-outline-primary btn-sm w-100"
+                                {/* Action buttons - Moved to right */}
+                                <div
+                                  className="card-body"
+                                  style={{ marginTop: "auto" }}
+                                >
+                                  <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                                    {item.inCart && user ? (
+                                      <button
+                                        className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                                        onClick={(e) => e.preventDefault()}
+                                      >
+                                        <div
+                                          className="decrease-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! - 1
+                                            );
+                                          }}
                                         >
-                                          Thêm vào giỏ
-                                        </button>
-                                      )}
-                                    </div>
+                                          -
+                                        </div>
+                                        <div>{item.cart.quantity}</div>
+                                        <div
+                                          className="increase-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! + 1
+                                            );
+                                          }}
+                                        >
+                                          +
+                                        </div>
+                                      </button>
+                                    ) : item.inCart ? (
+                                      <button
+                                        className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                                        onClick={(e) => e.preventDefault()}
+                                      >
+                                        <div
+                                          className="decrease-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! - 1
+                                            );
+                                          }}
+                                        >
+                                          -
+                                        </div>
+                                        <div>{item.cart.quantity}</div>
+                                        <div
+                                          className="increase-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! + 1
+                                            );
+                                          }}
+                                        >
+                                          +
+                                        </div>
+                                      </button>
+                                    ) : (
+                                      <button
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          addToCartForAuthenticatedUser({
+                                            id: 0,
+                                            user_id: user.id || 0,
+                                            variant_id: item.id,
+                                            quantity: 1,
+                                            unit_price: item.price,
+                                            variant: item,
+                                          });
+                                        }}
+                                        type="button"
+                                        data-mdb-button-init
+                                        data-mdb-ripple-init
+                                        className="btn btn-outline-primary btn-sm w-100"
+                                      >
+                                        Thêm vào giỏ
+                                      </button>
+                                    )}
                                   </div>
                                 </div>
                               </div>
-                            </Link>
+                            </div>
                           </SwiperSlide>
                         ))}
                     </Swiper>
@@ -432,7 +507,10 @@ const Home = () => {
                     style={{ width: "300px" }}
                   >
                     <div className="card h-100 bg-white ">
-                      <Link to={`/product/${item.id}`}>
+                      <Link
+                        to={`/product/${item.id}`}
+                        className="product-card-link"
+                      >
                         <div
                           className="bg-image hover-overlay ripple ripple-surface ripple-surface-light bg-white"
                           data-mdb-ripple-color="light"
@@ -465,9 +543,6 @@ const Home = () => {
                             className="img-fluid"
                             alt={item.name || "Product"}
                           />
-                          <a href="#!">
-                            <div className="mask"></div>
-                          </a>
                         </div>
 
                         <div
@@ -487,9 +562,7 @@ const Home = () => {
                                   lineHeight: "1.4",
                                 }}
                               >
-                                <a href="#!" className="text-dark">
-                                  {item.name || "Product Name"}
-                                </a>
+                                {item.name || "Product Name"}
                               </p>
                               <p className="small text-muted">Laptops</p>
                             </div>
@@ -526,38 +599,48 @@ const Home = () => {
                           </div>
                         </div>
                       </Link>
+
                       {/* Action buttons - Moved to right */}
                       <div className="card-body" style={{ marginTop: "auto" }}>
                         <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
                           {item.inCart && user ? (
-                            <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                            <button
+                              className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                              onClick={(e) => e.preventDefault()}
+                            >
                               <div
                                 className="decrease-btn"
-                                onClick={() =>
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
                                   handleClickChange(
                                     item.cart.id!,
                                     item.cart.quantity! - 1
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 -
                               </div>
                               <div>{item.cart.quantity}</div>
                               <div
                                 className="increase-btn"
-                                onClick={() =>
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
                                   handleClickChange(
                                     item.cart.id!,
                                     item.cart.quantity! + 1
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 +
                               </div>
                             </button>
                           ) : (
                             <button
-                              onClick={() =>
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 addToCartForAuthenticatedUser({
                                   id: 0,
                                   user_id: user.id || 0,
@@ -565,8 +648,8 @@ const Home = () => {
                                   quantity: 1,
                                   unit_price: item.price,
                                   variant: item,
-                                })
-                              }
+                                });
+                              }}
                               type="button"
                               data-mdb-button-init
                               data-mdb-ripple-init
@@ -646,6 +729,12 @@ const Home = () => {
           </div>
         </section>
       </div>
+      <CToaster
+        className="p-3"
+        placement="top-end"
+        push={toast}
+        ref={toaster}
+      />
     </>
   );
 };

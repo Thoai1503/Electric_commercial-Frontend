@@ -135,13 +135,12 @@ export const useCheckoutPage = (user_id: number) => {
       return;
     }
 
-    if (paymentInfo.method == "" || paymentInfo.method == null) {
-      alert("Vui lòng chọn phương thức thanh toán");
-      return;
-    }
-
     if (addresses?.length == 0) {
       alert("Vui lòng thêm địa chỉ");
+      return;
+    }
+    if (paymentInfo.method == "" || paymentInfo.method == null) {
+      alert("Vui lòng chọn phương thức thanh toán");
       return;
     }
     if (paymentInfo.address_id == null) {

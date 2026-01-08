@@ -2,18 +2,22 @@ import { useState } from "react";
 import type { MouseEvent } from "react";
 import { useLogout } from "../../hook/useLogout";
 
+import { useQuery } from "@tanstack/react-query";
+import cartQuery from "../../module/client/query/cart";
+
 const Navbar = () => {
+  //const cart = useSelector((state: RootState) => state.cart.items);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") as string)
     : null;
-
+  const { data: CartList } = useQuery(cartQuery.getByUser(user?.id));
   const { handleLogout } = useLogout();
-  const logout = () => {
-    console.log("User logged out");
-    // dispatch(clearUser());
-  };
+  // const logout = () => {
+  //   console.log("User logged out");
+  //   // dispatch(clearUser());
+  // };
 
   const handleMouseEnter = (dropdown: string) => {
     if (window.innerWidth > 992) {
@@ -526,10 +530,16 @@ const Navbar = () => {
                 className="user-section-mobile"
                 style={{ display: "flex", alignItems: "center", gap: "1rem" }}
               >
-                <button onClick={logout} className="cart-button">
+                <a
+                  href="/cart"
+                  className="cart-button"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
                   <span className="cart-icon">🛒</span>
-                  <div className="cart-count">0</div>
-                </button>
+                  <div className="cart-count">{CartList?.length || 0}</div>
+                </a>
 
                 {user ? (
                   <div
