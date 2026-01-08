@@ -7,7 +7,7 @@ import { useMemo } from "react";
 
 const OrderDetailPage = () => {
   const { id } = useParams();
-  const { data: variants } = useQuery(productVariantQuery.list);
+  const { data: variants } = useQuery(productVariantQuery.list());
   const { data: list } = useQuery(
     orderDetailQuery.get_by_order_id(Number(id!))
   );
