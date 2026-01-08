@@ -61,6 +61,8 @@ const Home = () => {
     handleClickChange,
     loading,
     addToCartForAuthenticatedUser,
+    pcVariants,
+    keyboards,
   } = useHomePage(user?.id || 0, () => {
     addToast(
       exampleToast(
@@ -70,6 +72,12 @@ const Home = () => {
   });
 
   const { product } = useGuestOrUserView(user?.id || 0, data);
+  const { product: keyboardsProduct } = useGuestOrUserView(
+    user?.id || 0,
+    keyboards
+  );
+  const { product: pcProduct } = useGuestOrUserView(user?.id || 0, pcVariants);
+
   const phone = product?.filter(
     (item) => item.product.category.slug == "dien-thoai"
   );
@@ -83,50 +91,50 @@ const Home = () => {
       currency: "VND",
     }).format(price);
   };
-  const products = [
-    {
-      id: 1,
-      brand: "Apple",
-      name: "Apple iPhone 10",
-      price: 152,
-      img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/7.png",
-    },
-    {
-      id: 2,
-      brand: "Samsung",
-      name: "Samsung Galaxy 10",
-      price: 152,
-      img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/9.png",
-    },
-    {
-      id: 3,
-      brand: "Redmi",
-      name: "Redmi Note 7 Pro",
-      price: 152,
-      img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/9.png",
-    },
-    {
-      id: 6,
-      brand: "Redmi",
-      name: "Redmi Note 7 Pro",
-      price: 152,
-      img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/9.png",
-    },
-    {
-      id: 4,
-      brand: "Apple",
-      name: "Apple iPhone 12",
-      price: 252,
-      img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/2.png",
-    },
-    {
-      id: 5,
-      brand: "Apple",
-      name: "Apple iPhone 12",
-      price: 252,
-      img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/2.png",
-    },
-  ];
+  // const products = [
+  //   {
+  //     id: 1,
+  //     brand: "Apple",
+  //     name: "Apple iPhone 10",
+  //     price: 152,
+  //     img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/7.png",
+  //   },
+  //   {
+  //     id: 2,
+  //     brand: "Samsung",
+  //     name: "Samsung Galaxy 10",
+  //     price: 152,
+  //     img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/9.png",
+  //   },
+  //   {
+  //     id: 3,
+  //     brand: "Redmi",
+  //     name: "Redmi Note 7 Pro",
+  //     price: 152,
+  //     img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/9.png",
+  //   },
+  //   {
+  //     id: 6,
+  //     brand: "Redmi",
+  //     name: "Redmi Note 7 Pro",
+  //     price: 152,
+  //     img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/9.png",
+  //   },
+  //   {
+  //     id: 4,
+  //     brand: "Apple",
+  //     name: "Apple iPhone 12",
+  //     price: 252,
+  //     img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/2.png",
+  //   },
+  //   {
+  //     id: 5,
+  //     brand: "Apple",
+  //     name: "Apple iPhone 12",
+  //     price: 252,
+  //     img: "https://ltp.crfnetwork.com/mobile-shop-backend/assets/products/2.png",
+  //   },
+  // ];
 
   const filters = ["*", "Apple", "Samsung", "Redmi"];
 
@@ -477,7 +485,7 @@ const Home = () => {
           </section>
         </div>
 
-        <section id="special-price" className="mt-5">
+        <section id="special-price" className="mt-5 bg-light ">
           <div className="container mt-5">
             <h3 className="font-size-20 mb-0">ĐIỆN THOẠI HOT</h3>
 
@@ -497,16 +505,16 @@ const Home = () => {
               ))}
             </div>
             <div className="product-filter row">
-              {phone?.map((item: any) => {
+              {phone?.slice(0, 4).map((item: any) => {
                 const visible =
                   activeFilter === "*" || item.brand === activeFilter;
                 return (
                   <div
                     key={item.id}
-                    className={`col-6 col-sm-4  col-md-3 col-lg-2 py-3 product-filter-item   ${!visible ? "filter-hidden" : "filter-visible"}`}
+                    className={`col-6 col-sm-4  col-md-3 col-lg-2 py-3 product-filter-item   ${!visible ? "filter-hidden" : "filter-visible"} `}
                     style={{ width: "300px" }}
                   >
-                    <div className="card h-100 bg-white ">
+                    <div className="card h-100 bg-white rounded-0 d-flex flex-column">
                       <Link
                         to={`/product/${item.id}`}
                         className="product-card-link"
@@ -667,7 +675,7 @@ const Home = () => {
             </div>
 
             <div className="product-filter row">
-              {products.map((product: any) => {
+              {/* {products.map((product: any) => {
                 const visible =
                   activeFilter === "*" || product.brand === activeFilter;
                 return (
@@ -724,10 +732,464 @@ const Home = () => {
                     </div>
                   </div>
                 );
-              })}
+              })} */}
             </div>
           </div>
         </section>
+
+        <div className="row mt-2">
+          <section>
+            <div
+              className="container py-5 "
+              style={{
+                backgroundColor: "black",
+                backgroundImage:
+                  "url('/images/7510236c-c858-4cab-a779-c3aaf12a5643.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                minHeight: "70vh",
+                height: "auto",
+                width: "100%",
+              }}
+            >
+              <div className="row">
+                <h4
+                  style={{
+                    color: "#48d6f0ff",
+                    borderBottom: "1px solid #48d6f0ff",
+                  }}
+                >
+                  BÀN PHÍM HOT
+                </h4>{" "}
+                <div className="col-md-12 mt-4">
+                  <div className="row justify-content-center">
+                    <Swiper
+                      modules={[Navigation, Autoplay]}
+                      navigation
+                      spaceBetween={15}
+                      slidesPerView={5}
+                      loop={true}
+                      autoplay={{
+                        delay: 2000,
+                        disableOnInteraction: false,
+                      }}
+                      breakpoints={{
+                        80: {
+                          slidesPerView: 1,
+                          spaceBetween: 10,
+                        },
+                        480: {
+                          slidesPerView: 2,
+                          spaceBetween: 10,
+                        },
+                        640: {
+                          slidesPerView: 3,
+                          spaceBetween: 12,
+                        },
+                        768: {
+                          slidesPerView: 3,
+                          spaceBetween: 15,
+                        },
+                        1024: {
+                          slidesPerView: 4,
+                          spaceBetween: 15,
+                        },
+                        1280: {
+                          slidesPerView: 5,
+                          spaceBetween: 15,
+                        },
+                      }}
+                    >
+                      {loading && (
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                          style={{
+                            width: "3rem",
+                            height: "3rem",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            zIndex: 1000,
+                          }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      )}
+                      {keyboards &&
+                        keyboardsProduct?.map((item) => (
+                          <SwiperSlide key={item.id}>
+                            <div style={{ padding: "0 5px" }}>
+                              <div
+                                className="card"
+                                style={{
+                                  borderRadius: "0px",
+                                  height: "100%",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <Link
+                                  to={`/product/${item.id}`}
+                                  className="product-card-link"
+                                >
+                                  <div
+                                    className="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
+                                    data-mdb-ripple-color="light"
+                                    style={{
+                                      position: "relative",
+                                      width: "100%",
+                                      paddingTop: "75%",
+                                      overflow: "hidden",
+                                      borderTopLeftRadius: "15px",
+                                      borderTopRightRadius: "15px",
+                                      backgroundColor: "#f8f9fa",
+                                    }}
+                                  >
+                                    <img
+                                      src={
+                                        item?.product_images?.[0]?.url
+                                          ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                          : "https://via.placeholder.com/300x225?text=No+Image"
+                                      }
+                                      style={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "contain",
+                                        padding: "10px",
+                                      }}
+                                      className="img-fluid"
+                                      alt={item.name || "Product"}
+                                    />
+                                  </div>
+
+                                  <div
+                                    className="card-body pb-0"
+                                    style={{ minHeight: "100px" }}
+                                  >
+                                    <div className="d-flex justify-content-between align-items-start">
+                                      <div style={{ flex: 1, minWidth: 0 }}>
+                                        <p
+                                          style={{
+                                            marginBottom: "0.25rem",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: "vertical",
+                                            lineHeight: "1.4",
+                                          }}
+                                        >
+                                          {item.name || "Product Name"}
+                                        </p>
+                                        <p className="small text-muted">
+                                          Laptops
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    className="card-body pb-0"
+                                    style={{ minHeight: "70px" }}
+                                  >
+                                    <div className="d-flex justify-content-between">
+                                      <p>
+                                        <span style={{ color: "#1a96e2ff" }}>
+                                          <strong>
+                                            {" "}
+                                            {formatVND(item.price || 0)}
+                                          </strong>
+                                        </span>
+                                      </p>
+                                      <p className="text-dark"> 8787</p>
+                                    </div>
+                                    <p className="small text-muted">
+                                      VISA Platinum
+                                    </p>
+                                  </div>
+                                </Link>
+
+                                {/* Action buttons - Moved to right */}
+                                <div
+                                  className="card-body"
+                                  style={{ marginTop: "auto" }}
+                                >
+                                  <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                                    {item.inCart && user ? (
+                                      <button
+                                        className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                                        onClick={(e) => e.preventDefault()}
+                                      >
+                                        <div
+                                          className="decrease-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! - 1
+                                            );
+                                          }}
+                                        >
+                                          -
+                                        </div>
+                                        <div>{item.cart.quantity}</div>
+                                        <div
+                                          className="increase-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! + 1
+                                            );
+                                          }}
+                                        >
+                                          +
+                                        </div>
+                                      </button>
+                                    ) : item.inCart ? (
+                                      <button
+                                        className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                                        onClick={(e) => e.preventDefault()}
+                                      >
+                                        <div
+                                          className="decrease-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! - 1
+                                            );
+                                          }}
+                                        >
+                                          -
+                                        </div>
+                                        <div>{item.cart.quantity}</div>
+                                        <div
+                                          className="increase-btn"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleClickChange(
+                                              item.cart.id!,
+                                              item.cart.quantity! + 1
+                                            );
+                                          }}
+                                        >
+                                          +
+                                        </div>
+                                      </button>
+                                    ) : (
+                                      <button
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          addToCartForAuthenticatedUser({
+                                            id: 0,
+                                            user_id: user.id || 0,
+                                            variant_id: item.id,
+                                            quantity: 1,
+                                            unit_price: item.price,
+                                            variant: item,
+                                          });
+                                        }}
+                                        type="button"
+                                        data-mdb-button-init
+                                        data-mdb-ripple-init
+                                        className="btn btn-outline-primary btn-sm w-100"
+                                      >
+                                        Thêm vào giỏ
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </SwiperSlide>
+                        ))}
+                    </Swiper>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div
+          className="mt-5 mb-5 bg-light"
+          id="may-tinh-ban"
+          style={{ backgroundColor: "white" }}
+        >
+          <div className="container mt-5"></div>
+          <h3 className="font-size-20 mb-5">PC MÁY BÀN</h3>
+          <div className="row">
+            {pcProduct?.slice(0, 8).map((item: any) => (
+              <div
+                key={item.id}
+                className="col-6 col-sm-4  col-md-3 col-lg-3 py-3"
+              >
+                <div className="card h-100 bg-white  rounded-0 d-flex flex-column">
+                  <Link
+                    to={`/product/${item.id}`}
+                    className="product-card-link"
+                  >
+                    <div
+                      className="bg-image hover-overlay ripple ripple-surface ripple-surface-light bg-white"
+                      data-mdb-ripple-color="light"
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        paddingTop: "75%",
+                        overflow: "hidden",
+                        borderTopLeftRadius: "15px",
+                        borderTopRightRadius: "15px",
+                        backgroundColor: "#f8f9fa",
+                      }}
+                    >
+                      <img
+                        src={
+                          item?.product_images?.[0]?.url
+                            ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                            : "https://via.placeholder.com/300x225?text=No+Image"
+                        }
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          padding: "10px",
+                        }}
+                        className="img-fluid"
+                        alt={item.name || "Product"}
+                      />
+                    </div>
+                    <div
+                      className="card-body pb-0"
+                      style={{ minHeight: "100px" }}
+                    >
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p
+                            style={{
+                              marginBottom: "0.25rem",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              lineHeight: "1.4",
+                            }}
+                          >
+                            {item.name || "Product Name"}
+                          </p>
+                          <p className="small text-muted">Laptops</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="card-body pb-0"
+                      style={{ minHeight: "70px" }}
+                    >
+                      <div className="d-flex justify-content-between">
+                        <h6
+                          className="text-dark"
+                          style={{ color: "rgba(200, 9, 9, 0)" }}
+                        >
+                          <strong> {formatVND(item.price || 0)}</strong>
+                        </h6>
+
+                        <p className="text-dark"> 8787</p>
+                      </div>
+                    </div>
+                  </Link>
+                  {/* Action buttons - Moved to right */}
+                  <div className="card-body" style={{ marginTop: "auto" }}>
+                    <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                      {item.inCart && user ? (
+                        <button
+                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          <div
+                            className="decrease-btn"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleClickChange(
+                                item.cart.id!,
+                                item.cart.quantity! - 1
+                              );
+                            }}
+                          >
+                            -
+                          </div>
+                          <div>{item.cart.quantity}</div>
+                          <div
+                            className="increase-btn"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleClickChange(
+                                item.cart.id!,
+                                item.cart.quantity! + 1
+                              );
+                            }}
+                          >
+                            +
+                          </div>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addToCartForAuthenticatedUser({
+                              id: 0,
+                              user_id: user.id || 0,
+                              variant_id: item.id,
+                              quantity: 1,
+                              unit_price: item.price,
+                              variant: item,
+                            });
+                          }}
+                          type="button"
+                          data-mdb-button-init
+                          data-mdb-ripple-init
+                          className="btn btn-outline-primary btn-sm w-100"
+                        >
+                          Thêm vào giỏ
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="d-flex justify-content-center mt-4">
+              <button
+                onClick={() => {
+                  // if (page < totalPage) {
+                  //   setPage(page + 1);
+                  // }
+                }}
+                className="btn btn-outline-primary"
+              >
+                Xem thêm
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <CToaster
         className="p-3"

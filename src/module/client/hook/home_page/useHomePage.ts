@@ -17,7 +17,23 @@ export const useHomePage = (
   const { data: userCart, isPending } = useQuery(
     cartQuery.getByUser(user_id || 0)
   );
-  const { data, isPending: isPendingList } = useQuery(productVariantQuery.list);
+  const { data, isPending: isPendingList } = useQuery(
+    productVariantQuery.list({
+      category: "",
+      sortBy: "created_at",
+      order: "asc",
+    })
+  );
+  const { data: keyboards } = useQuery(
+    productVariantQuery.list({
+      category: "ban-phim",
+      sortBy: "created_at",
+      order: "asc",
+    })
+  );
+  const { data: pcVariants, isPending: isPendingPc } = useQuery(
+    productVariantQuery.list({ category: "pc---may-tinh-ban" })
+  );
   const loading = useSelector((state: RootState) => state.cart.loading);
 
   const addToCartForAuthenticatedUser = useCallback(
@@ -75,5 +91,8 @@ export const useHomePage = (
     isPendingUpdateCart,
     isPendingList,
     data,
+    pcVariants,
+    isPendingPc,
+    keyboards,
   };
 };

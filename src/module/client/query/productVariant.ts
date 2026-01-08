@@ -3,12 +3,14 @@ import {
   getAllProductVariant,
   getProductVariantById,
 } from "../service/productVariant";
+import type { QueryState } from "../../../type/FilterState";
 
 export const productVariantQuery = {
-  list: queryOptions({
-    queryKey: ["home-product-variant"],
-    queryFn: () => getAllProductVariant(),
-  }),
+  list: (queryState?: QueryState) =>
+    queryOptions({
+      queryKey: ["home-product-variant", queryState || {}],
+      queryFn: () => getAllProductVariant(queryState),
+    }),
   detail: (id: number) =>
     queryOptions({
       queryKey: ["product-variant", id],

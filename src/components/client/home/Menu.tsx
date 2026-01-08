@@ -6,6 +6,7 @@ import {
   FaApple,
   FaWindows,
   FaKeyboard,
+  FaDesktop,
 } from "react-icons/fa";
 import "./css/Menu.css";
 
@@ -37,10 +38,10 @@ const Menu = () => {
     },
     {
       id: 3,
-      name: "Phụ kiện, đồ chơi",
+      name: "PC - Máy tính để bàn",
       count: 20,
-      icon: <FaHeadphones />,
-      link: "laptop",
+      icon: <FaDesktop />,
+      link: "pc---may-tinh-ban",
       children: [
         { name: "Chuột", icon: <FaKeyboard /> },
         { name: "Bàn phím", icon: <FaKeyboard /> },
@@ -49,10 +50,10 @@ const Menu = () => {
     },
     {
       id: 4,
-      name: "Điện thoại",
+      name: "Bàn phím",
       count: 14,
-      icon: <FaMobileAlt />,
-      link: "dien-thoai",
+      icon: <FaKeyboard />,
+      link: "ban-phim",
       // children: [
       //   { name: "iPhone", icon: <FaApple /> },
       //   { name: "Samsung", icon: <FaMobileAlt /> },
