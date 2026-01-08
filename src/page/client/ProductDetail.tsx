@@ -12,10 +12,11 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
 
   const { data } = useQuery(productVariantQuery.detail(Number(id)));
+  console.log("product detail data", data);
 
   const product = useMemo(
     () => ({
-      name: data?.name,
+      name: data?.product?.product_variant?.[0]?.name,
       brand: "Samsung",
       rating: 4.5,
       reviews: 1243,
@@ -33,12 +34,12 @@ const ProductDetail = () => {
       ],
       images: [
         ...(data?.product_images?.map(
-          (item) => `http://localhost:5173/uploads/${item.url}`
+          (item) => `https://electric-commercial.vercel.app/uploads/${item.url}`
         ) ?? []),
-        "https://images.unsplash.com/photo-1592286927505-c0d0eb5e76cc?w=500",
-        "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500",
-        "https://images.unsplash.com/photo-1591122947157-26bad3a117d2?w=500",
-        "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500",
+        // "https://images.unsplash.com/photo-1592286927505-c0d0eb5e76cc?w=500",
+        // "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500",
+        // "https://images.unsplash.com/photo-1591122947157-26bad3a117d2?w=500",
+        // "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500",
       ],
       specs: {
         display: '6.8" Dynamic AMOLED 2X',
