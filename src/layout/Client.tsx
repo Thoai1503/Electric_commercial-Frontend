@@ -20,6 +20,14 @@ const Client = () => {
         {/* <AuthDebug /> */}
 
         <Navbar />
+        {/* adding bar loading progress  */}
+        {loading && (
+          <div className="progress-bar">
+            <div className="progress">
+              <div className="indeterminate"></div>
+            </div>
+          </div>
+        )}
         <div className="container" style={{ opacity: loading ? 0.3 : 1 }}>
           <div className="row mt-5">
             <Outlet />

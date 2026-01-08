@@ -29,6 +29,10 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
             item.value_decimal != null ||
             item.value_int != null ||
             item.value_text != null;
+          const attribute_value_id = item.attribute_value_id;
+
+          console.log("Attr Val ID: " + attribute_value_id);
+
           return (
             <>
               <CustomInput
@@ -36,6 +40,7 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
                 isHavingValuable={isHavingValuable}
                 vl={vl}
                 handleSubmit={handleSubmit}
+                attribute_value_id={attribute_value_id}
               />
             </>
           );

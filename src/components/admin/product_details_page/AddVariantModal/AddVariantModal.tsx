@@ -11,27 +11,29 @@ import {
   CModalTitle,
   CRow,
 } from "@coreui/react";
-import { useState } from "react";
+import React from "react";
 
 interface Prop {
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   handleSubmit: () => void;
+  handleClose: () => void;
+
+  visible: boolean;
 }
 
-const AddVariantModal = ({ handleChange, handleSubmit }: Prop) => {
-  const [visible, setVisible] = useState(false);
+const AddVariantModal = ({
+  handleChange,
+  handleSubmit,
+  handleClose,
 
-  const handleClose = () => {
-    setVisible(false);
-  };
+  visible,
+}: Prop) => {
+  // const [visible, setVisible] = useState(false);
+
   return (
     <>
-      <CButton color="primary" onClick={() => setVisible(!visible)}>
-        Thêm biến thể mới
-      </CButton>
-
       <CModal
         alignment="center"
         scrollable

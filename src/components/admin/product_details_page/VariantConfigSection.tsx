@@ -4,6 +4,7 @@ import { useVariantConfigSection } from "../../../module/admin/hook/product_deta
 
 import AddVariantModal from "./AddVariantModal/AddVariantModal";
 import VariantItem from "./VariantItem/VariantItem";
+import { useState } from "react";
 
 interface Prop {
   id: number;
@@ -15,6 +16,10 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
   const { handleChange, handleSubmit, variants, categoryAttributes } =
     useVariantConfigSection(id);
 
+  const [visible, setVisible] = useState(false);
+  const handleClose = () => {
+    setVisible(false);
+  };
   console.log("Variant  :" + JSON.stringify(variants));
   // const en = variants && variants[0]?.variant_attributes;
   //alert(JSON.stringify(en));
@@ -24,6 +29,19 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
       {" "}
       <div className="mb-4">
         <h6 className="mb-3">📌 Danh sách các biến thể:</h6>
+        <div className="d-flex justify-content-end">
+          <button
+            className="btn btn-sm btn-primary mb-3"
+            data-bs-toggle="modal"
+            onClick={() => {
+              setVisible(true);
+            }}
+          >
+            <Plus size={14} className="me-1" />
+            Thêm biến thể
+          </button>
+        </div>
+
         <div className="table-responsive mb-3">
           <table className="table table-bordered">
             <thead className="table-light">
@@ -87,6 +105,8 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
       <AddVariantModal
         handleChange={handleChange}
         handleSubmit={handleSubmit}
+        visible={visible}
+        handleClose={handleClose}
       />
     </>
   );

@@ -378,6 +378,151 @@ const Product = () => {
             </div>
           </div>
           <div className=" bg-white " style={{ opacity: isLoading ? 0.4 : 1 }}>
+            {/* {isLoading ? (
+              <div className="text-center my-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="row mx-0">
+                {product &&
+                  product?.length > 0 &&
+                  product?.map((item) => (
+                    <div
+                      className="col-lg-3 pb-3 m"
+                      style={{
+                        marginRight: "0px",
+                        padding: "3px",
+                        width: "240px",
+                      }}
+                      key={item.id}
+                    >
+                      <div
+                        className="card h-100"
+                        style={{ borderRadius: "0px" }}
+                      >
+                        <img
+                          src={
+                            item.product_images &&
+                            item.product_images.length > 0
+                              ? `/uploads/${item.product_images[0].url}`
+                              : "/images/asus-vivobook-go-15-e1504fa-r5-nj630w-glr-14-750x500.jpg?h=120&fit=crop&auto=format&dpr=2 2x"
+                          }
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "contain",
+                          }}
+                          alt={item.name}
+                        />
+                        <div
+                          className="card-body pb-0"
+                          style={{ minHeight: "100px" }}
+                        >
+                          <div>
+                            <p className="text">{item.name}</p>
+                            <p className="small text-muted">Laptops</p>
+                          </div>
+                        </div>
+                        <div className="card-body pb-0">
+                          <div className="d-flex justify-content-between">
+                            <p>
+                              <span style={{ color: "#1a96e2ff" }}>
+                                <strong>
+                                  {" "}
+                                  {item.price.toLocaleString()} vnđ
+                                </strong>
+                              </span>
+                            </p>
+                            <p className="text-dark"> 8787</p>
+                          </div>
+                          <p className="small text-muted">VISA Platinum</p>
+                        </div>
+                        <div
+                          className="card-body"
+                          style={{ marginTop: "auto" }}
+                        >
+                          <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                            {item.inCart && user ? (
+                              <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                                <div
+                                  className="decrease-btn"
+                                  onClick={() =>
+                                    handleClickChange(
+                                      item.cart.id!,
+                                      item.cart.quantity! - 1
+                                    )
+                                  }
+                                >
+                                  -
+                                </div>
+                                <div>{item.cart.quantity}</div>
+                                <div
+                                  className="increase-btn"
+                                  onClick={() =>
+                                    handleClickChange(
+                                      item.cart.id!,
+                                      item.cart.quantity! + 1
+                                    )
+                                  }
+                                >
+                                  +
+                                </div>
+                              </button>
+                            ) : item.inCart ? (
+                              <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
+                                <div
+                                  className="decrease-btn"
+                                  onClick={() =>
+                                    handleClickChange(
+                                      item.cart.id!,
+                                      item.cart.quantity! - 1
+                                    )
+                                  }
+                                >
+                                  -
+                                </div>
+                                <div>{item.cart.quantity}</div>
+                                <div
+                                  className="increase-btn"
+                                  onClick={() =>
+                                    handleClickChange(
+                                      item.cart.id!,
+                                      item.cart.quantity! + 1
+                                    )
+                                  }
+                                >
+                                  +
+                                </div>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  addToCartForAuthenticatedUser({
+                                    id: 0,
+                                    user_id: user.id || 0,
+                                    variant_id: item.id,
+                                    quantity: 1,
+                                    unit_price: item.price,
+                                    variant: item,
+                                  })
+                                }
+                                type="button"
+                                data-mdb-button-init
+                                data-mdb-ripple-init
+                                className="btn btn-outline-primary btn-sm w-100"
+                              >
+                                Thêm vào giỏ
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )} */}
             <div className="row mx-0">
               {product &&
                 product?.length > 0 &&

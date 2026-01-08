@@ -8,4 +8,5 @@ export interface ProductAttribute {
   value_decimal: number | null;
   value_int: number | null;
   attribute: Attribute;
+  attribute_value_id: number;
 }

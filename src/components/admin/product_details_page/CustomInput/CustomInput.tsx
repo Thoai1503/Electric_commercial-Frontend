@@ -5,9 +5,16 @@ interface Prop {
   item: ProductAttribute;
   isHavingValuable: boolean;
   vl: string | number | undefined;
+  attribute_value_id?: number;
   handleSubmit: (id: number, en: Partial<ProductAttribute>) => void;
 }
-const CustomInput = ({ item, isHavingValuable, vl, handleSubmit }: Prop) => {
+const CustomInput = ({
+  item,
+  isHavingValuable,
+  vl,
+  handleSubmit,
+  attribute_value_id,
+}: Prop) => {
   const [submitData, setSubmitData] = useState<Partial<ProductAttribute>>({
     id: item.id,
     product_id: item.product_id,
@@ -85,7 +92,15 @@ const CustomInput = ({ item, isHavingValuable, vl, handleSubmit }: Prop) => {
           {item.attribute.unit != "" && item.attribute.unit}):
         </label>
       </div>
-      <div className="col-4">{renderInput(item.attribute.data_type)}</div>
+      <div className="col-4">
+        {attribute_value_id ? (
+          <select className="form-select">
+            <option value="">{attribute_value_id}</option>
+          </select>
+        ) : (
+          renderInput(item.attribute.data_type)
+        )}
+      </div>
       <div className="col-2">
         <button
           className="btn btn-outline-primary "
