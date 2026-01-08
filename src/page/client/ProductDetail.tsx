@@ -6,13 +6,19 @@ import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [selectedColor, setSelectedColor] = useState("midnight");
+  // const [selectedColor, setSelectedColor] = useState("midnight");
   const [selectedStorage, setSelectedStorage] = useState("128GB");
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   const { data } = useQuery(productVariantQuery.detail(Number(id)));
-  console.log("product detail data", data);
+  const product_id = useMemo(() => data?.product_id, [data]);
+  console.log("product_id", product_id);
+  const { data: variantData } = useQuery(
+    productVariantQuery.by_product_id(Number(product_id))
+  );
+  console.log("variantData", variantData?.length);
+  const variant_attributes = useMemo(() => data?.variant_attributes, [data]);
 
   const product = useMemo(
     () => ({
@@ -36,10 +42,6 @@ const ProductDetail = () => {
         ...(data?.product_images?.map(
           (item) => `https://electric-commercial.vercel.app/uploads/${item.url}`
         ) ?? []),
-        // "https://images.unsplash.com/photo-1592286927505-c0d0eb5e76cc?w=500",
-        // "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500",
-        // "https://images.unsplash.com/photo-1591122947157-26bad3a117d2?w=500",
-        // "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500",
       ],
       specs: {
         display: '6.8" Dynamic AMOLED 2X',
@@ -63,37 +65,74 @@ const ProductDetail = () => {
   const currentPrice =
     product.storage.find((s) => s.size === selectedStorage)?.price || 999;
 
+  // Kiểm tra nếu không có hình ảnh
+  const hasImages = product.images && product.images.length > 0;
+
   return (
     <div className="container py-5">
       <div className="row">
         {/* Image Gallery */}
         <div className="col-lg-6 mb-4">
-          <div className="card border-0 shadow-sm">
-            <img
-              src={product.images[selectedImage]}
-              className="card-img-top"
-              alt={product.name}
-              style={{ height: "500px", objectFit: "cover" }}
-            />
-          </div>
-          <div className="row mt-3 g-2">
-            {product.images.map((img, idx) => (
-              <div className="col-3" key={idx}>
+          {hasImages ? (
+            <>
+              <div className="card border-0 shadow-sm">
                 <img
-                  src={img}
-                  className={`img-thumbnail cursor-pointer ${selectedImage === idx ? "border-primary" : ""}`}
-                  alt={`View ${idx + 1}`}
-                  onClick={() => setSelectedImage(idx)}
+                  src={product.images[selectedImage]}
+                  className="card-img-top"
+                  alt={product.name}
                   style={{
-                    cursor: "pointer",
-                    height: "100px",
-                    objectFit: "cover",
-                    width: "100%",
+                    height: "500px",
+                    objectFit: "contain",
+                    backgroundColor: "#f8f9fa",
+                    padding: "20px",
                   }}
+                  // onError={(e) => {
+                  //   e.target.src =
+                  //     "https://via.placeholder.com/500x500?text=No+Image";
+                  // }}
                 />
               </div>
-            ))}
-          </div>
+              <div className="row mt-3 g-2">
+                {product.images.map((img, idx) => (
+                  <div className="col-3" key={idx}>
+                    <img
+                      src={img}
+                      className={`img-thumbnail ${selectedImage === idx ? "border-primary border-3" : ""}`}
+                      alt={`View ${idx + 1}`}
+                      onClick={() => setSelectedImage(idx)}
+                      style={{
+                        cursor: "pointer",
+                        height: "100px",
+                        objectFit: "contain",
+                        width: "100%",
+                        backgroundColor: "#f8f9fa",
+                        padding: "5px",
+                      }}
+                      // onError={(e) => {
+                      //   e.target.src =
+                      //     "https://via.placeholder.com/100x100?text=No+Image";
+                      // }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="card border-0 shadow-sm">
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{
+                  height: "500px",
+                  backgroundColor: "#f8f9fa",
+                }}
+              >
+                <div className="text-center text-muted">
+                  <i className="bi bi-image" style={{ fontSize: "4rem" }}></i>
+                  <p className="mt-2">No images available</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
@@ -135,7 +174,7 @@ const ProductDetail = () => {
           </h2>
 
           {/* Color Selection */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="form-label fw-semibold">
               Color:{" "}
               <span className="fw-normal">
@@ -161,13 +200,13 @@ const ProductDetail = () => {
                 />
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Storage Selection */}
           <div className="mb-4">
             <label className="form-label fw-semibold">Storage</label>
             <div className="btn-group w-100" role="group">
-              {product.storage.map((option) => (
+              {/* {product.storage.map((option) => (
                 <button
                   key={option.size}
                   type="button"
@@ -177,7 +216,20 @@ const ProductDetail = () => {
                   {option.size}
                   <div className="small">${option.price}</div>
                 </button>
-              ))}
+              ))} */}
+              {variantData?.map((variant) => (
+                <button
+                  key={variant.id}
+                  type="button"
+                  className={`btn ${selectedStorage === variant?.id?.toString() ? "btn-primary" : "btn-outline-primary"}`}
+                  onClick={() =>
+                    setSelectedStorage(variant?.id?.toString() || "")
+                  }
+                >
+                  {variant.id}
+                  <div className="small">${variant.price}</div>
+                </button>
+              )) || null}
             </div>
           </div>
 
@@ -239,14 +291,22 @@ const ProductDetail = () => {
               <h5 className="card-title fw-semibold mb-3">Specifications</h5>
               <table className="table table-sm">
                 <tbody>
-                  {Object.entries(product.specs).map(([key, value]) => (
+                  {/* {Object.entries(product.specs).map(([key, value]) => (
                     <tr key={key}>
                       <th className="text-capitalize" style={{ width: "40%" }}>
                         {key}
                       </th>
                       <td>{value}</td>
                     </tr>
-                  ))}
+                  ))} */}
+                  {variant_attributes?.map((attr) => (
+                    <tr key={attr.attribute.id}>
+                      <th className="text-capitalize" style={{ width: "40%" }}>
+                        {attr.attribute.name}
+                      </th>
+                      <td>{attr.attribute_value?.value}</td>
+                    </tr>
+                  )) || null}
                 </tbody>
               </table>
             </div>

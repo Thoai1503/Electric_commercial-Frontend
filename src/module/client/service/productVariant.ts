@@ -48,3 +48,14 @@ export const getProductVariantById = async (
       throw error;
     });
 };
+
+export const getVariantByProductId = async (
+  id: number
+): Promise<Partial<ProductVariant>[]> => {
+  return await catalogRequest
+    .get(`/productvariant/product/${id}`)
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
