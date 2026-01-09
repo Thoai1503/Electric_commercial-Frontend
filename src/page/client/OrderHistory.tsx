@@ -1,712 +1,446 @@
 import { useQuery } from "@tanstack/react-query";
 import { orderQuery } from "../../module/client/query/order";
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 
 const OrderHistory = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
-  const { data } = useQuery(orderQuery.get_by_user_id(user.id));
-  const list = useMemo(() => data?.sort((a, b) => b.id - a.id), [data]);
-  return (
-    <div className="container-fluid mt-5 mb-3">
-      <div className="row align-items-center">
-        <div className="col-sm-6">
-          <div className="page-title-box">
-            <h4 className="font-size-18">Lịch sử đơn hàng</h4>
-            <ol className="breadcrumb mb-0">
-              <li className="breadcrumb-item">
-                <a href="javascript: void(0);">
-                  <i className="mdi mdi-home-outline"></i>
-                </a>
-              </li>
-              <li className="breadcrumb-item">
-                <a href="javascript: void(0);">Ecommerce</a>
-              </li>
-              <li className="breadcrumb-item active">Order History</li>
-            </ol>
+  const { data, isLoading } = useQuery(orderQuery.get_by_user_id(user.id));
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState<"id" | "total" | "created_at">(
+    "id"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+  // Filter and sort data
+  const filteredData = useMemo(() => {
+    if (!data) return [];
+
+    let filtered = [...data];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (item) =>
+          item.id.toString().includes(searchTerm) ||
+          item.total.toString().includes(searchTerm)
+      );
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      let aVal = a[sortField];
+      let bVal = b[sortField];
+
+      if (sortField === "created_at") {
+        aVal = new Date(aVal).getTime();
+        bVal = new Date(bVal).getTime();
+      } else {
+        aVal = Number(aVal);
+        bVal = Number(bVal);
+      }
+
+      return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+    });
+
+    return filtered;
+  }, [data, searchTerm, sortField, sortOrder]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredData.length / entriesPerPage);
+  const startIndex = (currentPage - 1) * entriesPerPage;
+  const endIndex = startIndex + entriesPerPage;
+  const currentData = filteredData.slice(startIndex, endIndex);
+
+  const handleSort = (field: typeof sortField) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortOrder("desc");
+    }
+  };
+
+  const getStatusInfo = (status: number) => {
+    switch (status) {
+      case 3:
+        return { text: "Đã huỷ", badge: "danger", icon: "mdi-close-circle" };
+      case 2:
+        return {
+          text: "Đã thanh toán",
+          badge: "success",
+          icon: "mdi-check-circle",
+        };
+      case 1:
+        return {
+          text: "Đang xử lý",
+          badge: "warning",
+          icon: "mdi-clock-outline",
+        };
+      default:
+        return {
+          text: "Không xác định",
+          badge: "secondary",
+          icon: "mdi-help-circle",
+        };
+    }
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <li
+          key={i}
+          className={`page-item ${currentPage === i ? "active" : ""}`}
+        >
+          <button className="page-link" onClick={() => setCurrentPage(i)}>
+            {i}
+          </button>
+        </li>
+      );
+    }
+
+    return pages;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container-fluid mt-5">
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: "400px" }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
+      </div>
+    );
+  }
 
-        <div className="col-sm-6">
-          <div className="float-end d-none d-md-block">
-            <div className="dropdown">
-              <button
-                className="btn btn-primary dropdown-toggle waves-effect waves-light"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <i className="mdi mdi-settings me-2"></i> Settings
+  return (
+    <div className="container-fluid mt-5 mb-5">
+      {/* Header */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h2 className="mb-1 fw-bold">Lịch sử đơn hàng</h2>
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb mb-0">
+                  <li className="breadcrumb-item">
+                    <a href="#" className="text-decoration-none">
+                      <i className="mdi mdi-home-outline"></i> Trang chủ
+                    </a>
+                  </li>
+                  <li className="breadcrumb-item">
+                    <a href="#" className="text-decoration-none">
+                      Ecommerce
+                    </a>
+                  </li>
+                  <li className="breadcrumb-item active">Lịch sử đơn hàng</li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <button className="btn btn-primary">
+                <i className="mdi mdi-download me-2"></i>Xuất báo cáo
               </button>
-              <div className="dropdown-menu dropdown-menu-right">
-                <a className="dropdown-item" href="#">
-                  Action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Another action
-                </a>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#">
-                  Separated link
-                </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Card */}
+      <div className="row">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body">
+              {/* Controls */}
+              <div className="row mb-3">
+                <div className="col-md-6 mb-3 mb-md-0">
+                  <div className="d-flex align-items-center">
+                    <label className="me-2 text-nowrap mb-0">Hiển thị</label>
+                    <select
+                      className="form-select form-select-sm"
+                      style={{ width: "auto" }}
+                      value={entriesPerPage}
+                      onChange={(e) => {
+                        setEntriesPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                    </select>
+                    <span className="ms-2 text-muted">mục</span>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="input-group">
+                    <span className="input-group-text bg-white border-end-0">
+                      <i className="mdi mdi-magnify"></i>
+                    </span>
+                    <input
+                      type="search"
+                      className="form-control border-start-0"
+                      placeholder="Tìm kiếm theo mã đơn hàng..."
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Table */}
+              <div className="table-responsive">
+                <table className="table table-hover align-middle">
+                  <thead className="table-light">
+                    <tr>
+                      <th
+                        className="cursor-pointer user-select-none"
+                        onClick={() => handleSort("id")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="d-flex align-items-center">
+                          Mã đơn hàng
+                          {sortField === "id" && (
+                            <i
+                              className={`mdi mdi-chevron-${sortOrder === "asc" ? "up" : "down"} ms-1`}
+                            ></i>
+                          )}
+                        </div>
+                      </th>
+                      <th
+                        className="cursor-pointer user-select-none"
+                        onClick={() => handleSort("total")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="d-flex align-items-center">
+                          Tổng tiền
+                          {sortField === "total" && (
+                            <i
+                              className={`mdi mdi-chevron-${sortOrder === "asc" ? "up" : "down"} ms-1`}
+                            ></i>
+                          )}
+                        </div>
+                      </th>
+                      <th
+                        className="cursor-pointer user-select-none"
+                        onClick={() => handleSort("created_at")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="d-flex align-items-center">
+                          Ngày đặt
+                          {sortField === "created_at" && (
+                            <i
+                              className={`mdi mdi-chevron-${sortOrder === "asc" ? "up" : "down"} ms-1`}
+                            ></i>
+                          )}
+                        </div>
+                      </th>
+                      <th>Thanh toán</th>
+                      <th>Trạng thái</th>
+                      <th className="text-center">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="text-center py-5">
+                          <i className="mdi mdi-package-variant-closed font-size-48 text-muted d-block mb-3"></i>
+                          <p className="text-muted mb-0">
+                            Không tìm thấy đơn hàng nào
+                          </p>
+                        </td>
+                      </tr>
+                    ) : (
+                      currentData.map((item) => {
+                        const statusInfo = getStatusInfo(item.status);
+                        const createdDate = new Date(
+                          item.created_at
+                        ).toLocaleString("vi-VN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        });
+
+                        return (
+                          <tr key={item.id}>
+                            <td>
+                              <a
+                                href="#"
+                                className="text-decoration-none fw-semibold"
+                              >
+                                #DHG{String(item.id).padStart(6, "0")}
+                              </a>
+                            </td>
+                            <td className="fw-semibold text-primary">
+                              {item.total.toLocaleString("vi-VN")} ₫
+                            </td>
+                            <td>
+                              <small className="text-muted">
+                                {createdDate}
+                              </small>
+                            </td>
+                            <td>
+                              <i className="fab fa-cc-visa text-primary font-size-20"></i>
+                            </td>
+                            <td>
+                              <span
+                                className={`badge bg-${statusInfo.badge} bg-opacity-10 text-${statusInfo.badge} px-3 py-2`}
+                              >
+                                <i
+                                  className={`mdi ${statusInfo.icon} me-1`}
+                                ></i>
+                                {statusInfo.text}
+                              </span>
+                            </td>
+                            <td className="text-center">
+                              <div
+                                className="btn-group btn-group-sm"
+                                role="group"
+                              >
+                                <button
+                                  className="btn btn-outline-primary"
+                                  title="Xem chi tiết"
+                                >
+                                  <i className="mdi mdi-eye"></i>
+                                </button>
+                                {item.status === 2 && (
+                                  <button
+                                    className="btn btn-outline-success"
+                                    title="Tải hoá đơn"
+                                  >
+                                    <i className="mdi mdi-download"></i>
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Footer */}
+              <div className="row mt-3">
+                <div className="col-md-6 mb-3 mb-md-0">
+                  <div className="text-muted">
+                    Hiển thị {startIndex + 1} đến{" "}
+                    {Math.min(endIndex, filteredData.length)} trong tổng số{" "}
+                    {filteredData.length} đơn hàng
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <nav>
+                    <ul className="pagination pagination-sm justify-content-md-end justify-content-center mb-0">
+                      <li
+                        className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => setCurrentPage(currentPage - 1)}
+                          disabled={currentPage === 1}
+                        >
+                          <i className="mdi mdi-chevron-left"></i>
+                        </button>
+                      </li>
+                      {renderPagination()}
+                      <li
+                        className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                        >
+                          <i className="mdi mdi-chevron-right"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
+      {/* Summary Cards */}
+      <div className="row mt-4">
+        <div className="col-md-4 mb-3">
+          <div className="card border-0 shadow-sm bg-success bg-opacity-10">
             <div className="card-body">
-              <div
-                id="datatable_wrapper"
-                className="dataTables_wrapper dt-bootstrap4 no-footer"
-              >
-                <div className="row">
-                  <div className="col-sm-12 col-md-6">
-                    <div className="dataTables_length" id="datatable_length">
-                      <label>
-                        Show{" "}
-                        <select
-                          name="datatable_length"
-                          aria-controls="datatable"
-                          className="custom-select custom-select-sm form-control form-control-sm"
-                        >
-                          <option value="10">10</option>
-                          <option value="25">25</option>
-                          <option value="50">50</option>
-                          <option value="100">100</option>
-                        </select>{" "}
-                        entries
-                      </label>
-                    </div>
-                  </div>
-                  <div className="col-sm-12 col-md-6">
-                    <div id="datatable_filter" className="dataTables_filter">
-                      <label>
-                        Search:
-                        <input
-                          type="search"
-                          className="form-control form-control-sm"
-                          placeholder=""
-                          aria-controls="datatable"
-                        />
-                      </label>
-                    </div>
+              <div className="d-flex align-items-center">
+                <div className="flex-shrink-0">
+                  <div className="avatar-sm rounded-circle bg-success d-flex align-items-center justify-content-center">
+                    <i className="mdi mdi-check-circle font-size-24 text-white"></i>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-sm-12">
-                    <table
-                      id="datatable"
-                      className="table table-striped dt-responsive nowrap table-vertical dataTable no-footer dtr-inline"
-                      style={{
-                        borderCollapse: "collapse",
-                        borderSpacing: "0px",
-                        width: "100%",
-                      }}
-                      aria-describedby="datatable_info"
-                    >
-                      <thead>
-                        <tr>
-                          <th
-                            className="sorting sorting_asc"
-                            aria-controls="datatable"
-                            style={{ width: "72px" }}
-                            aria-sort="ascending"
-                            aria-label="Order ID: activate to sort column descending"
-                          >
-                            Order ID
-                          </th>
-                          <th
-                            className="sorting"
-                            aria-controls="datatable"
-                            style={{ width: "63px" }}
-                            aria-label="Amount: activate to sort column ascending"
-                          >
-                            Amount
-                          </th>
-                          <th
-                            className="sorting"
-                            aria-controls="datatable"
-                            style={{ width: "84px" }}
-                            aria-label="Order Date: activate to sort column ascending"
-                          >
-                            Order Date
-                          </th>
-                          <th
-                            className="sorting"
-                            aria-controls="datatable"
-                            style={{ width: "69px" }}
-                            aria-label="Payment: activate to sort column ascending"
-                          >
-                            Payment
-                          </th>
-                          <th
-                            className="sorting"
-                            aria-controls="datatable"
-                            style={{ width: " 133px" }}
-                            aria-label="Billing Name: activate to sort column ascending"
-                          >
-                            Billing Name
-                          </th>
-                          <th
-                            className="sorting"
-                            aria-controls="datatable"
-                            style={{ width: "64px" }}
-                            aria-label="Status: activate to sort column ascending"
-                          >
-                            Status
-                          </th>
-                          <th
-                            className="sorting"
-                            aria-controls="datatable"
-                            style={{ width: "54px" }}
-                            aria-label="Action: activate to sort column ascending"
-                          >
-                            Action
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {list?.map((item, index) => {
-                          let data = {
-                            status: "",
-                            badge: "",
-                          };
-                          switch (item.status) {
-                            case 3:
-                              data.status = "Đã huỷ";
-                              data.badge = "danger";
-                              break;
-                            case 2:
-                              data.status = "Đã thanh toán";
-                              data.badge = "success";
-                              break;
-                            case 1:
-                              data.status = "Đang thanh toán";
-                              data.badge = "warning";
-                              break;
-                          }
-                          const created_date = new Date(
-                            item.created_at
-                          ).toLocaleString("vi-VN");
-                          return (
-                            <tr className={index % 2 != 0 ? "even" : "odd"}>
-                              <td className="sorting_1 dtr-control">
-                                <a href="#" className="font-weight-bold">
-                                  #{item.id}
-                                </a>
-                              </td>
-                              <td>{item.total.toLocaleString("vi-VN")} VNĐ</td>
-                              <td>{created_date}</td>
-                              <td>
-                                <i className="fab fa-cc-amex text-muted font-size-20"></i>{" "}
-                              </td>
-                              <td>Lasse C. Overgaard</td>
-                              <td>
-                                <span
-                                  className={`badge bg-${data.badge}-subtle text-${data.badge}`}
-                                >
-                                  {data.status}
-                                </span>
-                              </td>
-                              <td>
-                                <button>Chi tiết</button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                        {/* <tr className="odd">
-                          <td className="sorting_1 dtr-control">
-                            <a href="#" className="font-weight-bold">
-                              #12354781
-                            </a>
-                          </td>
-                          <td>$22</td>
-                          <td>Jul 11, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-amex text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Lasse C. Overgaard</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="even">
-                          <td className="dtr-control sorting_1">
-                            <a href="#" className="font-weight-bold">
-                              #12365474
-                            </a>
-                          </td>
-                          <td>$1,541</td>
-                          <td>Jul 10, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-mastercard text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Johan E. Knudsen</td>
-                          <td>
-                            <span className="badge bg-danger-subtle text-danger ">
-                              Chargeback
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr> */}
-                        {/* <tr className="odd">
-                          <td className="dtr-control sorting_1">
-                            <a href="#" className="font-weight-bold">
-                              #23145216
-                            </a>
-                          </td>
-                          <td>$22</td>
-                          <td>Jul 11, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-amex text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Lasse C. Overgaard</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="even">
-                          <td className="sorting_1 dtr-control">
-                            <a href="#" className="font-weight-bold">
-                              #32147851
-                            </a>
-                          </td>
-                          <td>$421</td>
-                          <td>Jul 08, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-paypal text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Nikolaj S. Henriksen</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="odd">
-                          <td className="sorting_1 dtr-control">
-                            <a href="#" className="font-weight-bold">
-                              #32147851
-                            </a>
-                          </td>
-                          <td>$421</td>
-                          <td>Jul 08, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-paypal text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Nikolaj S. Henriksen</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="even">
-                          <td className="dtr-control sorting_1">
-                            <a href="#" className="font-weight-bold">
-                              #32569874
-                            </a>
-                          </td>
-                          <td>$54</td>
-                          <td>Jul 09, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-visa text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Herbert C. Patton</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="odd">
-                          <td className="dtr-control sorting_1">
-                            <a href="#" className="font-weight-bold">
-                              #45123698
-                            </a>
-                          </td>
-                          <td>$241</td>
-                          <td>July 14, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-paypal text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Nikolaj S. Henriksen</td>
-                          <td>
-                            <span className="badge bg-warning-subtle text-warning ">
-                              Refund
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="even">
-                          <td className="sorting_1 dtr-control">
-                            <a href="#" className="font-weight-bold">
-                              #50025441
-                            </a>
-                          </td>
-                          <td>$845</td>
-                          <td>Jul 08, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-discover text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Mathias N. Klausen</td>
-                          <td>
-                            <span className="badge bg-warning-subtle text-warning ">
-                              Refund
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="odd">
-                          <td className="sorting_1 dtr-control">
-                            <a href="#" className="font-weight-bold">
-                              #52140300
-                            </a>
-                          </td>
-                          <td>$45</td>
-                          <td>Jul 20, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-visa text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Herbert C. Patton</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="even">
-                          <td className="sorting_1 dtr-control">
-                            <a href="#" className="font-weight-bold">
-                              #52146321
-                            </a>
-                          </td>
-                          <td>$652</td>
-                          <td>Jul 02, 2019</td>
-                          <td>
-                            <i className="fab fa-cc-mastercard text-muted font-size-20"></i>{" "}
-                          </td>
-                          <td>Lasse C. Overgaard</td>
-                          <td>
-                            <span className="badge bg-success-subtle text-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="javascript:void(0);"
-                              className="me-3 text-primary"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Edit"
-                            >
-                              <i className="mdi mdi-pencil font-size-18"></i>
-                            </a>
-                            <a
-                              href="javascript:void(0);"
-                              className="text-danger"
-                              data-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-original-title="Delete"
-                            >
-                              <i className="mdi mdi-close font-size-18"></i>
-                            </a>
-                          </td>
-                        </tr> */}
-                      </tbody>
-                    </table>
+                <div className="flex-grow-1 ms-3">
+                  <h6 className="mb-1">Đã thanh toán</h6>
+                  <h4 className="mb-0">
+                    {data?.filter((o) => o.status === 2).length || 0}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4 mb-3">
+          <div className="card border-0 shadow-sm bg-warning bg-opacity-10">
+            <div className="card-body">
+              <div className="d-flex align-items-center">
+                <div className="flex-shrink-0">
+                  <div className="avatar-sm rounded-circle bg-warning d-flex align-items-center justify-content-center">
+                    <i className="mdi mdi-clock-outline font-size-24 text-white"></i>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-sm-12 col-md-5">
-                    <div
-                      className="dataTables_info"
-                      id="datatable_info"
-                      role="status"
-                      aria-live="polite"
-                    >
-                      Showing 1 to 10 of 21 entries
-                    </div>
+                <div className="flex-grow-1 ms-3">
+                  <h6 className="mb-1">Đang xử lý</h6>
+                  <h4 className="mb-0">
+                    {data?.filter((o) => o.status === 1).length || 0}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4 mb-3">
+          <div className="card border-0 shadow-sm bg-danger bg-opacity-10">
+            <div className="card-body">
+              <div className="d-flex align-items-center">
+                <div className="flex-shrink-0">
+                  <div className="avatar-sm rounded-circle bg-danger d-flex align-items-center justify-content-center">
+                    <i className="mdi mdi-close-circle font-size-24 text-white"></i>
                   </div>
-                  <div className="col-sm-12 col-md-7">
-                    <div
-                      className="dataTables_paginate paging_simple_numbers"
-                      id="datatable_paginate"
-                    >
-                      <ul className="pagination">
-                        <li
-                          className="paginate_button page-item previous disabled"
-                          id="datatable_previous"
-                        >
-                          <a
-                            aria-controls="datatable"
-                            aria-disabled="true"
-                            role="link"
-                            data-dt-idx="previous"
-                            className="page-link"
-                          >
-                            Previous
-                          </a>
-                        </li>
-                        <li className="paginate_button page-item active">
-                          <a
-                            href="#"
-                            aria-controls="datatable"
-                            role="link"
-                            aria-current="page"
-                            data-dt-idx="0"
-                            className="page-link"
-                          >
-                            1
-                          </a>
-                        </li>
-                        <li className="paginate_button page-item ">
-                          <a
-                            href="#"
-                            aria-controls="datatable"
-                            role="link"
-                            data-dt-idx="1"
-                            className="page-link"
-                          >
-                            2
-                          </a>
-                        </li>
-                        <li className="paginate_button page-item ">
-                          <a
-                            href="#"
-                            aria-controls="datatable"
-                            role="link"
-                            data-dt-idx="2"
-                            className="page-link"
-                          >
-                            3
-                          </a>
-                        </li>
-                        <li
-                          className="paginate_button page-item next"
-                          id="datatable_next"
-                        >
-                          <a
-                            href="#"
-                            aria-controls="datatable"
-                            role="link"
-                            data-dt-idx="next"
-                            className="page-link"
-                          >
-                            Next
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                </div>
+                <div className="flex-grow-1 ms-3">
+                  <h6 className="mb-1">Đã huỷ</h6>
+                  <h4 className="mb-0">
+                    {data?.filter((o) => o.status === 3).length || 0}
+                  </h4>
                 </div>
               </div>
             </div>

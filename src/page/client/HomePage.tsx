@@ -189,7 +189,10 @@ const Home = () => {
           </div>
         </div>
       )}
-      <div style={{ opacity: isPending && isPendingList ? 0.3 : 1 }}>
+      <div
+        style={{ opacity: isPending && isPendingList ? 0.3 : 1 }}
+        className="mt-2"
+      >
         <div className="d-flex row justify-content-center">
           <div className="d-flex col-md-3">
             <Menu />

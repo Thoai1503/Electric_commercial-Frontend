@@ -62,8 +62,8 @@ const ProductDetail = () => {
     [data]
   );
 
-  const currentPrice =
-    product.storage.find((s) => s.size === selectedStorage)?.price || 999;
+  const currentPrice = useMemo(() => data?.price, [data]);
+  //  product.storage.find((s) => s.size === selectedStorage)?.price || 999;
 
   // Kiểm tra nếu không có hình ảnh
   const hasImages = product.images && product.images.length > 0;
@@ -155,9 +155,7 @@ const ProductDetail = () => {
             </ol>
           </nav>
 
-          <h1 className="h2 fw-bold mb-2">
-            {product.brand} {product.name}
-          </h1>
+          <h1 className="h2 fw-bold mb-2">{product.name}</h1>
 
           <div className="d-flex align-items-center mb-3">
             <div className="text-warning me-2">
@@ -170,7 +168,7 @@ const ProductDetail = () => {
           </div>
 
           <h2 className="h3 text-primary fw-bold mb-4">
-            ${currentPrice.toLocaleString()}
+            {currentPrice?.toLocaleString()} VND
           </h2>
 
           {/* Color Selection */}
@@ -218,9 +216,10 @@ const ProductDetail = () => {
                 </button>
               ))} */}
               {variantData?.map((variant) => (
-                <button
+                <a
                   key={variant.id}
                   type="button"
+                  href={`/product/${variant.id}`}
                   className={`btn ${selectedStorage === variant?.id?.toString() ? "btn-primary" : "btn-outline-primary"}`}
                   onClick={() =>
                     setSelectedStorage(variant?.id?.toString() || "")
@@ -228,7 +227,7 @@ const ProductDetail = () => {
                 >
                   {variant.id}
                   <div className="small">${variant.price}</div>
-                </button>
+                </a>
               )) || null}
             </div>
           </div>

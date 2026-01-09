@@ -10,10 +10,10 @@ interface Prop {
 }
 
 const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
-  const { nonVariantProductAttributes, categoryAttributes, handleSubmit } =
+  const { nonVariantProductAttributes, handleSubmit } =
     useAttributeConfigSection(id);
 
-  console.log("Res: " + JSON.stringify(categoryAttributes));
+  console.log("Res: " + JSON.stringify(nonVariantProductAttributes));
 
   return (
     <>

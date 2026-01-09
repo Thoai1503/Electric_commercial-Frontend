@@ -605,7 +605,7 @@ const Navbar = () => {
                       }}
                     >
                       <a
-                        href="#profile"
+                        href="/profile"
                         style={dropdownItemStyle}
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((

@@ -28,7 +28,7 @@ const Client = () => {
             </div>
           </div>
         )}
-        <div className="container" style={{ opacity: loading ? 0.3 : 1 }}>
+        <div className="container " style={{ opacity: loading ? 0.3 : 1 }}>
           <div className="row mt-5">
             <Outlet />
           </div>
