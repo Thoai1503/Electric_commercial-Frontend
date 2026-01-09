@@ -20,8 +20,8 @@ const CustomInput = ({
     product_id: item.product_id,
     attribute_id: item.attribute_id,
     attribute_value_id: attribute_value_id,
-    [`value_${item.attribute.data_type.trim() == "nvarchar" ? "text" : item.attribute.data_type}`]:
-      isHavingValuable ? vl : "",
+    // [`value_${item.attribute.data_type.trim() == "nvarchar" ? "text" : item.attribute.data_type}`]:
+    //   isHavingValuable ? vl : "",
   });
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
