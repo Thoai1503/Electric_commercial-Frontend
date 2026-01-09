@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import type { ProductAttribute } from "../../../../type/ProductAttribute";
 
 interface Prop {
@@ -23,66 +23,70 @@ const CustomInput = ({
     [`value_${item.attribute.data_type.trim() == "nvarchar" ? "text" : item.attribute.data_type}`]:
       isHavingValuable ? vl : "",
   });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
     setSubmitData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+  console.log("Attr val: " + item.attribute.attribute_values);
+  const attributeValues = item.attribute.attribute_values;
 
-  const inputRef = useRef(null);
+  //const inputRef = useRef(null);
 
-  const renderInput = (dt: string) => {
-    const data_type = dt.trim();
-    switch (data_type) {
-      case "int":
-        return (
-          <div className="col-4">
-            {
-              <input
-                ref={inputRef}
-                name="value_int"
-                type="number"
-                className="form-control"
-                value={submitData.value_int ?? ""}
-                onChange={handleChange}
-              />
-            }
-          </div>
-        );
-      case "decimal":
-        return (
-          <div className="col-4">
-            {
-              <input
-                type="number"
-                className="form-control"
-                name="value_decimal"
-                step={0.1}
-                max={50}
-                value={submitData.value_decimal ?? ""}
-                onChange={handleChange}
-              />
-            }
-          </div>
-        );
-      case "nvarchar":
-        return (
-          <div className="col-4">
-            {
-              <input
-                type="text"
-                name="value_text"
-                className="form-control"
-                value={submitData.value_text ?? ""}
-                onChange={handleChange}
-              />
-            }
-          </div>
-        );
-    }
-  };
+  // const renderInput = (dt: string) => {
+  //   const data_type = dt.trim();
+  //   switch (data_type) {
+  //     case "int":
+  //       return (
+  //         <div className="col-4">
+  //           {
+  //             <input
+  //               ref={inputRef}
+  //               name="value_int"
+  //               type="number"
+  //               className="form-control"
+  //               value={submitData.value_int ?? ""}
+  //               onChange={handleChange}
+  //             />
+  //           }
+  //         </div>
+  //       );
+  //     case "decimal":
+  //       return (
+  //         <div className="col-4">
+  //           {
+  //             <input
+  //               type="number"
+  //               className="form-control"
+  //               name="value_decimal"
+  //               step={0.1}
+  //               max={50}
+  //               value={submitData.value_decimal ?? ""}
+  //               onChange={handleChange}
+  //             />
+  //           }
+  //         </div>
+  //       );
+  //     case "nvarchar":
+  //       return (
+  //         <div className="col-4">
+  //           {
+  //             <input
+  //               type="text"
+  //               name="value_text"
+  //               className="form-control"
+  //               value={submitData.value_text ?? ""}
+  //               onChange={handleChange}
+  //             />
+  //           }
+  //         </div>
+  //       );
+  //   }
+  // };
 
   return (
     <div className="row mb-3 align-items-center">
@@ -93,13 +97,33 @@ const CustomInput = ({
         </label>
       </div>
       <div className="col-4">
-        {attribute_value_id ? (
+        {/* {attribute_value_id ? (
           <select className="form-select">
-            <option value="">{attribute_value_id}</option>
+            {attributeValues?.map((av) => (
+              <option
+                key={av.id}
+                value={av.id}
+                selected={av.id === attribute_value_id}
+              >
+                {av.value}
+              </option>
+            ))}
           </select>
         ) : (
           renderInput(item.attribute.data_type)
-        )}
+        )} */}
+        <select className="form-select" onChange={handleChange}>
+          <option value="">-- Chọn giá trị --</option>
+          {attributeValues?.map((av) => (
+            <option
+              key={av.id}
+              value={av.id}
+              selected={av.id === attribute_value_id}
+            >
+              {av.value}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="col-2">
         <button
