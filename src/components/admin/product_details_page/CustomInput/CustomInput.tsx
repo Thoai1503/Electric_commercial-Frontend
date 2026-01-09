@@ -10,8 +10,8 @@ interface Prop {
 }
 const CustomInput = ({
   item,
-  isHavingValuable,
-  vl,
+  // isHavingValuable,
+  // vl,
   handleSubmit,
   attribute_value_id,
 }: Prop) => {

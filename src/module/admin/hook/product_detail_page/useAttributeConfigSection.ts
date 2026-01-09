@@ -22,7 +22,6 @@ export const useAttributeConfigSection = (id: number) => {
   const selectedAttributes = product?.product_attribute;
 
   const handleSubmit = (id: number, en: Partial<ProductAttribute>) => {
-    alert("Updating...: " + JSON.stringify(en));
     updatePA({ id: id, en: en });
   };
 

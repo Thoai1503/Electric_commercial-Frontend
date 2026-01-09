@@ -271,7 +271,9 @@ const Product = () => {
 
           <div className="col-lg-9">
             <div className="p-3 bg-white rounded mb-2">
-              <h4>Laptop ({c} sản phẩm)</h4>
+              <h4>
+                {category} ({c} sản phẩm)
+              </h4>
             </div>
             <div className="p-3 bg-white rounded mb-1">
               <div className="head d-flex">
