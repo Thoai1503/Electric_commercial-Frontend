@@ -13,7 +13,7 @@ interface Prop {
 }
 
 const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
-  const { handleChange, handleSubmit, variants, categoryAttributes } =
+  const { handleChange, handleSubmit, variants, categoryAttributes, product } =
     useVariantConfigSection(id);
 
   const [visible, setVisible] = useState(false);
@@ -23,6 +23,19 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
   console.log("Variant  :" + JSON.stringify(variants));
   // const en = variants && variants[0]?.variant_attributes;
   //alert(JSON.stringify(en));
+
+  if (!product) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "60vh" }}
+      >
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

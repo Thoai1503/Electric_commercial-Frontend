@@ -64,7 +64,7 @@ export const useVariantConfigSection = (id: number) => {
   return {
     handleChange,
     handleSubmit,
-
+    product,
     isPending,
     variants,
     categoryAttributes,

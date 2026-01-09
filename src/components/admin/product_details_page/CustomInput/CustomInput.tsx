@@ -19,7 +19,7 @@ const CustomInput = ({
     id: item.id,
     product_id: item.product_id,
     attribute_id: item.attribute_id,
-
+    attribute_value_id: attribute_value_id,
     [`value_${item.attribute.data_type.trim() == "nvarchar" ? "text" : item.attribute.data_type}`]:
       isHavingValuable ? vl : "",
   });
@@ -112,7 +112,11 @@ const CustomInput = ({
         ) : (
           renderInput(item.attribute.data_type)
         )} */}
-        <select className="form-select" onChange={handleChange}>
+        <select
+          className="form-select"
+          name="attribute_value_id"
+          onChange={handleChange}
+        >
           <option value="">-- Chọn giá trị --</option>
           {attributeValues?.map((av) => (
             <option

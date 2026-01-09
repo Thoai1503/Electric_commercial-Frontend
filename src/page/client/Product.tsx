@@ -11,13 +11,16 @@ import type { UserDataRespone } from "../../type/User";
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 import { categoryBrandQuery } from "../../module/client/query/categoryBrand";
-// import ReactMarkdown from "react-markdown";
-// import rehypeRaw from "rehype-raw";
 import { CToast, CToastBody, CToastHeader, CToaster } from "@coreui/react";
 
 const Product = () => {
   const [toast, addToast] = useState<any>();
   const toaster = useRef(null);
+  const [columnCounts, setColumnCounts] = useState<Record<number, number>>({});
+  const measureRefs = useRef<
+    Record<number, Record<number, HTMLSpanElement | null>>
+  >({});
+
   const exampleToast = (message = "default") => (
     <CToast>
       <CToastHeader closeButton>
@@ -40,6 +43,7 @@ const Product = () => {
       </CToastBody>
     </CToast>
   );
+
   const user = ((): Partial<UserDataRespone> => {
     try {
       return JSON.parse(localStorage.getItem("user") || "{}");
@@ -47,8 +51,8 @@ const Product = () => {
       return {};
     }
   })();
+
   const { category } = useParams();
-  // console.log("Category: " + category);
   const { data: categoryAttribute } = useQuery(
     categoryAttributeQuery.category_slug(category || "")
   );
@@ -68,9 +72,7 @@ const Product = () => {
   const filterState = useSelector(
     (state: RootState) => state.filterProduct.filter_state
   );
-  // const progress = useSelector(
-  //   (state: RootState) => state.filterProduct.progress
-  // );
+
   console.log("count: " + c);
   const { product } = useGuestOrUserView(user?.id || 0, ProductList);
   const { handleChangeFilter } = useFilterPage(category || "");
@@ -86,6 +88,30 @@ const Product = () => {
     );
   });
 
+  // Calculate optimal column layout based on text width
+  const calculateColumns = (values: any[], attrId: number) => {
+    if (!measureRefs.current[attrId]) return 2;
+
+    const maxTextWidth = Math.max(
+      ...values.map((v) => {
+        const span = measureRefs.current[attrId]?.[v.id];
+        return span ? span.offsetWidth : 0;
+      })
+    );
+
+    // Determine columns based on text length
+    if (maxTextWidth < 60) return 3; // Short text: 3 columns
+    if (maxTextWidth < 100) return 2; // Medium text: 2 columns
+    return 1; // Long text: 1 column
+  };
+
+  const getColumnClass = (attrId: number) => {
+    const cols = columnCounts[attrId] || 2;
+    if (cols === 3) return "col-4";
+    if (cols === 2) return "col-6";
+    return "col-12";
+  };
+
   useEffect(() => {
     dispatch(
       fetchProductVariant({
@@ -99,7 +125,20 @@ const Product = () => {
     );
   }, [dispatch]);
 
-  // console.log("Length: " + ProductList.length);
+  // Calculate column counts after data loads
+  useEffect(() => {
+    if (categoryAttribute) {
+      const newColumnCounts: Record<number, number> = {};
+      categoryAttribute.forEach((attr) => {
+        newColumnCounts[attr.id] = calculateColumns(
+          attr.attribute.attribute_values || [],
+          attr.id
+        );
+      });
+      setColumnCounts(newColumnCounts);
+    }
+  }, [categoryAttribute]);
+
   return (
     <>
       <div className="container mt-5 mb-5">
@@ -114,7 +153,6 @@ const Product = () => {
               position: "relative",
               top: "50%",
               left: "50%",
-              // transform: "translate(-50%, -50%)",
               zIndex: 1000,
             }}
           >
@@ -124,11 +162,9 @@ const Product = () => {
         <Breadcrumbs />
 
         <div className="content row">
-          <div className="col-lg-2  py-2">
+          <div className="col-lg-2 py-2">
             <div className="bg-white rounded p-3">
-              {" "}
               <strong>
-                {" "}
                 <p className="text">Bộ lọc tìm kiếm</p>
               </strong>
               <div className="selected-tag mb-3">
@@ -146,21 +182,26 @@ const Product = () => {
               <div>
                 <hr />
                 <strong>
-                  {" "}
                   <p className="text">Thương hiệu</p>
                 </strong>
-                <div className="row mb-3">
+                <div className="row g-2 mb-3">
                   {data?.map((item) => (
-                    <span className="text col-lg-6 mb-1">
-                      {" "}
-                      <input
-                        type="checkbox"
-                        name="0"
-                        value={item.brand_id}
-                        onChange={handleChangeFilter}
-                      />{" "}
-                      {item.brand.name}
-                    </span>
+                    <div key={item.brand_id} className="col-lg-6">
+                      <label
+                        className="d-flex align-items-start w-100"
+                        style={{ fontSize: "0.9rem", cursor: "pointer" }}
+                      >
+                        <input
+                          type="checkbox"
+                          name="0"
+                          value={item.brand_id}
+                          onChange={handleChangeFilter}
+                          className="me-2 mt-1"
+                          style={{ flexShrink: 0 }}
+                        />
+                        <span className="text-break">{item.brand.name}</span>
+                      </label>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -169,23 +210,57 @@ const Product = () => {
                 categoryAttribute?.map((attr) => (
                   <div key={attr.id}>
                     <strong>
-                      {" "}
                       <p className="text">{attr.attribute.name}</p>
                     </strong>
-                    <div className="row mb-3">
+
+                    {/* Hidden measurement spans */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        visibility: "hidden",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {attr.attribute.attribute_values?.map((value) => (
+                        <span
+                          key={value.id}
+                          ref={(el) => {
+                            if (!measureRefs.current[attr.id]) {
+                              measureRefs.current[attr.id] = {};
+                            }
+                            measureRefs.current[attr.id][value.id] = el;
+                          }}
+                          style={{ fontSize: "0.9rem" }}
+                        >
+                          {value.value}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Actual filter checkboxes with dynamic columns */}
+                    <div className="row g-2 mb-3">
                       {attr.attribute.attribute_values &&
                         attr.attribute.attribute_values.map((value) => (
-                          <span className="text col-lg-6" key={value.id}>
-                            {" "}
-                            <input
-                              id={attr.id.toString()}
-                              name={attr.attribute.id.toString()}
-                              type="checkbox"
-                              value={value.id}
-                              onChange={handleChangeFilter}
-                            />{" "}
-                            {value.value}
-                          </span>
+                          <div
+                            className={getColumnClass(attr.id)}
+                            key={value.id}
+                          >
+                            <label
+                              className="d-flex align-items-start w-100"
+                              style={{ fontSize: "0.9rem", cursor: "pointer" }}
+                            >
+                              <input
+                                id={attr.id.toString()}
+                                name={attr.attribute.id.toString()}
+                                type="checkbox"
+                                value={value.id}
+                                onChange={handleChangeFilter}
+                                className="me-2 mt-1"
+                                style={{ flexShrink: 0 }}
+                              />
+                              <span className="text-break">{value.value}</span>
+                            </label>
+                          </div>
                         ))}
                     </div>
                     <hr />
@@ -194,9 +269,8 @@ const Product = () => {
             </div>
           </div>
 
-          <div className="col-lg-9  ">
+          <div className="col-lg-9">
             <div className="p-3 bg-white rounded mb-2">
-              {" "}
               <h4>Laptop ({c} sản phẩm)</h4>
             </div>
             <div className="p-3 bg-white rounded mb-1">
@@ -258,7 +332,7 @@ const Product = () => {
                   )}
                 </button>
                 <button
-                  className="position-relative  mx-2 rounded p-2 text filter-btn"
+                  className="position-relative mx-2 rounded p-2 text filter-btn"
                   style={{
                     border:
                       filterState?.title == "Giá giảm dần"
@@ -366,15 +440,6 @@ const Product = () => {
                     </div>
                   )}
                 </button>
-                {/* <div
-                  className="mx-2 rounded p-2 text"
-                  style={{
-                    border: "1px solid lightgray",
-                  }}
-                >
-                  Bán chạy nhất
-                </div> */}
-
                 <button
                   className="position-relative mx-2 rounded p-2 text filter-btn"
                   style={{
@@ -433,154 +498,9 @@ const Product = () => {
               </div>
             </div>
             <div
-              className=" bg-white "
+              className="bg-white"
               style={{ opacity: isLoading || isPendingUpdateCart ? 0.4 : 1 }}
             >
-              {/* {isLoading ? (
-                <div className="text-center my-5">
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="row mx-0">
-                  {product &&
-                    product?.length > 0 &&
-                    product?.map((item) => (
-                      <div
-                        className="col-lg-3 pb-3 m"
-                        style={{
-                          marginRight: "0px",
-                          padding: "3px",
-                          width: "240px",
-                        }}
-                        key={item.id}
-                      >
-                        <div
-                          className="card h-100"
-                          style={{ borderRadius: "0px" }}
-                        >
-                          <img
-                            src={
-                              item.product_images &&
-                              item.product_images.length > 0
-                                ? `/uploads/${item.product_images[0].url}`
-                                : "/images/asus-vivobook-go-15-e1504fa-r5-nj630w-glr-14-750x500.jpg?h=120&fit=crop&auto=format&dpr=2 2x"
-                            }
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "contain",
-                            }}
-                            alt={item.name}
-                          />
-                          <div
-                            className="card-body pb-0"
-                            style={{ minHeight: "100px" }}
-                          >
-                            <div>
-                              <p className="text">{item.name}</p>
-                              <p className="small text-muted">Laptops</p>
-                            </div>
-                          </div>
-                          <div className="card-body pb-0">
-                            <div className="d-flex justify-content-between">
-                              <p>
-                                <span style={{ color: "#1a96e2ff" }}>
-                                  <strong>
-                                    {" "}
-                                    {item.price.toLocaleString()} vnđ
-                                  </strong>
-                                </span>
-                              </p>
-                              <p className="text-dark"> 8787</p>
-                            </div>
-                            <p className="small text-muted">VISA Platinum</p>
-                          </div>
-                          <div
-                            className="card-body"
-                            style={{ marginTop: "auto" }}
-                          >
-                            <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
-                              {item.inCart && user ? (
-                                <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
-                                  <div
-                                    className="decrease-btn"
-                                    onClick={() =>
-                                      handleClickChange(
-                                        item.cart.id!,
-                                        item.cart.quantity! - 1
-                                      )
-                                    }
-                                  >
-                                    -
-                                  </div>
-                                  <div>{item.cart.quantity}</div>
-                                  <div
-                                    className="increase-btn"
-                                    onClick={() =>
-                                      handleClickChange(
-                                        item.cart.id!,
-                                        item.cart.quantity! + 1
-                                      )
-                                    }
-                                  >
-                                    +
-                                  </div>
-                                </button>
-                              ) : item.inCart ? (
-                                <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
-                                  <div
-                                    className="decrease-btn"
-                                    onClick={() =>
-                                      handleClickChange(
-                                        item.cart.id!,
-                                        item.cart.quantity! - 1
-                                      )
-                                    }
-                                  >
-                                    -
-                                  </div>
-                                  <div>{item.cart.quantity}</div>
-                                  <div
-                                    className="increase-btn"
-                                    onClick={() =>
-                                      handleClickChange(
-                                        item.cart.id!,
-                                        item.cart.quantity! + 1
-                                      )
-                                    }
-                                  >
-                                    +
-                                  </div>
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() =>
-                                    addToCartForAuthenticatedUser({
-                                      id: 0,
-                                      user_id: user.id || 0,
-                                      variant_id: item.id,
-                                      quantity: 1,
-                                      unit_price: item.price,
-                                      variant: item,
-                                    })
-                                  }
-                                  type="button"
-                                  data-mdb-button-init
-                                  data-mdb-ripple-init
-                                  className="btn btn-outline-primary btn-sm w-100"
-                                >
-                                  Thêm vào giỏ
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              )} */}
               <div className="row mx-0">
                 {product &&
                   product?.length > 0 &&
@@ -626,7 +546,6 @@ const Product = () => {
                             <p>
                               <span style={{ color: "#1a96e2ff" }}>
                                 <strong>
-                                  {" "}
                                   {item.price.toLocaleString()} vnđ
                                 </strong>
                               </span>
@@ -639,7 +558,7 @@ const Product = () => {
                           className="card-body"
                           style={{ marginTop: "auto" }}
                         >
-                          <div className="d-flex justify-content-center align-items-center pb-2 mb-1 ">
+                          <div className="d-flex justify-content-center align-items-center pb-2 mb-1">
                             {item.inCart && user ? (
                               <button className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm">
                                 <div
@@ -741,7 +660,7 @@ const Product = () => {
             </div>
           </div>
         </div>
-      </div>{" "}
+      </div>
       <CToaster
         className="p-3"
         placement="top-end"
