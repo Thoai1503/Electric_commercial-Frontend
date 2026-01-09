@@ -1,4 +1,4 @@
-import { catalogRequest, catalogRequestTesting } from "../../../api/http";
+import { catalogRequestTesting } from "../../../api/http";
 import type { ProductAttribute } from "../../../type/ProductAttribute";
 
 export const updateProductAttribute = async (
@@ -6,7 +6,7 @@ export const updateProductAttribute = async (
   en: Partial<ProductAttribute>
 ): Promise<boolean> => {
   return await catalogRequestTesting
-    .put(`/api/productattribute/${id}`, en)
+    .put(`/productattribute/${id}`, en)
     .then((res) => res.data)
     .catch((error) => {
       throw error;
