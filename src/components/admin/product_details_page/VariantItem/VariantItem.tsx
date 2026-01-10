@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import type { ProductVariant } from "../../../../type/productVariant";
 import type { VariantAttribute } from "../../../../type/VariantAttribute";
@@ -41,6 +41,9 @@ const VariantItem = ({ item, index }: Prop) => {
     updateVariant(productVariant);
     update(variantAttributeList);
   };
+  useEffect(() => {
+    setVariantAttributeList(item.variant_attributes ?? []);
+  }, [isEdit, item.variant_attributes]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -82,18 +85,11 @@ const VariantItem = ({ item, index }: Prop) => {
         <td>{item.id}</td>
         <td>{item.name}</td>
         <td>{item.sku}</td>
-        <td>{item.price}</td>
+        <td>{item.price?.toLocaleString().replace(",", ".")}đ</td>
         {variantAttributeList
           .sort((a, b) => a.attribute_id - b.attribute_id)
           .map((e) => {
-            return (
-              <td>
-                <VariantAttributeComboBox
-                  attribute_id={e.attribute_id}
-                  attribute_value_id={e.attribute_value_id || null}
-                />
-              </td>
-            );
+            return <td>{e.attribute_value?.value}</td>;
           })}
         <td>
           <button
