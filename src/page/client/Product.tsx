@@ -12,6 +12,8 @@ import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 import { categoryBrandQuery } from "../../module/client/query/categoryBrand";
 import { CToast, CToastBody, CToastHeader, CToaster } from "@coreui/react";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
 
 const Product = () => {
   const [toast, addToast] = useState<any>();
@@ -72,6 +74,16 @@ const Product = () => {
   const filterState = useSelector(
     (state: RootState) => state.filterProduct.filter_state
   );
+  function valuetext(value: number) {
+    return `${value}°C`;
+  }
+
+  const [value, setValue] = useState<number[]>([20, 10000000]);
+
+  const handleChange = (event: Event, newValue: number[]) => {
+    setValue(newValue);
+    console.log(event, newValue);
+  };
 
   console.log("count: " + c);
   const { product } = useGuestOrUserView(user?.id || 0, ProductList);
@@ -179,6 +191,25 @@ const Product = () => {
                 </span>
               </div>
               <p className="text text-danger ">Xoá bộ lọc</p>
+              <div>
+                <hr />
+                <strong>
+                  <p className="text">Khoảng giá</p>
+                </strong>
+                <div className="row g-2 mb-3">
+                  <Box sx={{ width: 300 }}>
+                    <Slider
+                      getAriaLabel={() => "Temperature range"}
+                      value={value}
+                      max={10000000}
+                      size="small"
+                      onChange={handleChange}
+                      valueLabelDisplay="auto"
+                      getAriaValueText={valuetext}
+                    />
+                  </Box>
+                </div>
+              </div>
               <div>
                 <hr />
                 <strong>
