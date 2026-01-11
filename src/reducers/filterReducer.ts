@@ -13,13 +13,15 @@ interface FilterState {
     title: string;
     sortBy?: string;
     order?: string;
-    filters?: Record<string, (string | number)[]>;
+    filters?: Record<string, any[]>;
   };
 }
 interface FetchProductVariantParams {
   skip: number;
   take: number;
   order?: string;
+  minPrice?: number;
+  maxPrice?: number;
   sortBy?: string;
   title?: string;
   category?: string;
@@ -36,6 +38,8 @@ export const fetchProductVariant = createAsyncThunk(
       order,
       sortBy,
       category = "",
+      minPrice,
+      maxPrice,
       filters = {},
     }: FetchProductVariantParams,
     { dispatch }
@@ -57,7 +61,7 @@ export const fetchProductVariant = createAsyncThunk(
     console.log("filterQuery", filterQuery);
 
     const response = await catalogRequest.get(
-      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}${
+      `/productvariant?skip=${skip}&take=${take}&sortBy=${sortBy}&order=${order}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&${
         filterQuery ? `&${filterQuery}` : ""
       }`
     );

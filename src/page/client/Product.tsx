@@ -16,6 +16,13 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
 const Product = () => {
+  const [priceRange, setPriceRange] = useState<{
+    minPrice: number;
+    maxPrice: number;
+  }>({
+    minPrice: 0,
+    maxPrice: 50000000,
+  });
   const [toast, addToast] = useState<any>();
   const toaster = useRef(null);
   const [columnCounts, setColumnCounts] = useState<Record<number, number>>({});
@@ -83,6 +90,23 @@ const Product = () => {
   const handleChange = (event: Event, newValue: number[]) => {
     setValue(newValue);
     console.log(event, newValue);
+
+    dispatch(
+      fetchProductVariant({
+        skip: 0,
+        take: 8,
+        sortBy: filterState?.sortBy,
+        order: filterState?.order,
+        category: category,
+        minPrice: newValue[0],
+        maxPrice: newValue[1],
+        filters: {
+          ...filterState?.filters,
+          //  price: [newValue[0], newValue[1]],
+        },
+      })
+    );
+    setPriceRange({ minPrice: newValue[0], maxPrice: newValue[1] });
   };
 
   console.log("count: " + c);
@@ -201,7 +225,7 @@ const Product = () => {
                     <Slider
                       getAriaLabel={() => "Temperature range"}
                       value={value}
-                      max={10000000}
+                      max={80000000}
                       size="small"
                       onChange={handleChange}
                       valueLabelDisplay="auto"
@@ -683,6 +707,8 @@ const Product = () => {
                       sortBy: filterState?.sortBy,
                       order: filterState?.order,
                       category: category,
+                      minPrice: priceRange.minPrice,
+                      maxPrice: priceRange.maxPrice,
                       filters: filterState?.filters,
                     })
                   )
