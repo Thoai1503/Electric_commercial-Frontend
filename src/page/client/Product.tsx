@@ -111,7 +111,11 @@ const Product = () => {
 
   console.log("count: " + c);
   const { product } = useGuestOrUserView(user?.id || 0, ProductList);
-  const { handleChangeFilter } = useFilterPage(category || "");
+  const { handleChangeFilter } = useFilterPage(
+    category || "",
+    priceRange.maxPrice,
+    priceRange.minPrice
+  );
   const {
     handleClickChange,
     isPendingUpdateCart,

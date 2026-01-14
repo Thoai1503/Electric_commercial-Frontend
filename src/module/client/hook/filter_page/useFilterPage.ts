@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../../../store/store";
 import { fetchProductVariant } from "../../../../reducers/filterReducer";
 
-export const useFilterPage = (category: string) => {
+export const useFilterPage = (category: string, max: number, min: number) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const filterState = useSelector(
@@ -59,6 +59,8 @@ export const useFilterPage = (category: string) => {
         order: filterState?.order,
         category: category,
         filters: updatedFilters,
+        maxPrice: max,
+        minPrice: min,
       })
     );
   };

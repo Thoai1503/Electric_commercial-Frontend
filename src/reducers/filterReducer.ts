@@ -9,6 +9,8 @@ interface FilterState {
   current_length: number;
   count: number;
   progress: number;
+  maxPrice?: number;
+  minPrice?: number;
   filter_state: {
     title: string;
     sortBy?: string;
@@ -75,6 +77,8 @@ export const fetchProductVariant = createAsyncThunk(
       data: response.data.data,
       skip,
       count: response.data.count,
+      maxPrice: response.data.max,
+      minPrice: response.data.min,
       filter_state: {
         title,
         sortBy,
@@ -91,6 +95,7 @@ const initialState: FilterState = {
   loading: false,
   current_length: 0,
   progress: 0,
+
   filter_state: {
     title: "Giá tăng dần",
     sortBy: "price",
@@ -141,6 +146,8 @@ const filterProductSlice = createSlice({
         if (action.payload.skip === 0) {
           state.count = action.payload.count;
           state.variant = action.payload.data;
+          state.maxPrice = action.payload.maxPrice;
+          state.minPrice = action.payload.minPrice;
           state.filter_state = {
             ...action.payload.filter_state,
             title:
