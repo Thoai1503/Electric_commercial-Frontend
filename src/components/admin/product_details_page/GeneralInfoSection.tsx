@@ -179,14 +179,14 @@ const GeneralInfoSection = ({ id }: Prop) => {
                 images_upload_handler: async (
                   blobInfo: any,
                   success: any,
-                  failure: any
+                  failure: any,
                 ) => {
                   try {
                     const formData = new FormData();
                     formData.append(
                       "file",
                       blobInfo.blob(),
-                      blobInfo.filename()
+                      blobInfo.filename(),
                     );
 
                     console.log("form data: " + JSON.stringify(formData));
@@ -195,7 +195,7 @@ const GeneralInfoSection = ({ id }: Prop) => {
                       {
                         method: "POST",
                         body: formData,
-                      }
+                      },
                     );
 
                     const json = await response.json();
@@ -207,7 +207,7 @@ const GeneralInfoSection = ({ id }: Prop) => {
 
                     // Nếu muốn tự động chèn vào content luôn:
                     editorRef.current?.insertContent(
-                      `<img src="${imageUrl}" alt="${blobInfo.filename()}" />`
+                      `<img src="${imageUrl}" alt="${blobInfo.filename()}" />`,
                     );
                   } catch (err: any) {
                     failure("Upload thất bại: " + err.message);

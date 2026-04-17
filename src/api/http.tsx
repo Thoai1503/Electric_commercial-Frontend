@@ -29,7 +29,7 @@ http.interceptors.request.use(
     // Debug logging
     console.log(
       "HTTP Interceptor - Token from localStorage:",
-      token ? "EXISTS" : "MISSING"
+      token ? "EXISTS" : "MISSING",
     );
     console.log("HTTP Interceptor - Request URL:", config.url);
     console.log("HTTP Interceptor - Request method:", config.method);
@@ -38,7 +38,7 @@ http.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
       console.log(
         "HTTP Interceptor - Authorization header set:",
-        `Bearer ${token.substring(0, 20)}...`
+        `Bearer ${token.substring(0, 20)}...`,
       );
     } else {
       console.log("HTTP Interceptor - No token found in localStorage");
@@ -48,7 +48,7 @@ http.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor with automatic token refresh
@@ -79,7 +79,7 @@ http.interceptors.response.use(
           `${API_URL_BASE}api/v1/auth/refresh-token`,
           {
             refreshToken,
-          }
+          },
         );
 
         if (response.data.success) {
@@ -111,7 +111,7 @@ http.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // Legacy axiosInstance for backward compatibility
