@@ -49,7 +49,7 @@ const AddImageModal = ({
     selectedImages,
     handleDelete,
   } = useAddImageModals(product_id, variant_id, setVisible, () =>
-    addToast(exampleToast)
+    addToast(exampleToast),
   );
 
   const toaster = useRef(null);
@@ -99,7 +99,7 @@ const AddImageModal = ({
               >
                 <AspectRatio ratio="1" sx={{ minWidth: 200 }}>
                   <img
-                    srcSet={`${item.url}?h=120&fit=crop&auto=format&dpr=2 2x}`}
+                    srcSet={`/uploads/${item.url}?h=120&fit=crop&auto=format&dpr=2 2x`}
                     src={`/uploads/${item.url}?h=120&fit=crop&auto=format`}
                     alt={item.url}
                   />

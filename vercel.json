@@ -6,7 +6,7 @@
     },
     {
       "source": "/uploads/:path*",
-      "destination": "http://103.90.225.130:8888/uploads/:path*"
+      "destination": "http://103.90.225.130:8888/Uploads/:path*"
     },
     {
       "source": "/(.*)",

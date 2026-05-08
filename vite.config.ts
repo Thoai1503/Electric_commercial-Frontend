@@ -6,14 +6,14 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/catalog": {
-        target: "http://electriccatalogapi9898989.somee.com/",
+        target: "https://phone-shop-backend.vercel.app/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/catalog/, "/api"),
       },
       "/uploads": {
-        target: "http://electriccatalogapi9898989.somee.com/",
+        target: "https://phone-shop-backend.vercel.app",
         changeOrigin: true,
-        // No rewrite needed since we want /uploads/* to map directly
+        rewrite: (path) => path.replace(/^\/uploads/, "/Uploads"),
       },
     },
   },

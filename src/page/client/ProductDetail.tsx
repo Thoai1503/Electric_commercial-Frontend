@@ -40,7 +40,7 @@ const ProductDetail = () => {
       ],
       images: [
         ...(data?.product_images?.map(
-          (item) => `https://electric-commercial.vercel.app/uploads/${item.url}`
+          (item) => `/uploads/${item.url}`
         ) ?? []),
       ],
       specs: {
