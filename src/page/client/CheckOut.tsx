@@ -3,6 +3,7 @@ import AddAddressModal from "../../components/client/checkout/AddAddressModal";
 import { userAddressQuery } from "../../module/client/query/userAddress";
 import { useQuery } from "@tanstack/react-query";
 import { useCheckoutPage } from "../../module/client/hook/checkout_page/useCheckoutPage";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const CheckOut = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
@@ -238,7 +239,7 @@ const CheckOut = () => {
                     <img
                       src={
                         item?.variant?.product_images?.[0]?.url
-                          ? `/uploads/${item?.variant?.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                          ? `${getImageUrl(item?.variant?.product_images[0].url)}?h=120&fit=crop&auto=format&dpr=2 2x`
                           : "https://via.placeholder.com/300x225?text=No+Image"
                       }
                       alt="Product"

@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useQuery } from "@tanstack/react-query";
 import { productVariantQuery } from "../../module/client/query/productVariant";
 import { useParams } from "react-router-dom";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const ProductDetail = () => {
   const product_id = useMemo(() => data?.product_id, [data]);
   console.log("product_id", product_id);
   const { data: variantData } = useQuery(
-    productVariantQuery.by_product_id(Number(product_id))
+    productVariantQuery.by_product_id(Number(product_id)),
   );
   console.log("variantData", variantData?.length);
   const variant_attributes = useMemo(() => data?.variant_attributes, [data]);
@@ -39,9 +40,7 @@ const ProductDetail = () => {
         { size: "1TB", price: 1499 },
       ],
       images: [
-        ...(data?.product_images?.map(
-          (item) => `/uploads/${item.url}`
-        ) ?? []),
+        ...(data?.product_images?.map((item) => getImageUrl(item.url)) ?? []),
       ],
       specs: {
         display: '6.8" Dynamic AMOLED 2X',
@@ -59,7 +58,7 @@ const ProductDetail = () => {
         "Titanium frame",
       ],
     }),
-    [data]
+    [data],
   );
 
   const currentPrice = useMemo(() => data?.price, [data]);

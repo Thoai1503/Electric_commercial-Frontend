@@ -4,12 +4,13 @@ import { useParams } from "react-router-dom";
 import { orderDetailQuery } from "../../module/admin/query/orderDetail";
 import { productVariantQuery } from "../../module/client/query/productVariant";
 import { useMemo } from "react";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const OrderDetailPage = () => {
   const { id } = useParams();
   const { data: variants } = useQuery(productVariantQuery.list());
   const { data: list } = useQuery(
-    orderDetailQuery.get_by_order_id(Number(id!))
+    orderDetailQuery.get_by_order_id(Number(id!)),
   );
 
   const order_details = useMemo(
@@ -18,7 +19,7 @@ const OrderDetailPage = () => {
         const variant = variants?.find((u) => u.id == item.variant_id);
         return { ...item, variant: variant };
       }),
-    [variants, list]
+    [variants, list],
   );
 
   return (
@@ -65,7 +66,9 @@ const OrderDetailPage = () => {
                           <img
                             width={70}
                             height={70}
-                            src={`/uploads/${item.variant?.product_images?.[0]?.url}`}
+                            src={getImageUrl(
+                              item.variant?.product_images?.[0]?.url,
+                            )}
                             alt={item.variant?.name}
                             className="rounded border"
                             style={{

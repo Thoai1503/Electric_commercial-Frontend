@@ -1,5 +1,6 @@
 import type { Cart } from "../../../type/Cart";
 import { useCartItemMutation } from "../../../module/client/hook/cart_page/useCartItemMutation";
+import { getImageUrl } from "../../../utils/imageHelper";
 
 interface Prop {
   item: Cart;
@@ -14,7 +15,7 @@ const CartItem = ({ item }: Prop) => {
         <div className="col-lg-2">
           <img
             width={80}
-            src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+            src={getImageUrl(item?.variant?.product_images?.[0]?.url)}
             alt={item?.variant?.name}
           />
         </div>

@@ -11,7 +11,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api\/catalog/, "/api"),
       },
       "/uploads": {
-        target: "https://phone-shop-backend.vercel.app",
+        target: "https://phone-shop-backend.vercel.app/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/uploads/, "/Uploads"),
       },

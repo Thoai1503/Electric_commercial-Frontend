@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/catalog/:path*",
-      "destination": "http://103.90.225.130:8888/api/:path*"
+      "destination": "https://phone-shop-backend.vercel.app/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "http://103.90.225.130:8888/Uploads/:path*"
+      "destination": "https://phone-shop-backend.vercel.app/Uploads/:path*"
     },
     {
       "source": "/(.*)",

@@ -12,7 +12,7 @@ export const catalogRequest = axios.create({
   baseURL: VITE_CATOLOG_API,
 });
 export const catalogRequestTesting = axios.create({
-  baseURL: "https://localhost:7084",
+  baseURL: "https://localhost:3000/",
 });
 
 export const http = axios.create({

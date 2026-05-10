@@ -19,6 +19,7 @@ import { useHomePage } from "../../module/client/hook/home_page/useHomePage";
 import { useGuestOrUserView } from "../../hook/useGuestOrUserView";
 import { Link } from "react-router-dom";
 import { CToast, CToastBody, CToaster, CToastHeader } from "@coreui/react";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const Home = () => {
   const [toast, addToast] = useState<any>();
@@ -66,20 +67,20 @@ const Home = () => {
   } = useHomePage(user?.id || 0, () => {
     addToast(
       exampleToast(
-        "Thêm vào giỏ hàng thành công" + ` <a href="/cart">Xem giỏ hàng</a>`
-      )
+        "Thêm vào giỏ hàng thành công" + ` <a href="/cart">Xem giỏ hàng</a>`,
+      ),
     );
   });
 
   const { product } = useGuestOrUserView(user?.id || 0, data);
   const { product: keyboardsProduct } = useGuestOrUserView(
     user?.id || 0,
-    keyboards
+    keyboards,
   );
   const { product: pcProduct } = useGuestOrUserView(user?.id || 0, pcVariants);
 
   const phone = product?.filter(
-    (item) => item.product.category.slug == "dien-thoai"
+    (item) => item.product.category.slug == "dien-thoai",
   );
   console.log(phone);
 
@@ -315,7 +316,7 @@ const Home = () => {
                                     <img
                                       src={
                                         item?.product_images?.[0]?.url
-                                          ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                          ? `${getImageUrl(item.product_images[0].url)}?h=120&fit=crop&auto=format&dpr=2 2x`
                                           : "https://via.placeholder.com/300x225?text=No+Image"
                                       }
                                       style={{
@@ -398,7 +399,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! - 1
+                                              item.cart.quantity! - 1,
                                             );
                                           }}
                                         >
@@ -412,7 +413,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! + 1
+                                              item.cart.quantity! + 1,
                                             );
                                           }}
                                         >
@@ -431,7 +432,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! - 1
+                                              item.cart.quantity! - 1,
                                             );
                                           }}
                                         >
@@ -445,7 +446,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! + 1
+                                              item.cart.quantity! + 1,
                                             );
                                           }}
                                         >
@@ -538,7 +539,7 @@ const Home = () => {
                           <img
                             src={
                               item?.product_images?.[0]?.url
-                                ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                ? `${getImageUrl(item.product_images[0].url)}?h=120&fit=crop&auto=format&dpr=2 2x`
                                 : "https://via.placeholder.com/300x225?text=No+Image"
                             }
                             style={{
@@ -626,7 +627,7 @@ const Home = () => {
                                   e.stopPropagation();
                                   handleClickChange(
                                     item.cart.id!,
-                                    item.cart.quantity! - 1
+                                    item.cart.quantity! - 1,
                                   );
                                 }}
                               >
@@ -640,7 +641,7 @@ const Home = () => {
                                   e.stopPropagation();
                                   handleClickChange(
                                     item.cart.id!,
-                                    item.cart.quantity! + 1
+                                    item.cart.quantity! + 1,
                                   );
                                 }}
                               >
@@ -853,7 +854,7 @@ const Home = () => {
                                     <img
                                       src={
                                         item?.product_images?.[0]?.url
-                                          ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                                          ? `${getImageUrl(item.product_images[0].url)}?h=120&fit=crop&auto=format&dpr=2 2x`
                                           : "https://via.placeholder.com/300x225?text=No+Image"
                                       }
                                       style={{
@@ -936,7 +937,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! - 1
+                                              item.cart.quantity! - 1,
                                             );
                                           }}
                                         >
@@ -950,7 +951,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! + 1
+                                              item.cart.quantity! + 1,
                                             );
                                           }}
                                         >
@@ -969,7 +970,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! - 1
+                                              item.cart.quantity! - 1,
                                             );
                                           }}
                                         >
@@ -983,7 +984,7 @@ const Home = () => {
                                             e.stopPropagation();
                                             handleClickChange(
                                               item.cart.id!,
-                                              item.cart.quantity! + 1
+                                              item.cart.quantity! + 1,
                                             );
                                           }}
                                         >
@@ -1060,7 +1061,7 @@ const Home = () => {
                       <img
                         src={
                           item?.product_images?.[0]?.url
-                            ? `/uploads/${item.product_images[0].url}?h=120&fit=crop&auto=format&dpr=2 2x`
+                            ? `${getImageUrl(item.product_images[0].url)}?h=120&fit=crop&auto=format&dpr=2 2x`
                             : "https://via.placeholder.com/300x225?text=No+Image"
                         }
                         style={{
@@ -1131,7 +1132,7 @@ const Home = () => {
                               e.stopPropagation();
                               handleClickChange(
                                 item.cart.id!,
-                                item.cart.quantity! - 1
+                                item.cart.quantity! - 1,
                               );
                             }}
                           >
@@ -1145,7 +1146,7 @@ const Home = () => {
                               e.stopPropagation();
                               handleClickChange(
                                 item.cart.id!,
-                                item.cart.quantity! + 1
+                                item.cart.quantity! + 1,
                               );
                             }}
                           >
@@ -1205,3 +1206,4 @@ const Home = () => {
 };
 
 export default Home;
+

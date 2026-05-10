@@ -1,12 +1,7 @@
 const Footer = () => {
   return (
-    <div
-      className="container m-0 mr-0"
-      style={{ backgroundColor: "black", width: 2500 }}
-    >
-      {" "}
-      <div className="py-5">
-        {" "}
+    <footer className="w-100 mt-5" style={{ backgroundColor: "black" }}>
+      <div className="container py-5 text-white">
         <div className="row">
           {" "}
           <div className="col-6 col-md-2 mb-3">
@@ -127,7 +122,7 @@ const Footer = () => {
             </form>{" "}
           </div>{" "}
         </div>{" "}
-        <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+        <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top border-secondary">
           {" "}
           <p>© 2025 Company, Inc. All rights reserved.</p>{" "}
           <ul className="list-unstyled d-flex">
@@ -148,9 +143,9 @@ const Footer = () => {
               </a>
             </li>{" "}
           </ul>{" "}
-        </div>{" "}
-      </div>{" "}
-    </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 

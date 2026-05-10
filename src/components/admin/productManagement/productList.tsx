@@ -9,6 +9,7 @@ import productQuery from "../../../module/admin/query/product";
 import { Link } from "react-router-dom";
 import { CContainer } from "@coreui/react";
 import type { ProductVariant } from "../../../type/productVariant";
+import { getImageUrl } from "../../../utils/imageHelper";
 
 // Badge theo status (0 = Inactive, 1 = Active)
 const getBadge = (status: number) => {
@@ -124,7 +125,7 @@ export const ProductList = () => {
                               <img
                                 width={120}
                                 height={120}
-                                src={`/uploads/${i.product_images?.[0]?.url}`}
+                                src={getImageUrl(i.product_images?.[0]?.url)}
                                 style={{
                                   objectFit: "contain", // hoặc "cover"
                                 }}

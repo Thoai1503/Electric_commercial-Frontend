@@ -33,8 +33,8 @@ const Client = () => {
             <Outlet />
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 };

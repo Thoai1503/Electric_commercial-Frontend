@@ -14,6 +14,7 @@ import { categoryBrandQuery } from "../../module/client/query/categoryBrand";
 import { CToast, CToastBody, CToastHeader, CToaster } from "@coreui/react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const Product = () => {
   const [priceRange, setPriceRange] = useState<{
@@ -63,23 +64,23 @@ const Product = () => {
 
   const { category } = useParams();
   const { data: categoryAttribute } = useQuery(
-    categoryAttributeQuery.category_slug(category || "")
+    categoryAttributeQuery.category_slug(category || ""),
   );
   const { data } = useQuery(categoryBrandQuery.category_slug(category!));
 
   const dispatch = useDispatch<AppDispatch>();
   const ProductList = useSelector(
-    (state: RootState) => state.filterProduct.variant
+    (state: RootState) => state.filterProduct.variant,
   );
   const count = useSelector(
-    (state: RootState) => state.filterProduct.current_length
+    (state: RootState) => state.filterProduct.current_length,
   );
   const c = useSelector((state: RootState) => state.filterProduct.count);
   const isLoading = useSelector(
-    (state: RootState) => state.filterProduct.loading
+    (state: RootState) => state.filterProduct.loading,
   );
   const filterState = useSelector(
-    (state: RootState) => state.filterProduct.filter_state
+    (state: RootState) => state.filterProduct.filter_state,
   );
   function valuetext(value: number) {
     return `${value}°C`;
@@ -104,7 +105,7 @@ const Product = () => {
           ...filterState?.filters,
           //  price: [newValue[0], newValue[1]],
         },
-      })
+      }),
     );
     setPriceRange({ minPrice: newValue[0], maxPrice: newValue[1] });
   };
@@ -114,7 +115,7 @@ const Product = () => {
   const { handleChangeFilter } = useFilterPage(
     category || "",
     priceRange.maxPrice,
-    priceRange.minPrice
+    priceRange.minPrice,
   );
   const {
     handleClickChange,
@@ -123,8 +124,8 @@ const Product = () => {
   } = useHomePage(user?.id || 0, () => {
     addToast(
       exampleToast(
-        "Thêm vào giỏ hàng thành công" + ` <a href="/cart">Xem giỏ hàng</a>`
-      )
+        "Thêm vào giỏ hàng thành công" + ` <a href="/cart">Xem giỏ hàng</a>`,
+      ),
     );
   });
 
@@ -136,7 +137,7 @@ const Product = () => {
       ...values.map((v) => {
         const span = measureRefs.current[attrId]?.[v.id];
         return span ? span.offsetWidth : 0;
-      })
+      }),
     );
 
     // Determine columns based on text length
@@ -161,7 +162,7 @@ const Product = () => {
         sortBy: filterState?.sortBy,
         order: filterState?.order,
         category: category,
-      })
+      }),
     );
   }, [dispatch]);
 
@@ -172,7 +173,7 @@ const Product = () => {
       categoryAttribute.forEach((attr) => {
         newColumnCounts[attr.id] = calculateColumns(
           attr.attribute.attribute_values || [],
-          attr.id
+          attr.id,
         );
       });
       setColumnCounts(newColumnCounts);
@@ -357,7 +358,7 @@ const Product = () => {
                         order: "asc",
                         category: category,
                         filters: filterState?.filters,
-                      })
+                      }),
                     )
                   }
                 >
@@ -412,7 +413,7 @@ const Product = () => {
                         order: "desc",
                         category: category,
                         filters: filterState?.filters,
-                      })
+                      }),
                     )
                   }
                 >
@@ -466,7 +467,7 @@ const Product = () => {
                         order: "desc",
                         category: category,
                         filters: filterState?.filters,
-                      })
+                      }),
                     )
                   }
                 >
@@ -521,7 +522,7 @@ const Product = () => {
                         order: "desc",
                         category: category,
                         filters: filterState?.filters,
-                      })
+                      }),
                     )
                   }
                 >
@@ -583,7 +584,7 @@ const Product = () => {
                           src={
                             item.product_images &&
                             item.product_images.length > 0
-                              ? `/uploads/${item.product_images[0].url}`
+                              ? getImageUrl(item.product_images[0].url)
                               : "/images/asus-vivobook-go-15-e1504fa-r5-nj630w-glr-14-750x500.jpg?h=120&fit=crop&auto=format&dpr=2 2x"
                           }
                           style={{
@@ -627,7 +628,7 @@ const Product = () => {
                                   onClick={() =>
                                     handleClickChange(
                                       item.cart.id!,
-                                      item.cart.quantity! - 1
+                                      item.cart.quantity! - 1,
                                     )
                                   }
                                 >
@@ -639,7 +640,7 @@ const Product = () => {
                                   onClick={() =>
                                     handleClickChange(
                                       item.cart.id!,
-                                      item.cart.quantity! + 1
+                                      item.cart.quantity! + 1,
                                     )
                                   }
                                 >
@@ -653,7 +654,7 @@ const Product = () => {
                                   onClick={() =>
                                     handleClickChange(
                                       item.cart.id!,
-                                      item.cart.quantity! - 1
+                                      item.cart.quantity! - 1,
                                     )
                                   }
                                 >
@@ -665,7 +666,7 @@ const Product = () => {
                                   onClick={() =>
                                     handleClickChange(
                                       item.cart.id!,
-                                      item.cart.quantity! + 1
+                                      item.cart.quantity! + 1,
                                     )
                                   }
                                 >
@@ -714,7 +715,7 @@ const Product = () => {
                       minPrice: priceRange.minPrice,
                       maxPrice: priceRange.maxPrice,
                       filters: filterState?.filters,
-                    })
+                    }),
                   )
                 }
               >

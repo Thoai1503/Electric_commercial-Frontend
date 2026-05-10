@@ -19,6 +19,7 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Card from "@mui/joy/Card";
 import { useAddImageModals } from "../../../../module/admin/hook/product_detail_page/useAddImageModal";
+import { getImageUrl } from "../../../../utils/imageHelper";
 
 interface Prop {
   visible: boolean;
@@ -99,8 +100,8 @@ const AddImageModal = ({
               >
                 <AspectRatio ratio="1" sx={{ minWidth: 200 }}>
                   <img
-                    srcSet={`/uploads/${item.url}?h=120&fit=crop&auto=format&dpr=2 2x`}
-                    src={`/uploads/${item.url}?h=120&fit=crop&auto=format`}
+                    srcSet={`${getImageUrl(item.url)}?h=120&fit=crop&auto=format&dpr=2 2x`}
+                    src={`${getImageUrl(item.url)}?h=120&fit=crop&auto=format`}
                     alt={item.url}
                   />
                 </AspectRatio>

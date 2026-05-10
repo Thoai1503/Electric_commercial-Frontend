@@ -8,6 +8,7 @@ import CartItem from "../../components/client/cart/CartItem";
 import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const CartPage = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
@@ -20,9 +21,9 @@ const CartPage = () => {
     () =>
       cartList.reduce(
         (sum, item) => sum + item.unit_price! * item.quantity!,
-        0
+        0,
       ),
-    [cartList]
+    [cartList],
   );
 
   const checkOut = async () => {
@@ -34,7 +35,7 @@ const CartPage = () => {
     }
 
     const result = await axios.post(
-      "http://localhost:5000/api/v1/momo-payment/create_payment"
+      "http://localhost:5000/api/v1/momo-payment/create_payment",
     );
     alert("Url: " + result.data.url);
     const url = result.data.url;
@@ -90,7 +91,9 @@ const CartPage = () => {
                       <div className="col-lg-2">
                         <img
                           width={80}
-                          src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+                          src={getImageUrl(
+                            item?.variant?.product_images?.[0]?.url,
+                          )}
                           alt={item?.variant?.name}
                         />
                       </div>
@@ -180,7 +183,9 @@ const CartPage = () => {
                           width={80}
                           height={80}
                           style={{ objectFit: "contain" }}
-                          src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+                          src={getImageUrl(
+                            item?.variant?.product_images?.[0]?.url,
+                          )}
                           alt={item?.variant?.name}
                         />
                         <div className="flex-grow-1">
@@ -333,7 +338,9 @@ const CartPage = () => {
                         width={80}
                         height={80}
                         style={{ objectFit: "contain" }}
-                        src={`/uploads/${item?.variant?.product_images?.[0]?.url}`}
+                        src={getImageUrl(
+                          item?.variant?.product_images?.[0]?.url,
+                        )}
                         alt={item?.variant?.name}
                       />
                       <div className="flex-grow-1">
