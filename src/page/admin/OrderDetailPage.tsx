@@ -1,10 +1,18 @@
-import { CCol, CContainer, CRow } from "@coreui/react";
+﻿import { CBadge, CContainer } from "@coreui/react";
 import { useQuery } from "@tanstack/react-query";
+import { CreditCard, MapPin, PackageSearch, UserRound } from "lucide-react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { orderDetailQuery } from "../../module/admin/query/orderDetail";
 import { productVariantQuery } from "../../module/client/query/productVariant";
-import { useMemo } from "react";
 import { getImageUrl } from "../../utils/imageHelper";
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(value);
 
 const OrderDetailPage = () => {
   const { id } = useParams();
@@ -13,128 +21,208 @@ const OrderDetailPage = () => {
     orderDetailQuery.get_by_order_id(Number(id!)),
   );
 
-  const order_details = useMemo(
+  const orderDetails = useMemo(
     () =>
       list?.map((item) => {
         const variant = variants?.find((u) => u.id == item.variant_id);
-        return { ...item, variant: variant };
-      }),
+        return { ...item, variant };
+      }) ?? [],
     [variants, list],
   );
 
+  const totals = useMemo(() => {
+    const subtotal = orderDetails.reduce((sum, item) => {
+      const price = Number(item.variant?.price ?? 0);
+      return sum + price * item.quantity;
+    }, 0);
+
+    return {
+      subtotal,
+      discount: 0,
+      final: subtotal,
+    };
+  }, [orderDetails]);
+
   return (
-    <CContainer fluid className="px-4 py-4 bg-light min-vh-100">
-      {/* Header */}
-      <CRow className="mb-4">
-        <CCol>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h2 className=" mb-0 "> Chi tiết đơn hàng #{id}</h2>
-              <p className="text-muted mb-0">
-                Ngày tạo: 23/10/2025 &nbsp; | &nbsp; Trạng thái:{" "}
-                <span className="badge bg-success">Đã thanh toán</span>
-              </p>
-            </div>
-          </div>
-        </CCol>
-      </CRow>
-
-      <div className="row g-4">
-        {/* Bảng sản phẩm */}
-        <div className="col-lg-8">
-          <div className="card shadow-sm border-0 rounded-3">
-            <div className="card-body">
-              <h4 className="fw-semibold mb-4 text-secondary">
-                Danh sách sản phẩm
-              </h4>
-              <div className="table-responsive">
-                <table className="table align-middle table-hover">
-                  <thead className="table">
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col"></th>
-                      <th scope="col">Tên sản phẩm</th>
-                      <th scope="col">Số lượng</th>
-                      <th scope="col">Đơn giá</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order_details?.map((item, index) => (
-                      <tr key={item.id}>
-                        <th scope="row">{index + 1}</th>
-                        <td>
-                          <img
-                            width={70}
-                            height={70}
-                            src={getImageUrl(
-                              item.variant?.product_images?.[0]?.url,
-                            )}
-                            alt={item.variant?.name}
-                            className="rounded border"
-                            style={{
-                              objectFit: "contain",
-                              backgroundColor: "#f8f9fa",
-                            }}
-                          />
-                        </td>
-                        <td className="fw-medium">{item.variant?.name}</td>
-                        <td>{item.quantity}</td>
-                        <td className="text-danger fw-semibold">
-                          {item.variant?.price?.toLocaleString()} VNĐ
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+    <CContainer fluid className="px-0">
+      <div className="mt-4 mb-5">
+        <div
+          className="card border-0 shadow mb-4"
+          style={{
+            background: "linear-gradient(135deg, #111827 0%, #1e293b 100%)",
+          }}
+        >
+          <div className="card-body p-4 p-lg-5">
+            <div className="d-flex flex-column flex-lg-row justify-content-between gap-4 align-items-lg-center">
+              <div>
+                <div
+                  className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border border-primary text-primary small fw-semibold"
+                  style={{ background: "rgba(13,110,253,0.15)" }}
+                >
+                  <PackageSearch size={16} />
+                  Theo dõi đơn hàng
+                </div>
+                <h2 className="mt-3 mb-2 fw-bold text-white">
+                  Chi tiết đơn hàng #{id}
+                </h2>
+                <p className="mb-0" style={{ color: "#94a3b8" }}>
+                  Kiểm tra sản phẩm, tổng tiền và thông tin nhận hàng trong cùng
+                  một màn hình.
+                </p>
               </div>
-
-              {/* Tổng tiền */}
-              <div className="mt-4 border-top pt-3">
-                <div className="d-flex justify-content-between">
-                  <span className="fw-medium text-muted">Tổng tạm tính:</span>
-                  <span>22.000.000 VNĐ</span>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <span className="fw-medium text-muted">Chiết khấu:</span>
-                  <span>10%</span>
-                </div>
-                <div className="d-flex justify-content-between border-top pt-2 mt-2">
-                  <strong>Tổng tiền:</strong>
-                  <strong className="text-success">20.000.000 VNĐ</strong>
-                </div>
-              </div>
+              <CBadge
+                color="success"
+                shape="rounded-pill"
+                className="px-3 py-2 fs-6"
+              >
+                {orderDetails.length} sản phẩm
+              </CBadge>
             </div>
           </div>
         </div>
 
-        {/* Thông tin người mua */}
-        <div className="col-lg-4">
-          <div className="card shadow-sm border-0 rounded-3">
-            <div className="card-body">
-              <h4 className="fw-semibold mb-4 text-secondary">
-                👤 Thông tin người mua
-              </h4>
-              <p className="mb-2">
-                <strong>Tên:</strong> Võ Giang Thoại
-              </p>
-              <p className="mb-2">
-                <strong>Email:</strong> thoai@example.com
-              </p>
-              <p className="mb-2">
-                <strong>Số điện thoại:</strong> 0905 123 456
-              </p>
-              <p className="mb-2">
-                <strong>Địa chỉ giao hàng:</strong> 123 Nguyễn Văn Linh, Đà Nẵng
-              </p>
+        <div className="row g-4">
+          <div className="col-lg-8">
+            <div className="card border-0 shadow-sm">
+              <div className="card-body p-4">
+                <h5 className="fw-bold mb-3">Danh sách sản phẩm</h5>
+                <div
+                  className="table-responsive rounded-4 overflow-hidden"
+                  style={{ border: "1px solid #e2e8f0" }}
+                >
+                  <table className="table align-middle mb-0 bg-white">
+                    <thead style={{ background: "#111827" }}>
+                      <tr>
+                        <th
+                          className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                          style={{ color: "#94a3b8" }}
+                        >
+                          #
+                        </th>
+                        <th
+                          className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                          style={{ color: "#94a3b8" }}
+                        >
+                          Ảnh
+                        </th>
+                        <th
+                          className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                          style={{ color: "#94a3b8" }}
+                        >
+                          Sản phẩm
+                        </th>
+                        <th
+                          className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                          style={{ color: "#94a3b8" }}
+                        >
+                          Số lượng
+                        </th>
+                        <th
+                          className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                          style={{ color: "#94a3b8" }}
+                        >
+                          Đơn giá
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orderDetails.map((item, index) => (
+                        <tr key={item.id}>
+                          <td className="px-4 py-3 fw-semibold">{index + 1}</td>
+                          <td className="px-4 py-3">
+                            <img
+                              width={70}
+                              height={70}
+                              src={getImageUrl(
+                                item.variant?.product_images?.[0]?.url,
+                              )}
+                              alt={item.variant?.name}
+                              className="rounded border"
+                              style={{
+                                objectFit: "contain",
+                                backgroundColor: "#f8f9fa",
+                              }}
+                            />
+                          </td>
+                          <td className="px-4 py-3 fw-medium">
+                            {item.variant?.name}
+                          </td>
+                          <td className="px-4 py-3">{item.quantity}</td>
+                          <td className="px-4 py-3 text-danger fw-semibold">
+                            {formatCurrency(Number(item.variant?.price ?? 0))}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-              <div className="mt-4 p-3 bg-light rounded border">
-                <p className="mb-1">
-                  <strong>Phương thức thanh toán:</strong> VNPay
+                <div className="mt-4 border-top pt-3">
+                  <div className="d-flex justify-content-between">
+                    <span className="fw-medium text-muted">Tổng tạm tính:</span>
+                    <span>{formatCurrency(totals.subtotal)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <span className="fw-medium text-muted">Chiết khấu:</span>
+                    <span>{formatCurrency(totals.discount)}</span>
+                  </div>
+                  <div className="d-flex justify-content-between border-top pt-2 mt-2">
+                    <strong>Tổng tiền:</strong>
+                    <strong className="text-success">
+                      {formatCurrency(totals.final)}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-4">
+            <div className="card border-0 shadow-sm mb-4">
+              <div className="card-body p-4">
+                <h5 className="fw-bold mb-3 d-flex align-items-center gap-2">
+                  <UserRound size={18} className="text-primary" />
+                  Thông tin người mua
+                </h5>
+                <p className="mb-2">
+                  <strong>Tên:</strong> Chưa có dữ liệu
+                </p>
+                <p className="mb-2">
+                  <strong>Email:</strong> Chưa có dữ liệu
+                </p>
+                <p className="mb-2">
+                  <strong>Số điện thoại:</strong> Chưa có dữ liệu
                 </p>
                 <p className="mb-0">
-                  <strong>Trạng thái:</strong>{" "}
-                  <span className="badge bg-success">Hoàn tất</span>
+                  <strong>Địa chỉ:</strong> Chưa có dữ liệu
                 </p>
+              </div>
+            </div>
+
+            <div className="card border-0 shadow-sm">
+              <div className="card-body p-4">
+                <h5 className="fw-bold mb-3 d-flex align-items-center gap-2">
+                  <CreditCard size={18} className="text-primary" />
+                  Thanh toán
+                </h5>
+                <div
+                  className="p-3 rounded-3"
+                  style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}
+                >
+                  <p className="mb-2">
+                    <strong>Phương thức:</strong> VNPay
+                  </p>
+                  <p className="mb-0">
+                    <strong>Trạng thái:</strong>{" "}
+                    <span className="badge rounded-pill bg-success-subtle text-success border border-success-subtle">
+                      Hoàn tất
+                    </span>
+                  </p>
+                </div>
+                <div className="mt-3 small text-muted d-flex align-items-center gap-1">
+                  <MapPin size={14} />
+                  Dữ liệu người nhận sẽ hiển thị khi API trả đầy đủ thông tin.
+                </div>
               </div>
             </div>
           </div>

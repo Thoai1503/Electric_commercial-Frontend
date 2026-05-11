@@ -14,9 +14,9 @@ export const getByUserId = async (user_id: number): Promise<Cart[]> => {
 
 export const updateCartItemQuantity = async (
   id: number,
-  quantity: number
+  quantity: number,
 ): Promise<boolean> => {
-  return Request.post<boolean>(`/api/v1/cart/${id}`, { quantity: quantity })
+  return Request.post<boolean>(`api/cart/${id}`, { quantity: quantity })
     .then((res) => res.data)
     .catch((err) => {
       throw err;
@@ -24,7 +24,7 @@ export const updateCartItemQuantity = async (
 };
 
 export const addToUserCart = async (item: Partial<Cart>): Promise<number> => {
-  return Request.post<number>("/api/v1/cart", item)
+  return Request.post<number>("api/cart", item)
     .then((res) => res.data)
     .catch((error) => {
       throw error;
@@ -33,9 +33,9 @@ export const addToUserCart = async (item: Partial<Cart>): Promise<number> => {
 
 export const addManyToUserCart = async (
   user_id: number,
-  items: Partial<Cart>[]
+  items: Partial<Cart>[],
 ): Promise<boolean> => {
-  return Request.post<boolean>("/api/v1/cart/batch", {
+  return Request.post<boolean>("api/cart/list", {
     user_id: user_id,
     items: items,
   })
@@ -46,7 +46,7 @@ export const addManyToUserCart = async (
 };
 
 export const removeCartItem = async (id: number): Promise<boolean> => {
-  return Request.delete<boolean>(`/api/v1/cart/${id}`)
+  return Request.delete<boolean>(`api/cart/${id}`)
     .then((res) => res.data)
     .catch((err) => {
       throw err;

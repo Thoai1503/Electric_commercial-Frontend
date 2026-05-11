@@ -458,6 +458,7 @@ const Home = () => {
                                         onClick={(e) => {
                                           e.preventDefault();
                                           e.stopPropagation();
+                                          //       alert("Thêm vào giỏ hàng thành công");
                                           addToCartForAuthenticatedUser({
                                             id: 0,
                                             user_id: user.id || 0,
@@ -1206,4 +1207,3 @@ const Home = () => {
 };
 
 export default Home;
-

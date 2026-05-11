@@ -1,11 +1,15 @@
-import { ArrowRight, ChevronDown } from "lucide-react";
-
-import type { Brand } from "../../../type/Brand";
-
+import {
+  ArrowRight,
+  ChevronDown,
+  FileText,
+  FolderTree,
+  Tag,
+} from "lucide-react";
 import { Editor } from "@tinymce/tinymce-react";
 
 import { useProductDetailPage } from "../../../module/admin/hook/product_detail_page";
-import { useEffect } from "react";
+import type { Brand } from "../../../type/Brand";
+
 interface Prop {
   id: number;
 }
@@ -21,11 +25,7 @@ const GeneralInfoSection = ({ id }: Prop) => {
     data,
     selectedBrand,
     selectedCategory,
-
-    content,
     handleProductNameChange,
-    logContent,
-
     setContent,
     setSelectedBrand,
     setSelectedCategory,
@@ -33,42 +33,40 @@ const GeneralInfoSection = ({ id }: Prop) => {
     setCategoryDropdownOpen,
   } = useProductDetailPage(id);
 
-  useEffect(() => {
-    console.log("Content: " + content);
-  }, [content]);
-
   return (
     <>
-      {/* Product Name */}
-      <div className="row mb-4 align-items-center">
-        <div className="col-2">
-          <label className="form-label mb-0 fw-normal">Tên sản phẩm:</label>
-        </div>
-        <div className="col-10">
+      <div className="d-flex align-items-center gap-2 text-dark fw-bold mb-3">
+        <FileText size={18} className="text-primary" />
+        Thong tin co ban
+      </div>
+
+      <div className="row g-4 mb-4">
+        <div className="col-12">
+          <label className="form-label text-muted small fw-semibold text-uppercase mb-2">
+            Ten san pham
+          </label>
           <input
             type="text"
-            className="form-control"
+            className="form-control form-control-lg"
             value={data?.name}
             onChange={handleProductNameChange}
-            placeholder=""
+            placeholder="Nhap ten san pham"
           />
         </div>
       </div>
 
-      {/* Slug */}
-
-      {/* Brand */}
-      <div className="row mb-4 align-items-center">
-        <div className="col-2">
-          <label className="form-label mb-0 fw-normal">Brand:</label>
-        </div>
-        <div className="col-10">
+      <div className="row g-4 mb-4">
+        <div className="col-12 col-lg-6">
+          <label className="form-label text-muted small fw-semibold text-uppercase mb-2 d-flex align-items-center gap-2">
+            <Tag size={14} className="text-primary" />
+            Thuong hieu
+          </label>
           <div className="position-relative">
             <button
-              className="btn btn-outline-light border w-100 text-start d-flex justify-content-between align-items-center"
+              className="btn btn-light border w-100 text-start d-flex justify-content-between align-items-center"
               type="button"
               onClick={() => setBrandDropdownOpen(!brandDropdownOpen)}
-              style={{ backgroundColor: "white", color: "#6c757d" }}
+              style={{ minHeight: "48px", color: "#334155" }}
             >
               <span>{selectedBrand.name}</span>
               <ChevronDown size={16} />
@@ -82,7 +80,7 @@ const GeneralInfoSection = ({ id }: Prop) => {
                   {brands?.map((brand: Brand) => (
                     <li
                       key={brand.id}
-                      className="list-group-item list-group-item-action border-0"
+                      className="list-group-item list-group-item-action"
                       style={{ cursor: "pointer" }}
                     >
                       <button
@@ -101,148 +99,117 @@ const GeneralInfoSection = ({ id }: Prop) => {
             )}
           </div>
         </div>
-      </div>
 
-      {/* Category */}
-      <div className="row mb-4 align-items-center">
-        <div className="col-2">
-          <label className="form-label mb-0 fw-normal">Category:</label>
-        </div>
-        <div className="col-10">
-          <div className="d-flex align-items-center">
-            <div className="position-relative flex-grow-1">
-              <button
-                className="btn btn-outline-light border w-100 text-start d-flex justify-content-between align-items-center"
-                type="button"
-                onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
-                style={{ backgroundColor: "white", color: "#6c757d" }}
+        <div className="col-12 col-lg-6">
+          <label className="form-label text-muted small fw-semibold text-uppercase mb-2 d-flex align-items-center gap-2">
+            <FolderTree size={14} className="text-primary" />
+            Danh muc
+          </label>
+          <div className="position-relative flex-grow-1">
+            <button
+              className="btn btn-light border w-100 text-start d-flex justify-content-between align-items-center"
+              type="button"
+              onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+              style={{ minHeight: "48px", color: "#334155" }}
+            >
+              <span>{selectedCategory.name}</span>
+              <ChevronDown size={16} />
+            </button>
+            {categoryDropdownOpen && (
+              <div
+                className="position-absolute w-100 mt-1"
+                style={{ zIndex: 1050 }}
               >
-                <span>{selectedCategory.name}</span>
-                <ChevronDown size={16} />
-              </button>
-              {categoryDropdownOpen && (
-                <div
-                  className="position-absolute w-100 mt-1"
-                  style={{ zIndex: 1050 }}
-                >
-                  <ul className="list-group shadow">
-                    {categories?.map((category: any) => (
-                      <li
-                        key={category.id}
-                        className="list-group-item list-group-item-action border-0"
-                        style={{ cursor: "pointer" }}
+                <ul className="list-group shadow">
+                  {categories?.map((category: any) => (
+                    <li
+                      key={category.id}
+                      className="list-group-item list-group-item-action"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <button
+                        className="btn btn-link text-decoration-none p-0 w-100 text-start text-dark"
+                        onClick={() => {
+                          setSelectedCategory({
+                            id: category.id,
+                            name: category.text,
+                          });
+                          setCategoryDropdownOpen(false);
+                        }}
                       >
-                        <button
-                          className="btn btn-link text-decoration-none p-0 w-100 text-start text-dark"
-                          onClick={() => {
-                            setSelectedCategory({
-                              id: category.id,
-                              name: category.text,
-                            });
-                            setCategoryDropdownOpen(false);
-                          }}
-                        >
-                          {category.text}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-            <span className="ms-2 text-muted small">(tree select)</span>
+                        {category.text}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <small className="text-muted mt-2 d-inline-block">
+              Du lieu lay tu cay danh muc hien co.
+            </small>
           </div>
         </div>
       </div>
 
-      {/* Product Description */}
-      <div className="row mb-4">
-        <div className="col-2">
-          <label className="form-label mb-0 fw-normal">Mô tả sản phẩm:</label>
-        </div>
-        <div className="col-10">
-          <div>
-            <Editor
-              apiKey="opbl478qvvrtoorhvqc4f7zei61txljv0gkj67k1ogzky57n" // có thể để trống khi test local
-              initialValue="<p>Soạn thảo với upload ảnh...</p>"
-              init={{
-                height: 500,
-                menubar: true,
-                plugins: "image media link code",
-                toolbar:
-                  "undo redo | bold italic | alignleft aligncenter alignright | image media link code",
+      <div className="mb-4">
+        <label className="form-label text-muted small fw-semibold text-uppercase mb-2">
+          Mo ta san pham
+        </label>
+        <div className="border rounded-3 overflow-hidden">
+          <Editor
+            apiKey="opbl478qvvrtoorhvqc4f7zei61txljv0gkj67k1ogzky57n"
+            initialValue="<p>Soan thao voi upload anh...</p>"
+            init={{
+              height: 460,
+              menubar: true,
+              plugins: "image media link code",
+              toolbar:
+                "undo redo | bold italic | alignleft aligncenter alignright | image media link code",
+              images_upload_url: "http://localhost:5000/upload",
+              images_upload_handler: async (
+                blobInfo: any,
+                success: any,
+                failure: any,
+              ) => {
+                try {
+                  const formData = new FormData();
+                  formData.append("file", blobInfo.blob(), blobInfo.filename());
 
-                // URL API backend để nhận file upload
-                images_upload_url: "http://localhost:5000/upload",
+                  const response = await fetch("http://localhost:5000/upload", {
+                    method: "POST",
+                    body: formData,
+                  });
 
-                // Custom handler nếu muốn tự điều khiển upload
-                images_upload_handler: async (
-                  blobInfo: any,
-                  success: any,
-                  failure: any,
-                ) => {
-                  try {
-                    const formData = new FormData();
-                    formData.append(
-                      "file",
-                      blobInfo.blob(),
-                      blobInfo.filename(),
-                    );
+                  const json = await response.json();
+                  const imageUrl = json.url;
 
-                    console.log("form data: " + JSON.stringify(formData));
-                    const response = await fetch(
-                      "http://localhost:5000/upload",
-                      {
-                        method: "POST",
-                        body: formData,
-                      },
-                    );
-
-                    const json = await response.json();
-                    // giả sử backend trả về { url: "http://localhost:5000/uploads/abc.png" }
-                    const imageUrl = json.url;
-
-                    // TinyMCE yêu cầu success(URL string)
-                    success(imageUrl);
-
-                    // Nếu muốn tự động chèn vào content luôn:
-                    editorRef.current?.insertContent(
-                      `<img src="${imageUrl}" alt="${blobInfo.filename()}" />`,
-                    );
-                  } catch (err: any) {
-                    failure("Upload thất bại: " + err.message);
-                  }
-                },
-              }}
-              onEditorChange={(newContent) => setContent(newContent)}
-            />
-
-            <button onClick={() => logContent()}>Lấy nội dung</button>
-            <h3 className="mt-4">Xem trước nội dung:</h3>
-            <div
-              style={{ border: "1px solid #ddd", padding: "10px" }}
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          </div>
+                  success(imageUrl);
+                  editorRef.current?.insertContent(
+                    `<img src="${imageUrl}" alt="${blobInfo.filename()}" />`,
+                  );
+                } catch (err: any) {
+                  failure("Upload that bai: " + err.message);
+                }
+              },
+            }}
+            onEditorChange={(newContent) => setContent(newContent)}
+          />
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-2"></div>
-        <div className="col-10">
-          <button
-            type="button"
-            className="btn d-flex align-items-center"
-            style={{ backgroundColor: "#6f42c1", color: "white" }}
-            onClick={nextTab}
-          >
-            <span className="me-2">Tiếp tục</span>
-            <ArrowRight size={16} className="me-1" />
-            <span>Thuộc tính</span>
-          </button>
-        </div>
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-primary d-flex align-items-center gap-2 px-4 fw-semibold"
+          onClick={nextTab}
+        >
+          <span>Tiep tuc</span>
+          <ArrowRight size={16} />
+          <span>Thuoc tinh</span>
+        </button>
       </div>
     </>
   );
 };
+
 export default GeneralInfoSection;

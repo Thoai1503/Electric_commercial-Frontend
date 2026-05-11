@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, SlidersHorizontal } from "lucide-react";
 
 import { useAttributeConfigSection } from "../../../module/admin/hook/product_detail_page/useAttributeConfigSection";
 import CustomInput from "./CustomInput/CustomInput";
@@ -12,8 +12,6 @@ interface Prop {
 const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
   const { nonVariantProductAttributes, handleSubmit, product } =
     useAttributeConfigSection(id);
-
-  console.log("Res: " + JSON.stringify(nonVariantProductAttributes));
 
   if (!product) {
     return (
@@ -30,37 +28,41 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
 
   return (
     <>
-      <div className="mb-4">
-        <h6 className="mb-3">📌 Thuộc tính sản phẩm chung:</h6>
-        {nonVariantProductAttributes?.map((item) => {
-          const vl =
-            item.value_decimal ||
-            item.value_int ||
-            item.value_text ||
-            undefined;
-          const isHavingValuable =
-            item.value_decimal != null ||
-            item.value_int != null ||
-            item.value_text != null;
-          const attribute_value_id = item.attribute_value_id;
-
-          console.log("Attr Val ID: " + attribute_value_id);
-
-          return (
-            <>
-              <CustomInput
-                item={item}
-                isHavingValuable={isHavingValuable}
-                vl={vl}
-                handleSubmit={handleSubmit}
-                attribute_value_id={attribute_value_id}
-              />
-            </>
-          );
-        })}
+      <div className="d-flex align-items-center gap-2 text-dark fw-bold mb-3">
+        <SlidersHorizontal size={18} className="text-primary" />
+        Thuộc tính sản phẩm chung
       </div>
 
-      <div className="d-flex gap-2">
+      <div className="card border-0 shadow-sm mb-4">
+        <div className="card-body p-4">
+          {nonVariantProductAttributes?.map((item) => {
+            const vl =
+              item.value_decimal ||
+              item.value_int ||
+              item.value_text ||
+              undefined;
+            const isHavingValuable =
+              item.value_decimal != null ||
+              item.value_int != null ||
+              item.value_text != null;
+            const attribute_value_id = item.attribute_value_id;
+
+            return (
+              <div key={item.id} className="mb-4">
+                <CustomInput
+                  item={item}
+                  isHavingValuable={isHavingValuable}
+                  vl={vl}
+                  handleSubmit={handleSubmit}
+                  attribute_value_id={attribute_value_id}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="d-flex gap-2 justify-content-end">
         <button
           type="button"
           className="btn btn-outline-secondary d-flex align-items-center"
@@ -71,12 +73,11 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
         </button>
         <button
           type="button"
-          className="btn d-flex align-items-center"
-          style={{ backgroundColor: "#6f42c1", color: "white" }}
+          className="btn btn-primary d-flex align-items-center gap-2 px-4 fw-semibold"
           onClick={nextTab}
         >
-          <span className="me-2">Tiếp tục</span>
-          <ArrowRight size={16} className="me-1" />
+          <span>Tiếp tục</span>
+          <ArrowRight size={16} />
           <span>Biến thể</span>
         </button>
       </div>

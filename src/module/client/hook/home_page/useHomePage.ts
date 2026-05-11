@@ -10,29 +10,29 @@ import { updateCartItemQuantity } from "../../service/cart";
 
 export const useHomePage = (
   user_id: number,
-  onSuccessCallback?: () => void
+  onSuccessCallback?: () => void,
 ) => {
   const dispatch = useDispatch<AppDispatch>();
   const queryClient = useQueryClient();
   const { data: userCart, isPending } = useQuery(
-    cartQuery.getByUser(user_id || 0)
+    cartQuery.getByUser(user_id || 0),
   );
   const { data, isPending: isPendingList } = useQuery(
     productVariantQuery.list({
       category: "",
       sortBy: "created_at",
       order: "asc",
-    })
+    }),
   );
   const { data: keyboards } = useQuery(
     productVariantQuery.list({
       category: "ban-phim",
       sortBy: "created_at",
       order: "asc",
-    })
+    }),
   );
   const { data: pcVariants, isPending: isPendingPc } = useQuery(
-    productVariantQuery.list({ category: "pc---may-tinh-ban" })
+    productVariantQuery.list({ category: "pc---may-tinh-ban" }),
   );
   const loading = useSelector((state: RootState) => state.cart.loading);
 
@@ -41,7 +41,7 @@ export const useHomePage = (
       try {
         const result = await dispatch(addToCartAsync(cart)).unwrap();
 
-        console.log("Result: " + result);
+        console.log("Result: " + JSON.stringify(result));
         queryClient.invalidateQueries(cartQuery.getByUser(cart.user_id));
 
         if (onSuccessCallback) {
@@ -55,7 +55,7 @@ export const useHomePage = (
         return { success: false, error: err };
       }
     },
-    [dispatch, queryClient, user_id]
+    [dispatch, queryClient, user_id],
   );
   interface MutateProp {
     id: number;

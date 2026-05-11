@@ -25,14 +25,14 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
   const { isPending, updateProcess } = useCategoryMutation(
     cateValue.id,
     cateValue.cate,
-    successUpdate
+    successUpdate,
   );
 
   const handleDrop = (newTree: NodeModel<any>[], _options: DropOptions) => {
     console.log(
       "API call: " + JSON.stringify(newTree),
       _options.dragSourceId,
-      _options.dropTarget
+      _options.dropTarget,
     );
 
     setCateValue({
@@ -53,49 +53,73 @@ const CategoryTree: React.FC<MyTreeProps> = ({ nodes, onMove }) => {
 
   return (
     <>
-      <h3>
-        {" "}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="25"
-          height="25"
-          fill="currentColor"
-          className="bi bi-diagram-3-fill text-info"
-          viewBox="0 0 16 16"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z"
-          />
-        </svg>{" "}
-        Cây thư mục
-      </h3>
-      <p className="text-danger mb-1">
-        * Kéo thả để cập nhật thay đổi cấu trúc cây
-      </p>
-      {isPending && <CSpinner color="primary" />}
+      <div className="d-flex justify-content-between align-items-start gap-3 mb-3">
+        <div>
+          <h6 className="mb-1 fw-bold">Kéo thả cây danh mục</h6>
+          <p className="text-muted mb-0 small">
+            Kéo một mục và thả vào mục cha mới để cập nhật cấu trúc.
+          </p>
+        </div>
+        {isPending && <CSpinner color="primary" size="sm" />}
+      </div>
 
-      <Tree
-        tree={nodes}
-        rootId={0}
-        render={(node, { depth, isOpen, onToggle }) => (
-          <div className="col-lg-3" style={{ marginLeft: depth * 20 }}>
-            {node.droppable && (
-              <span
-                style={{ cursor: "pointer", marginRight: 5 }}
-                onClick={onToggle}
+      <div
+        className="rounded-4 p-3"
+        style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}
+      >
+        <div className="small text-muted mb-3">
+          Mẹo: bấm vào biểu tượng mũi tên để mở/đóng nhóm con.
+        </div>
+
+        <Tree
+          tree={nodes}
+          rootId={0}
+          render={(node, { depth, isOpen, onToggle }) => (
+            <div style={{ marginLeft: depth * 18 }} className="mb-2">
+              <div
+                className="d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+                style={{
+                  background: "#ffffff",
+                  border: "1px solid #e2e8f0",
+                  minHeight: "42px",
+                }}
               >
-                {isOpen ? "📂" : "📁"}
-              </span>
-            )}
-            {node.text}
-          </div>
-        )}
-        dragPreviewRender={(monitorProps) => (
-          <div>{monitorProps.item.text}</div>
-        )}
-        onDrop={handleDrop}
-      />
+                {node.droppable ? (
+                  <button
+                    type="button"
+                    className="btn btn-sm p-0 border-0 bg-transparent text-primary d-inline-flex align-items-center justify-content-center"
+                    style={{ width: "20px", height: "20px" }}
+                    onClick={onToggle}
+                    aria-label={isOpen ? "Thu gọn" : "Mở rộng"}
+                  >
+                    {isOpen ? "▾" : "▸"}
+                  </button>
+                ) : (
+                  <span style={{ width: "20px" }} />
+                )}
+
+                <span>{node.droppable ? "📁" : "📄"}</span>
+                <span className="text-dark fw-semibold">{node.text}</span>
+
+                {node.droppable && (
+                  <span className="ms-auto badge rounded-pill text-bg-light border">
+                    Nhóm
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+          dragPreviewRender={(monitorProps) => (
+            <div
+              className="px-3 py-2 rounded-3 shadow-sm"
+              style={{ background: "#0d6efd", color: "#fff" }}
+            >
+              {monitorProps.item.text}
+            </div>
+          )}
+          onDrop={handleDrop}
+        />
+      </div>
     </>
   );
 };

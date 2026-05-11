@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, Shapes } from "lucide-react";
 
 import { useVariantConfigSection } from "../../../module/admin/hook/product_detail_page/useVariantConfigSection";
 
@@ -20,9 +20,6 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
   const handleClose = () => {
     setVisible(false);
   };
-  console.log("Variant  :" + JSON.stringify(variants));
-  // const en = variants && variants[0]?.variant_attributes;
-  //alert(JSON.stringify(en));
 
   if (!product) {
     return (
@@ -39,63 +36,87 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
 
   return (
     <>
-      {" "}
-      <div className="mb-4">
-        <h6 className="mb-3">📌 Danh sách các biến thể:</h6>
-        <div className="d-flex justify-content-end">
-          <button
-            className="btn btn-sm btn-primary mb-3"
-            data-bs-toggle="modal"
-            onClick={() => {
-              setVisible(true);
-            }}
-          >
-            <Plus size={14} className="me-1" />
-            Thêm biến thể
-          </button>
-        </div>
+      <div className="d-flex align-items-center gap-2 text-dark fw-bold mb-3">
+        <Shapes size={18} className="text-primary" />
+        Danh sách biến thể
+      </div>
 
-        <div className="table-responsive mb-3">
-          <table className="table table-bordered">
-            <thead className="table-light">
-              <tr>
-                <th>STT</th>
-                <th>Tên</th>
-                <th>SKU</th>
-                <th>Giá</th>
-                {categoryAttributes
-                  ?.sort((a, b) => a.attribute.id - b.attribute.id)
-                  .map((item) => (
-                    <th key={item.attribute.id}>{item.attribute.name}</th>
-                  ))}
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {variants?.map((variant, index) => (
-                <VariantItem item={variant} index={index} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="mb-4">
-          <span className="me-2">👉 Action:</span>
-          <div className="btn-group">
-            <button className="btn btn-outline-primary btn-sm">
+      <div className="card border-0 shadow-sm mb-4">
+        <div className="card-body p-4">
+          <div className="d-flex justify-content-end mb-3">
+            <button
+              className="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
+              data-bs-toggle="modal"
+              onClick={() => {
+                setVisible(true);
+              }}
+            >
               <Plus size={14} className="me-1" />
-              Add Variant
+              Thêm biến thể
             </button>
-            <button className="btn btn-outline-secondary btn-sm">
-              Bulk Edit Price
-            </button>
-            <button className="btn btn-outline-secondary btn-sm">
-              Import CSV
-            </button>
+          </div>
+
+          <div
+            className="table-responsive rounded-4 overflow-hidden mb-2"
+            style={{ border: "1px solid #e2e8f0" }}
+          >
+            <table className="table align-middle mb-0 bg-white">
+              <thead style={{ background: "#111827" }}>
+                <tr>
+                  <th
+                    className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                    style={{ color: "#94a3b8" }}
+                  >
+                    STT
+                  </th>
+                  <th
+                    className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                    style={{ color: "#94a3b8" }}
+                  >
+                    Tên
+                  </th>
+                  <th
+                    className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                    style={{ color: "#94a3b8" }}
+                  >
+                    SKU
+                  </th>
+                  <th
+                    className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                    style={{ color: "#94a3b8" }}
+                  >
+                    Giá
+                  </th>
+                  {categoryAttributes
+                    ?.sort((a, b) => a.attribute.id - b.attribute.id)
+                    .map((item) => (
+                      <th
+                        key={item.attribute.id}
+                        className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                        style={{ color: "#94a3b8" }}
+                      >
+                        {item.attribute.name}
+                      </th>
+                    ))}
+                  <th
+                    className="border-0 px-4 py-3 small text-uppercase fw-semibold"
+                    style={{ color: "#94a3b8" }}
+                  >
+                    Hành động
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {variants?.map((variant, index) => (
+                  <VariantItem key={variant.id} item={variant} index={index} />
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div className="d-flex gap-2">
+
+      <div className="d-flex gap-2 justify-content-end">
         <button
           type="button"
           className="btn btn-outline-secondary d-flex align-items-center"
@@ -106,12 +127,11 @@ const VariantConfigSection = ({ id, nextTab, prevTab }: Prop) => {
         </button>
         <button
           type="button"
-          className="btn d-flex align-items-center"
-          style={{ backgroundColor: "#6f42c1", color: "white" }}
+          className="btn btn-primary d-flex align-items-center gap-2 px-4 fw-semibold"
           onClick={nextTab}
         >
-          <span className="me-2">Tiếp tục</span>
-          <ArrowRight size={16} className="me-1" />
+          <span>Tiếp tục</span>
+          <ArrowRight size={16} />
           <span>Ảnh</span>
         </button>
       </div>
