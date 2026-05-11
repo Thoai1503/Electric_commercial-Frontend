@@ -1,11 +1,13 @@
+import axios from "axios";
 import { http } from "../api/http";
 import type { UserLogin, UserRegisterData, UserRespone } from "../type/User";
 
+const API_URL_BASE = import.meta.env.VITE_API_URL;
 export const userLoginService = async (loginState: UserLogin) => {
   try {
-    const { data } = await http.post<UserRespone>(
-      "/api/v1/auth/login",
-      loginState
+    const { data } = await axios.post<UserRespone>(
+      `${API_URL_BASE}/api/v1/auth/login`,
+      loginState,
     );
 
     if (!data.success) {
@@ -26,12 +28,12 @@ export const userLoginService = async (loginState: UserLogin) => {
 };
 
 export const userRegisterService = async (
-  submitdata: UserRegisterData
+  submitdata: UserRegisterData,
 ): Promise<UserRespone> => {
   try {
     const { data } = await http.post<UserRespone>(
       "/api/v1/auth/register",
-      submitdata
+      submitdata,
     );
     return data;
   } catch (error) {
