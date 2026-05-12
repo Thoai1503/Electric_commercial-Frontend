@@ -48,10 +48,10 @@ export const useLoginPage = () => {
           id: userData?.id ?? 0,
           email: userData?.email ?? "",
           name: userData?.name ?? "",
-          accessToken: accessToken,
-          refreshToken: data.refreshToken,
+          accessToken: accessToken ?? "",
+          refreshToken: data.refreshToken ?? "",
           role: userData?.role ?? null,
-        })
+        }),
       );
 
       console.log("Authen state: " + JSON.stringify(authState));
@@ -85,7 +85,7 @@ export const useLoginPage = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value: input } = e.target;
     console.log("Name :" + name);

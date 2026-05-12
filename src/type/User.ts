@@ -8,10 +8,17 @@ export interface UserDataRespone {
 
 export interface UserRespone {
   success: boolean;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: string;
+  message?: string;
+  code?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresIn?: string;
   user: UserDataRespone | null;
+  data?: {
+    id?: number;
+    email?: string;
+    status?: number;
+  };
 }
 
 export interface UserLogin {

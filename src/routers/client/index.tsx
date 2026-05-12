@@ -13,6 +13,7 @@ import OrderHistory from "../../page/client/OrderHistory";
 
 import ProductDetail from "../../page/client/ProductDetail";
 import MyProfile from "../../page/client/MyProfile";
+import VerifyEmail from "../../page/client/VerifyEmail";
 
 export const clientRoutes = [
   {
@@ -56,5 +57,9 @@ export const clientRoutes = [
   {
     path: "/register",
     element: <p>Register Page</p>,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmail />,
   },
 ];

@@ -41,6 +41,19 @@ export const userRegisterService = async (
   }
 };
 
+export const verifyEmailTokenService = async (
+  token: string,
+): Promise<UserRespone> => {
+  try {
+    const { data } = await http.post<UserRespone>("/api/v1/auth/verify-email", {
+      token,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const logout = async (): Promise<void> => {
   try {
     const result = await http.post("/api/v1/auth/logout");

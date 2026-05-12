@@ -21,6 +21,8 @@ const Login = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const errorParam = searchParams.get("error");
+  const registeredParam = searchParams.get("registered");
+  const messageParam = searchParams.get("message");
   const {
     handleChange,
     loginValue,
@@ -120,6 +122,22 @@ const Login = () => {
                         className="needs-validation"
                         noValidate
                       >
+                        {registeredParam === "1" && (
+                          <div
+                            className="alert alert-success d-flex align-items-center rounded-3 mb-4"
+                            role="alert"
+                          >
+                            <AlertCircle
+                              size={20}
+                              className="me-2 flex-shrink-0"
+                            />
+                            <div>
+                              {messageParam ||
+                                "Dang ky thanh cong. Vui long kiem tra email de xac thuc tai khoan."}
+                            </div>
+                          </div>
+                        )}
+
                         {(showError || errorParam) && (
                           <div
                             className="alert alert-danger login-alert d-flex align-items-center rounded-3 mb-4"
