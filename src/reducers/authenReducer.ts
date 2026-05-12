@@ -26,7 +26,7 @@ export const refreshToken = createAsyncThunk<
     const res = await axios.post(
       import.meta.env.VITE_API_URL + "/api/v1/auth/refresh_token",
       { refreshToken },
-      { withCredentials: true }
+      //    { withCredentials: true },
     );
 
     console.log("Token refreshed:", res.data);
@@ -35,7 +35,7 @@ export const refreshToken = createAsyncThunk<
     if (axios.isAxiosError(err)) {
       console.log("Error refreshing token:", err.response?.data);
       return rejectWithValue(
-        err.response?.data?.message || "Failed to refresh token"
+        err.response?.data?.message || "Failed to refresh token",
       );
     }
     console.log("Unexpected error:", err);
