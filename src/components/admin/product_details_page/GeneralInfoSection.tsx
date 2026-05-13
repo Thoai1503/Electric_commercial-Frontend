@@ -9,6 +9,7 @@ import { Editor } from "@tinymce/tinymce-react";
 
 import { useProductDetailPage } from "../../../module/admin/hook/product_detail_page";
 import type { Brand } from "../../../type/Brand";
+import { useEffect, useState } from "react";
 
 interface Prop {
   id: number;
@@ -32,6 +33,62 @@ const GeneralInfoSection = ({ id }: Prop) => {
     setBrandDropdownOpen,
     setCategoryDropdownOpen,
   } = useProductDetailPage(id);
+
+  const [initialContent, setInitialContent] = useState("<p>Loading...</p>");
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/product/${id}/content`,
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch content");
+        }
+
+        const result = await response.json();
+        setInitialContent(result.html || "<p>No content available</p>");
+      } catch (error: any) {
+        alert(error?.message || "Unable to load content");
+        setInitialContent("<p>Error loading content</p>");
+      }
+    };
+
+    fetchContent();
+  }, [id]);
+
+  const handleTemporarySave = async () => {
+    try {
+      const htmlContent = editorRef.current?.getContent?.() ?? "";
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/product/${id}/content`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            html: htmlContent,
+            locale: "vi",
+            change_note: "Save from admin editor",
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to save content");
+      }
+
+      const result = await response.json();
+      alert(
+        `Saved successfully. Version: ${result.version_number}, Draft ID: ${result.draft_version_id}`,
+      );
+    } catch (error: any) {
+      alert(error?.message || "Unable to save content");
+    }
+  };
 
   return (
     <>
@@ -158,38 +215,30 @@ const GeneralInfoSection = ({ id }: Prop) => {
         <div className="border rounded-3 overflow-hidden">
           <Editor
             apiKey="opbl478qvvrtoorhvqc4f7zei61txljv0gkj67k1ogzky57n"
-            initialValue="<p>Soan thao voi upload anh...</p>"
+            initialValue={initialContent}
+            onInit={(_evt, editor) => {
+              editorRef.current = editor;
+            }}
             init={{
               height: 460,
               menubar: true,
               plugins: "image media link code",
               toolbar:
                 "undo redo | bold italic | alignleft aligncenter alignright | image media link code",
-              images_upload_url: "http://localhost:5000/upload",
-              images_upload_handler: async (
-                blobInfo: any,
-                success: any,
-                failure: any,
-              ) => {
-                try {
-                  const formData = new FormData();
-                  formData.append("file", blobInfo.blob(), blobInfo.filename());
+              images_upload_url: `http://localhost:3000/api/product/${id}/content/upload`,
+              images_upload_handler: async (blobInfo: any) => {
+                const formData = new FormData();
+                formData.append("file", blobInfo.blob(), blobInfo.filename());
 
-                  const response = await fetch("http://localhost:5000/upload", {
-                    method: "POST",
-                    body: formData,
-                  });
+                const response = await fetch(
+                  `${import.meta.env.VITE_API_URL}/api/product/${id}/content/upload`,
+                  { method: "POST", body: formData },
+                );
 
-                  const json = await response.json();
-                  const imageUrl = json.url;
+                if (!response.ok) throw new Error("Upload failed");
 
-                  success(imageUrl);
-                  editorRef.current?.insertContent(
-                    `<img src="${imageUrl}" alt="${blobInfo.filename()}" />`,
-                  );
-                } catch (err: any) {
-                  failure("Upload that bai: " + err.message);
-                }
+                const json = await response.json();
+                return json.url;
               },
             }}
             onEditorChange={(newContent) => setContent(newContent)}
@@ -197,7 +246,14 @@ const GeneralInfoSection = ({ id }: Prop) => {
         </div>
       </div>
 
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          className="btn btn-outline-primary px-4 fw-semibold"
+          onClick={handleTemporarySave}
+        >
+          Luu
+        </button>
         <button
           type="button"
           className="btn btn-primary d-flex align-items-center gap-2 px-4 fw-semibold"
