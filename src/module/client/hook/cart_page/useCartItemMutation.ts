@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Cart } from "../../../../type/Cart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateCartItemQuantity } from "../../service/cart";
+import { removeCartItem, updateCartItemQuantity } from "../../service/cart";
 
 export const useCartItemMutation = (item: Cart) => {
   const [cartItem, setCartItem] = useState<Partial<Cart>>({
@@ -10,7 +10,7 @@ export const useCartItemMutation = (item: Cart) => {
   });
   const queryClient = useQueryClient();
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     e.preventDefault();
     alert("HandleChange");
@@ -40,5 +40,27 @@ export const useCartItemMutation = (item: Cart) => {
     },
   });
 
-  return { cartItem, handleChange, isPending, isSuccess };
+  const { isPending: isRemoving, mutate: removeItem } = useMutation({
+    mutationFn: (id: number) => removeCartItem(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart", item.user_id] });
+    },
+    onError: (error) => {
+      alert("Lỗi xoá sản phẩm khỏi giỏ hàng: " + error.message);
+    },
+  });
+
+  const handleRemove = () => {
+    if (!item.id) return;
+    removeItem(item.id);
+  };
+
+  return {
+    cartItem,
+    handleChange,
+    isPending,
+    isSuccess,
+    handleRemove,
+    isRemoving,
+  };
 };

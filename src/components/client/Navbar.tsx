@@ -40,10 +40,10 @@ const Navbar = () => {
     top: "100%",
     left: "0",
     minWidth: "200px",
-    backgroundColor: "#1a1a1a",
-    border: "1px solid #333",
+    backgroundColor: "#0f172a",
+    border: "1px solid #1e293b",
     borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0 12px 24px rgba(2, 6, 23, 0.4)",
     zIndex: 1000,
     opacity: 0,
     visibility: "hidden",
@@ -61,10 +61,10 @@ const Navbar = () => {
   const dropdownItemStyle: React.CSSProperties = {
     display: "block",
     padding: "10px 15px",
-    color: "#48d6f0ff",
+    color: "#bfdbfe",
     textDecoration: "none",
-    borderBottom: "1px solid #333",
-    transition: "background-color 0.2s ease",
+    borderBottom: "1px solid #1e293b",
+    transition: "background-color 0.2s ease, color 0.2s ease",
   };
 
   return (
@@ -97,63 +97,89 @@ const Navbar = () => {
         .nav-item {
           position: relative;
         }
+        .nav-link-main {
+          color: #bfdbfe;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 0.95rem;
+          transition: color 0.2s ease;
+        }
+        .nav-link-main:hover {
+          color: #60a5fa;
+        }
         .cart-button {
           display: inline-flex;
           align-items: center;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
+          gap: 0.6rem;
+          background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+          border: 1px solid #334155;
           border-radius: 50px;
-          padding: 0;
+          padding: 0.4rem 0.9rem 0.4rem 0.5rem;
           cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+          box-shadow:
+            inset 0 1px 0 rgba(148, 163, 184, 0.18),
+            0 8px 18px rgba(2, 6, 23, 0.35);
         }
         .cart-button:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+          border-color: #60a5fa;
+          box-shadow:
+            inset 0 1px 0 rgba(148, 163, 184, 0.22),
+            0 12px 24px rgba(2, 6, 23, 0.45);
         }
         .cart-button:active {
           transform: translateY(0);
         }
-        .cart-icon {
-          padding: 0.75rem 1rem;
-          color: white;
-          font-size: 1.1rem;
+        .cart-icon-wrap {
+          width: 34px;
+          height: 34px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(13, 110, 253, 0.18);
+          color: #93c5fd;
+        }
+        .cart-label {
+          color: #e2e8f0;
+          font-weight: 600;
+          font-size: 0.9rem;
+          letter-spacing: 0.01em;
         }
         .cart-count {
-          background: white;
-          color: #667eea;
-          font-weight: 600;
-          padding: 0.75rem 1.25rem;
-          border-radius: 50px;
-          margin-left: -5px;
+          background: #ef4444;
+          color: #ffffff;
+          font-weight: 700;
+          font-size: 0.75rem;
+          min-width: 22px;
+          height: 22px;
+          padding: 0 6px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #111827;
         }
         .login-button {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #0d6efd 0%, #1d4ed8 100%);
           border: none;
-          color: white;
+          color: #eff6ff;
           padding: 0.6rem 1.5rem;
           border-radius: 50px;
-          font-weight: 500;
+          font-weight: 600;
           transition: transform 0.2s, box-shadow 0.2s;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          box-shadow: 0 6px 18px rgba(13, 110, 253, 0.35);
           text-decoration: none;
           display: inline-block;
         }
         .login-button:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-          color: white;
-        }
-        .user-greeting {
-          color: white;
-          padding: 0.6rem 1rem;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 50px;
-          font-weight: 500;
+          box-shadow: 0 10px 24px rgba(13, 110, 253, 0.45);
+          color: #eff6ff;
         }
         .user-greeting-hover:hover {
-          background: rgba(255, 255, 255, 0.15) !important;
+          background: rgba(148, 163, 184, 0.2) !important;
           transform: translateY(-1px);
         }
         .user-profile-dropdown {
@@ -194,7 +220,7 @@ const Navbar = () => {
                 display: "flex",
                 alignItems: "center",
                 textDecoration: "none",
-                color: "#39c9e3ff",
+                color: "#bfdbfe",
               }}
             >
               <div
@@ -202,7 +228,7 @@ const Navbar = () => {
                   width: "40px",
                   height: "40px",
                   background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    "linear-gradient(135deg, #0d6efd 0%, #1d4ed8 100%)",
                   borderRadius: "8px",
                   display: "flex",
                   alignItems: "center",
@@ -222,7 +248,7 @@ const Navbar = () => {
               </div>
               <span
                 style={{
-                  color: "#48d6f0ff",
+                  color: "#bfdbfe",
                   fontWeight: "bold",
                   fontSize: "1.2rem",
                 }}
@@ -238,7 +264,7 @@ const Navbar = () => {
                 display: "none",
                 background: "none",
                 border: "none",
-                color: "#48d6f0ff",
+                color: "#93c5fd",
                 fontSize: "1.5rem",
                 cursor: "pointer",
               }}
@@ -279,14 +305,7 @@ const Navbar = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}
               >
-                <a
-                  href="/"
-                  style={{
-                    color: "#48d6f0ff",
-                    textDecoration: "none",
-                    fontWeight: "500",
-                  }}
-                >
+                <a href="/" className="nav-link-main">
                   Home
                 </a>
 
@@ -298,18 +317,14 @@ const Navbar = () => {
                 >
                   <a
                     href="/f/laptop"
+                    className="nav-link-main"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
                         toggleDropdown("topsale");
                       }
                     }}
-                    style={{
-                      color: "#48d6f0ff",
-                      cursor: "pointer",
-                      textDecoration: "none",
-                      fontWeight: "500",
-                    }}
+                    style={{ cursor: "pointer" }}
                   >
                     Top sale ▾
                   </a>
@@ -349,18 +364,14 @@ const Navbar = () => {
                 >
                   <a
                     href="/f/laptop"
+                    className="nav-link-main"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
                         toggleDropdown("special");
                       }
                     }}
-                    style={{
-                      color: "#48d6f0ff",
-                      cursor: "pointer",
-                      textDecoration: "none",
-                      fontWeight: "500",
-                    }}
+                    style={{ cursor: "pointer" }}
                   >
                     Special Price ▾
                   </a>
@@ -400,18 +411,14 @@ const Navbar = () => {
                 >
                   <a
                     href="/f/laptop"
+                    className="nav-link-main"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
                         toggleDropdown("newphones");
                       }
                     }}
-                    style={{
-                      color: "#48d6f0ff",
-                      cursor: "pointer",
-                      textDecoration: "none",
-                      fontWeight: "500",
-                    }}
+                    style={{ cursor: "pointer" }}
                   >
                     New Phones ▾
                   </a>
@@ -454,18 +461,14 @@ const Navbar = () => {
                 >
                   <a
                     href="/f/laptop"
+                    className="nav-link-main"
                     onClick={(e) => {
                       if (window.innerWidth <= 992) {
                         e.preventDefault();
                         toggleDropdown("blogs");
                       }
                     }}
-                    style={{
-                      color: "#48d6f0ff",
-                      cursor: "pointer",
-                      textDecoration: "none",
-                      fontWeight: "500",
-                    }}
+                    style={{ cursor: "pointer" }}
                   >
                     Blogs ▾
                   </a>
@@ -497,14 +500,7 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <a
-                  href="/cart"
-                  style={{
-                    color: "#48d6f0ff",
-                    textDecoration: "none",
-                    fontWeight: "500",
-                  }}
-                >
+                <a href="/cart" className="nav-link-main">
                   Cart
                 </a>
 
@@ -513,11 +509,11 @@ const Navbar = () => {
                   type="text"
                   className="search-input-mobile"
                   style={{
-                    backgroundColor: "#454545",
-                    color: "white",
+                    backgroundColor: "#0f172a",
+                    color: "#e2e8f0",
                     borderRadius: "25px",
                     padding: "0.6rem 1.2rem",
-                    border: "none",
+                    border: "1px solid #1e293b",
                     outline: "none",
                     minWidth: "200px",
                   }}
@@ -537,7 +533,26 @@ const Navbar = () => {
                     textDecoration: "none",
                   }}
                 >
-                  <span className="cart-icon">🛒</span>
+                  <span className="cart-icon-wrap" aria-hidden="true">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 4H5L7.2 14.2C7.29 14.62 7.52 15 7.86 15.28C8.2 15.56 8.62 15.71 9.06 15.7H18.4C18.82 15.7 19.23 15.56 19.57 15.29C19.9 15.02 20.13 14.65 20.23 14.24L21.5 8.9C21.56 8.66 21.57 8.4 21.51 8.16C21.44 7.92 21.3 7.7 21.1 7.55C20.9 7.39 20.66 7.31 20.4 7.3H6.1"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <circle cx="9.5" cy="19" r="1.35" fill="currentColor" />
+                      <circle cx="17" cy="19" r="1.35" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span className="cart-label">Giỏ hàng</span>
                   <div className="cart-count">{CartList?.length || 0}</div>
                 </a>
 
@@ -560,7 +575,8 @@ const Navbar = () => {
                         gap: "0.5rem",
                         cursor: "pointer",
                         padding: "0.6rem 1rem",
-                        background: "rgba(255, 255, 255, 0.1)",
+                        background: "rgba(148, 163, 184, 0.14)",
+                        border: "1px solid rgba(148, 163, 184, 0.24)",
                         borderRadius: "50px",
                         transition: "all 0.3s ease",
                       }}
@@ -572,7 +588,7 @@ const Navbar = () => {
                           height: "32px",
                           borderRadius: "50%",
                           background:
-                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                            "linear-gradient(135deg, #0d6efd 0%, #1d4ed8 100%)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -583,10 +599,10 @@ const Navbar = () => {
                       >
                         {user?.name?.charAt(0).toUpperCase()}
                       </div>
-                      <span style={{ color: "white", fontWeight: "500" }}>
+                      <span style={{ color: "#eff6ff", fontWeight: "600" }}>
                         {user.name}
                       </span>
-                      <span style={{ color: "#48d6f0ff", fontSize: "0.8rem" }}>
+                      <span style={{ color: "#93c5fd", fontSize: "0.8rem" }}>
                         ▾
                       </span>
                     </div>
@@ -610,7 +626,7 @@ const Navbar = () => {
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
                             e.target as HTMLAnchorElement
-                          ).style.backgroundColor = "#333")
+                          ).style.backgroundColor = "#1e293b")
                         }
                         onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
@@ -627,7 +643,7 @@ const Navbar = () => {
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
                             e.target as HTMLAnchorElement
-                          ).style.backgroundColor = "#333")
+                          ).style.backgroundColor = "#1e293b")
                         }
                         onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
@@ -644,7 +660,7 @@ const Navbar = () => {
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
                             e.target as HTMLAnchorElement
-                          ).style.backgroundColor = "#333")
+                          ).style.backgroundColor = "#1e293b")
                         }
                         onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
@@ -661,7 +677,7 @@ const Navbar = () => {
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
                             e.target as HTMLAnchorElement
-                          ).style.backgroundColor = "#333")
+                          ).style.backgroundColor = "#1e293b")
                         }
                         onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
@@ -686,7 +702,7 @@ const Navbar = () => {
                         onMouseOver={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((
                             e.target as HTMLAnchorElement
-                          ).style.backgroundColor = "#333")
+                          ).style.backgroundColor = "#1e293b")
                         }
                         onMouseOut={(e: MouseEvent<HTMLAnchorElement>) =>
                           ((

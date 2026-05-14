@@ -7,6 +7,7 @@ import {
   // cilCursor,
   // cilDescription,
   cilDrop,
+  cilFile,
   // cilExternalLink,
   // cilNotes,
   cilPencil,
@@ -83,6 +84,11 @@ const _nav = [
       {
         component: CNavItem,
         name: "Sản phẩm",
+        to: "./products",
+      },
+      {
+        component: CNavItem,
+        name: "Quản lý nội dung",
         to: "./products",
       },
       // {
@@ -206,6 +212,20 @@ const _nav = [
       //     text: "PRO",
       //   },
       // },
+    ],
+  },
+
+  {
+    component: CNavGroup,
+    name: "Quản lý Content",
+    to: "./products",
+    icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Đi đến danh sách sản phẩm",
+        to: "./products",
+      },
     ],
   },
   // {

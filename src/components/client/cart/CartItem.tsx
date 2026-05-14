@@ -7,7 +7,8 @@ interface Prop {
 }
 
 const CartItem = ({ item }: Prop) => {
-  const { cartItem, handleChange, isPending } = useCartItemMutation(item);
+  const { cartItem, handleChange, isPending, handleRemove, isRemoving } =
+    useCartItemMutation(item);
 
   return (
     <div key={item.id} className="cart-item pb-3 mb-3">
@@ -19,7 +20,7 @@ const CartItem = ({ item }: Prop) => {
             alt={item?.variant?.name}
           />
         </div>
-        <div className="col-lg-6">
+        <div className="col-lg-5">
           <div className="row">
             <p className="cart-item title mb-0 text">{item?.variant?.name}</p>{" "}
             <span
@@ -70,6 +71,17 @@ const CartItem = ({ item }: Prop) => {
               đ
             </strong>
           </span>
+        </div>
+
+        <div className="col-lg-1 d-flex justify-content-end">
+          <button
+            type="button"
+            className="item-remove-btn"
+            onClick={handleRemove}
+            disabled={isRemoving}
+          >
+            {isRemoving ? "Đang xoá..." : "Xoá"}
+          </button>
         </div>
       </div>
     </div>

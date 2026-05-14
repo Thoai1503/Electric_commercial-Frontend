@@ -5,6 +5,7 @@ import ProductDetails from "../../page/admin/ProductDetailsPage";
 import ProductPage from "../../page/admin/ProductPage";
 import OrderPage from "../../page/admin/OrderPage";
 import OrderDetailPage from "../../page/admin/OrderDetailPage";
+import ContentManagementPage from "../../page/admin/ContentManagementPage";
 
 const Dashboard = React.lazy(() => import("../../page/admin/Dashboard"));
 // const Product = React.lazy(
@@ -19,4 +20,9 @@ export const adminRoutes = [
   { path: "dashboard", element: <Navigate to="/admin" /> },
   { path: "orders", element: <OrderPage /> },
   { path: "category/create", element: <AddNewCatePage /> },
+  { path: "content-management/:productId", element: <ContentManagementPage /> },
+  {
+    path: "products/:productId/content",
+    element: <ContentManagementPage />,
+  },
 ];

@@ -1,22 +1,33 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import type { RootState } from "../../store/store";
-import { clearCart } from "../../reducers/cartReducer";
+import { clearCart, removeFromCart } from "../../reducers/cartReducer";
 import axios from "axios";
 import useCartPage from "../../module/client/hook/cart_page/useCartPage";
 import CartItem from "../../components/client/cart/CartItem";
 import Breadcrumbs from "../../components/client/breadcrumbs/BreadCrumbs";
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { getImageUrl } from "../../utils/imageHelper";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { removeCartItem } from "../../module/client/service/cart";
+import {
+  CreditCard,
+  ReceiptText,
+  ShieldCheck,
+  ShoppingCart,
+  Trash2,
+} from "lucide-react";
 
 const CartPage = () => {
   const user = JSON.parse(localStorage.getItem("user")!);
   const { CartList, totalPrice, handleChange } = useCartPage(user?.id);
   const isLoggedIn = !!user;
+  const [removingId, setRemovingId] = useState<number | null>(null);
 
   const cartList = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const totalGuestPrice = useMemo(
     () =>
       cartList.reduce(
@@ -25,6 +36,103 @@ const CartPage = () => {
       ),
     [cartList],
   );
+
+  const cartPageStyles = `
+    .cart-surface {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+    .cart-summary {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+    .cart-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+      color: #0f172a;
+    }
+    .cart-clear-btn {
+      border: none;
+      background: transparent;
+      color: #0d6efd;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0;
+    }
+    .cart-clear-btn:hover {
+      color: #1d4ed8;
+    }
+    .summary-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #0f172a;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      color: #334155;
+    }
+    .summary-row.total {
+      color: #0d6efd;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+    .vat-note {
+      font-size: 0.84rem;
+      color: #64748b;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .checkout-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      width: 100%;
+      margin-top: 0.85rem;
+      font-weight: 600;
+    }
+    .item-remove-btn {
+      border: none;
+      background: transparent;
+      color: #ef4444;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0;
+    }
+    .item-remove-btn:hover {
+      color: #dc2626;
+    }
+  `;
+
+  const { mutate: removeServerItem } = useMutation({
+    mutationFn: (id: number) => removeCartItem(id),
+    onMutate: (id) => {
+      setRemovingId(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart", user?.id] });
+    },
+    onSettled: () => {
+      setRemovingId(null);
+    },
+  });
 
   const checkOut = async () => {
     const user = localStorage.getItem("user");
@@ -44,32 +152,31 @@ const CartPage = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="container">
+      <div className="container mt-3 mt-lg-5 mb-5">
+        <style>{cartPageStyles}</style>
         <Breadcrumbs />
         <div className="row mt-4">
           <div className="col-12 col-lg-8 mb-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5>
+              <h5 className="cart-title">
+                <ShoppingCart size={20} className="text-primary" />
                 <strong>Giỏ hàng ({cartList.length})</strong>
               </h5>
-              <p
-                style={{
-                  fontSize: "13px",
-                  cursor: "pointer",
-                  color: "#63b6c5ff",
-                }}
+              <button
+                className="cart-clear-btn"
                 onClick={() => dispatch(clearCart())}
               >
+                <Trash2 size={15} />
                 Xoá tất cả
-              </p>
+              </button>
             </div>
-            <div className="bg-white p-3 rounded">
+            <div className="cart-surface p-3 p-lg-4 rounded-4">
               {/* Header - Desktop only */}
               <div
                 className="row mb-3 d-none d-lg-flex"
                 style={{ borderBottom: "1px solid lightgray" }}
               >
-                <div className="col-lg-7 text">
+                <div className="col-lg-6 text">
                   <strong>Tên sản phẩm</strong>
                 </div>
                 <div className="col-lg-2 text">
@@ -80,6 +187,9 @@ const CartPage = () => {
                 </div>
                 <div className="col-lg-1 text">
                   <strong>Thành tiền</strong>
+                </div>
+                <div className="col-lg-1 text-end">
+                  <strong>Xoá</strong>
                 </div>
               </div>
 
@@ -97,7 +207,7 @@ const CartPage = () => {
                           alt={item?.variant?.name}
                         />
                       </div>
-                      <div className="col-lg-5">
+                      <div className="col-lg-4">
                         <div className="row">
                           <p className="cart-item title mb-0 text">
                             {item?.variant?.name}
@@ -174,6 +284,16 @@ const CartPage = () => {
                           </strong>
                         </span>
                       </div>
+                      <div className="col-lg-1 d-flex justify-content-end">
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => dispatch(removeFromCart(item.id!))}
+                          title="Xoá sản phẩm"
+                        >
+                          Xoá
+                        </button>
+                      </div>
                     </div>
 
                     {/* Mobile Layout */}
@@ -242,6 +362,15 @@ const CartPage = () => {
                           </strong>
                         </div>
                       </div>
+                      <div className="d-flex justify-content-end mt-2">
+                        <button
+                          type="button"
+                          className="item-remove-btn"
+                          onClick={() => dispatch(removeFromCart(item.id!))}
+                        >
+                          Xoá
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -250,30 +379,37 @@ const CartPage = () => {
           </div>
 
           <div className="col-12 col-lg-4">
-            <div className="p-3 bg-white rounded">
-              <p>
-                <strong>Thanh toán</strong>
+            <div className="cart-summary p-3 p-lg-4 rounded-4">
+              <p className="summary-title">
+                <ReceiptText size={18} className="text-primary" />
+                Thanh toán
               </p>
-              <div className="d-flex justify-content-between align-items-center">
-                <h6>Tạm tính:</h6>
-                <p>{totalGuestPrice.toLocaleString("vi-VN")}đ</p>
+              <div className="summary-row">
+                <h6 className="mb-0">Tạm tính:</h6>
+                <p className="mb-0">
+                  {totalGuestPrice.toLocaleString("vi-VN")}đ
+                </p>
               </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <h6>Thành tiền:</h6>
-                <h6 style={{ color: "#1586ddff" }}>
+              <div className="summary-row total">
+                <h6 className="mb-0 d-inline-flex align-items-center gap-1">
+                  <CreditCard size={16} /> Thành tiền:
+                </h6>
+                <h6 className="mb-0">
                   {totalGuestPrice.toLocaleString("vi-VN")}đ
                 </h6>
               </div>
 
               <hr />
-              <p style={{ fontSize: "14px", color: "gray" }}>
+              <p className="vat-note mb-0">
+                <ShieldCheck size={16} className="text-success" />
                 Giá đã bao gồm VAT (nếu có)
               </p>
 
               <button
                 onClick={checkOut}
-                className="btn btn-outline-primary w-100 mt-3"
+                className="btn btn-primary checkout-btn"
               >
+                <CreditCard size={16} />
                 Thanh toán
               </button>
             </div>
@@ -285,31 +421,30 @@ const CartPage = () => {
 
   return (
     <div className="container mt-3 mt-lg-5 mb-5">
+      <style>{cartPageStyles}</style>
       <Breadcrumbs />
       <div className="row mt-4">
         <div className="col-12 col-lg-8 mb-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5>
+            <h5 className="cart-title">
+              <ShoppingCart size={20} className="text-primary" />
               <strong>Giỏ hàng ({CartList?.length})</strong>
             </h5>
-            <p
-              style={{
-                fontSize: "13px",
-                cursor: "pointer",
-                color: "#63b6c5ff",
-              }}
+            <button
+              className="cart-clear-btn"
               onClick={() => dispatch(clearCart())}
             >
+              <Trash2 size={15} />
               Xoá tất cả
-            </p>
+            </button>
           </div>
-          <div className="bg-white p-3 rounded">
+          <div className="cart-surface p-3 p-lg-4 rounded-4">
             {/* Header - Desktop only */}
             <div
               className="row mb-3 d-none d-lg-flex"
               style={{ borderBottom: "1px solid lightgray" }}
             >
-              <div className="col-lg-7 text">
+              <div className="col-lg-6 text">
                 <strong>Tên sản phẩm</strong>
               </div>
               <div className="col-lg-2 text">
@@ -320,6 +455,9 @@ const CartPage = () => {
               </div>
               <div className="col-lg-1 text">
                 <strong>Thành tiền</strong>
+              </div>
+              <div className="col-lg-1 text-end">
+                <strong>Xoá</strong>
               </div>
             </div>
 
@@ -397,6 +535,16 @@ const CartPage = () => {
                         </strong>
                       </div>
                     </div>
+                    <div className="d-flex justify-content-end mt-2">
+                      <button
+                        type="button"
+                        className="item-remove-btn"
+                        onClick={() => item.id && removeServerItem(item.id)}
+                        disabled={removingId === item.id}
+                      >
+                        {removingId === item.id ? "Đang xoá..." : "Xoá"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -405,26 +553,31 @@ const CartPage = () => {
         </div>
 
         <div className="col-12 col-lg-4">
-          <div className="p-3 bg-white rounded">
-            <p>
-              <strong>Thanh toán</strong>
+          <div className="cart-summary p-3 p-lg-4 rounded-4">
+            <p className="summary-title">
+              <ReceiptText size={18} className="text-primary" />
+              Thanh toán
             </p>
-            <div className="d-flex justify-content-between align-items-center">
-              <h6>Tạm tính:</h6>
-              <p>{totalPrice?.toLocaleString("vi-VN") || 0}đ</p>
+            <div className="summary-row">
+              <h6 className="mb-0">Tạm tính:</h6>
+              <p className="mb-0">
+                {totalPrice?.toLocaleString("vi-VN") || 0}đ
+              </p>
             </div>
-            <div className="d-flex justify-content-between align-items-center">
-              <h6>Thành tiền:</h6>
-              <h6 style={{ color: "#1586ddff" }}>
-                {totalPrice?.toLocaleString("vi-VN")}đ
+            <div className="summary-row total">
+              <h6 className="mb-0 d-inline-flex align-items-center gap-1">
+                <CreditCard size={16} /> Thành tiền:
               </h6>
+              <h6 className="mb-0">{totalPrice?.toLocaleString("vi-VN")}đ</h6>
             </div>
             <hr />
-            <p style={{ fontSize: "14px", color: "gray" }}>
+            <p className="vat-note mb-0">
+              <ShieldCheck size={16} className="text-success" />
               Giá đã bao gồm VAT (nếu có)
             </p>
 
-            <Link to="/checkout" className="btn btn-outline-primary w-100 mt-3">
+            <Link to="/checkout" className="btn btn-primary checkout-btn">
+              <CreditCard size={16} />
               Thanh toán
             </Link>
           </div>

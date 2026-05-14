@@ -127,7 +127,7 @@ const Menu = () => {
 
   return (
     <div
-      className="menu-container mt-5 mr-2"
+      className="menu-container mt-3 mr-2"
       onMouseLeave={() => setHoveredId(null)} // khi rời toàn bộ container thì ẩn panel
       style={{ borderColor: "white" }}
     >
