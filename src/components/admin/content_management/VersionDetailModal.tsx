@@ -16,6 +16,7 @@ const VersionDetailModal = ({ productId, versionId, onClose }: Props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<"html" | "preview">("html");
 
   useEffect(() => {
     fetchVersionDetail();
@@ -120,47 +121,98 @@ const VersionDetailModal = ({ productId, versionId, onClose }: Props) => {
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <label className="form-label fw-semibold text-muted small">
-                        HTML Content
+                        HTML Content & Preview
                       </label>
-                      <button
-                        className={`btn btn-sm ${
-                          copied ? "btn-success" : "btn-outline-secondary"
-                        }`}
-                        onClick={handleCopy}
-                      >
-                        {copied ? (
-                          <>
-                            <Check size={14} className="me-1" />
-                            Copied!
-                          </>
-                        ) : (
-                          <>
-                            <Copy size={14} className="me-1" />
-                            Copy
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div
-                      className="bg-light p-3 rounded border border-secondary-subtle"
-                      style={{
-                        maxHeight: "400px",
-                        overflowY: "auto",
-                        fontFamily: "monospace",
-                        fontSize: "0.85rem",
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      {version.html || (
-                        <span className="text-muted">No content</span>
+                      {activeTab === "html" && (
+                        <button
+                          className={`btn btn-sm ${
+                            copied ? "btn-success" : "btn-outline-secondary"
+                          }`}
+                          onClick={handleCopy}
+                        >
+                          {copied ? (
+                            <>
+                              <Check size={14} className="me-1" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={14} className="me-1" />
+                              Copy
+                            </>
+                          )}
+                        </button>
                       )}
                     </div>
+
+                    <ul className="nav nav-tabs mb-3" role="tablist">
+                      <li className="nav-item" role="presentation">
+                        <button
+                          type="button"
+                          className={`nav-link ${
+                            activeTab === "html" ? "active" : ""
+                          }`}
+                          onClick={() => setActiveTab("html")}
+                        >
+                          HTML Code
+                        </button>
+                      </li>
+                      <li className="nav-item" role="presentation">
+                        <button
+                          type="button"
+                          className={`nav-link ${
+                            activeTab === "preview" ? "active" : ""
+                          }`}
+                          onClick={() => setActiveTab("preview")}
+                        >
+                          Preview
+                        </button>
+                      </li>
+                    </ul>
+
+                    {activeTab === "html" ? (
+                      <div
+                        className="bg-light p-3 rounded border border-secondary-subtle"
+                        style={{
+                          maxHeight: "400px",
+                          overflowY: "auto",
+                          fontFamily: "monospace",
+                          fontSize: "0.85rem",
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {version.html || (
+                          <span className="text-muted">No content</span>
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        className="bg-white rounded border border-secondary-subtle"
+                        style={{ height: "400px", overflow: "hidden" }}
+                      >
+                        {version.html ? (
+                          <iframe
+                            title="Rendered content preview"
+                            srcDoc={version.html}
+                            sandbox=""
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              border: "0",
+                              background: "#fff",
+                            }}
+                          />
+                        ) : (
+                          <div className="p-3 text-muted">No preview</div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className="alert alert-info small">
-                    <strong>Preview:</strong> The content above is the raw HTML.
-                    This will be rendered on the frontend.
+                    <strong>Preview:</strong> Left side is raw HTML code, right
+                    side is rendered output.
                   </div>
                 </>
               ) : null}

@@ -1,4 +1,5 @@
-import { ArrowLeft, ArrowRight, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, ArrowRight, ChevronDown, Plus, SlidersHorizontal } from "lucide-react";
 
 import { useAttributeConfigSection } from "../../../module/admin/hook/product_detail_page/useAttributeConfigSection";
 import CustomInput from "./CustomInput/CustomInput";
@@ -12,6 +13,7 @@ interface Prop {
 const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
   const { nonVariantProductAttributes, handleSubmit, product } =
     useAttributeConfigSection(id);
+  const [showNewAttributeRow, setShowNewAttributeRow] = useState(false);
 
   if (!product) {
     return (
@@ -35,7 +37,7 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
 
       <div className="card border-0 shadow-sm mb-4">
         <div className="card-body p-4">
-          {nonVariantProductAttributes?.map((item) => {
+          {nonVariantProductAttributes?.map((item, index) => {
             const vl =
               item.value_decimal ||
               item.value_int ||
@@ -47,18 +49,112 @@ const AttributeConfigSestion = ({ id, nextTab, prevTab }: Prop) => {
               item.value_text != null;
             const attribute_value_id = item.attribute_value_id;
 
+            const isLastItem =
+              index === (nonVariantProductAttributes?.length || 0) - 1;
+
             return (
-              <div key={item.id} className="mb-4">
-                <CustomInput
-                  item={item}
-                  isHavingValuable={isHavingValuable}
-                  vl={vl}
-                  handleSubmit={handleSubmit}
-                  attribute_value_id={attribute_value_id}
-                />
+              <div
+                key={item.id}
+                className="mb-4 d-flex align-items-start gap-2"
+              >
+                <div className="flex-grow-1">
+                  <CustomInput
+                    item={item}
+                    isHavingValuable={isHavingValuable}
+                    vl={vl}
+                    handleSubmit={handleSubmit}
+                    attribute_value_id={attribute_value_id}
+                  />
+                </div>
+                {isLastItem && (
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    title="Thêm thuộc tính mới"
+                    onClick={() => setShowNewAttributeRow(true)}
+                  >
+                    <Plus size={16} />
+                  </button>
+                )}
               </div>
             );
           })}
+
+          {showNewAttributeRow && (
+            <div className="row mb-3 align-items-center">
+              {/* <div className="col-2">
+                <label className="form-label mb-0">Thuộc tính mới:</label>
+              </div> */}
+              <div className="col-2">
+                {/* <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nhập tên thuộc tính"
+                /> */}
+                  <div className="position-relative flex-grow-1">
+            <button
+              className="btn btn-light border w-100 text-start d-flex justify-content-between align-items-center "
+              type="button"
+          //    onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+              style={{ minHeight: "48px", color: "#334155" }}
+            >
+              <span>Nhập tên thuộc tính</span>
+              <ChevronDown size={16} />
+            </button>
+            {/* {categoryDropdownOpen && (
+              <div
+                className="position-absolute w-100 mt-1"
+                style={{ zIndex: 1050 }}
+              >
+                <ul className="list-group shadow">
+                  {categories?.map((category: any) => (
+                    <li
+                      key={category.id}
+                      className="list-group-item list-group-item-action"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <button
+                        className="btn btn-link text-decoration-none p-0 w-100 text-start text-dark"
+                        onClick={() => {
+                          setSelectedCategory({
+                            id: category.id,
+                            name: category.text,
+                          });
+                          setCategoryDropdownOpen(false);
+                        }}
+                      >
+                        {category.text}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )} */}
+            <small className="text-muted mt-2 d-inline-block">
+              Du lieu lay tu cay danh muc hien co.
+            </small>
+          </div>
+              </div>
+              :
+              <div className="col-4" style={{ width: "480px" }}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nhập giá trị thuộc tính"
+                  width={10}
+                />
+              </div>
+              <div className="col-2">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  disabled
+                >
+                  Lưu
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

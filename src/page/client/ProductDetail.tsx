@@ -196,15 +196,15 @@ const ProductDetail = () => {
                 <h5 className="card-title fw-bold mb-0">Thông số kỹ thuật</h5>
               </div>
               <div className="card-body">
-                <table className="table table-sm table-bordered mb-0">
+                <table className="table table-sm  mb-0">
                   <tbody>
                     {variant_attributes?.map((attr) => (
                       <tr key={attr.attribute.id}>
                         <th
-                          className="text-capitalize bg-light"
+                          className="text-capitalize"
                           style={{ width: "30%" }}
                         >
-                          {attr.attribute.name}
+                          {attr.attribute.name} :
                         </th>
                         <td>{attr.attribute_value?.value}</td>
                       </tr>
@@ -439,7 +439,7 @@ const ProductDetail = () => {
 
       {/* Product Details Sections */}
       <div className="row g-4 mb-5">
-        <div className="col-12">
+        <div className="col-7">
           {/* Description from CMS */}
           {publishedContent?.html && (
             <div className="card border-0 shadow-sm mb-4">

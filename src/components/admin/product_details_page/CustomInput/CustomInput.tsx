@@ -24,7 +24,7 @@ const CustomInput = ({
     //   isHavingValuable ? vl : "",
   });
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ): void => {
     const { name, value } = e.target;
     setSubmitData((prev) => ({
