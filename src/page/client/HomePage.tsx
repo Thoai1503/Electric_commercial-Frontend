@@ -59,8 +59,9 @@ const Home = () => {
     isPending,
     isPendingList,
     isPendingUpdateCart,
+    updatingCartItemId,
+    addingVariantId,
     handleClickChange,
-    loading,
     addToCartForAuthenticatedUser,
     pcVariants,
     keyboards,
@@ -84,7 +85,7 @@ const Home = () => {
   );
   console.log(phone);
 
-  const isProductLoading = isPending || isPendingList || loading;
+  const isProductLoading = isPending || isPendingList;
 
   const [activeFilter, setActiveFilter] = useState<string>("*");
 
@@ -249,13 +250,6 @@ const Home = () => {
           border-color: #0d6efd;
           color: #0d6efd;
         }
-        .home-loading-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(15, 23, 42, 0.25);
-          backdrop-filter: blur(2px);
-          z-index: 9999;
-        }
         .home-product-title {
           font-size: 1.15rem;
           font-weight: 700;
@@ -283,13 +277,6 @@ const Home = () => {
           }
         }
       `}</style>
-      {isPendingUpdateCart && (
-        <div className="home-loading-overlay d-flex justify-content-center align-items-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
       <div
         style={{ opacity: isPending && isPendingList ? 0.3 : 1 }}
         className="home-shell mt-2"
@@ -512,7 +499,19 @@ const Home = () => {
                                           >
                                             -
                                           </div>
-                                          <div>{item.cart.quantity}</div>
+                                          <div>
+                                            {isPendingUpdateCart &&
+                                            updatingCartItemId ===
+                                              item.cart.id ? (
+                                              <span
+                                                className="spinner-border spinner-border-sm text-primary"
+                                                role="status"
+                                                aria-hidden="true"
+                                              />
+                                            ) : (
+                                              item.cart.quantity
+                                            )}
+                                          </div>
                                           <div
                                             className="increase-btn"
                                             onClick={(e) => {
@@ -545,7 +544,19 @@ const Home = () => {
                                           >
                                             -
                                           </div>
-                                          <div>{item.cart.quantity}</div>
+                                          <div>
+                                            {isPendingUpdateCart &&
+                                            updatingCartItemId ===
+                                              item.cart.id ? (
+                                              <span
+                                                className="spinner-border spinner-border-sm text-primary"
+                                                role="status"
+                                                aria-hidden="true"
+                                              />
+                                            ) : (
+                                              item.cart.quantity
+                                            )}
+                                          </div>
                                           <div
                                             className="increase-btn"
                                             onClick={(e) => {
@@ -578,9 +589,18 @@ const Home = () => {
                                           type="button"
                                           data-mdb-button-init
                                           data-mdb-ripple-init
+                                          disabled={addingVariantId === item.id}
                                           className="btn btn-primary btn-sm w-100 home-btn-pill"
                                         >
-                                          Thêm vào giỏ
+                                          {addingVariantId === item.id ? (
+                                            <span
+                                              className="spinner-border spinner-border-sm"
+                                              role="status"
+                                              aria-hidden="true"
+                                            />
+                                          ) : (
+                                            "Thêm vào giỏ"
+                                          )}
                                         </button>
                                       )}
                                     </div>
@@ -776,7 +796,18 @@ const Home = () => {
                                   >
                                     -
                                   </div>
-                                  <div>{item.cart.quantity}</div>
+                                  <div>
+                                    {isPendingUpdateCart &&
+                                    updatingCartItemId === item.cart.id ? (
+                                      <span
+                                        className="spinner-border spinner-border-sm text-primary"
+                                        role="status"
+                                        aria-hidden="true"
+                                      />
+                                    ) : (
+                                      item.cart.quantity
+                                    )}
+                                  </div>
                                   <div
                                     className="increase-btn"
                                     onClick={(e) => {
@@ -808,9 +839,18 @@ const Home = () => {
                                   type="button"
                                   data-mdb-button-init
                                   data-mdb-ripple-init
+                                  disabled={addingVariantId === item.id}
                                   className="btn btn-primary btn-sm w-100 home-btn-pill"
                                 >
-                                  Thêm vào giỏ
+                                  {addingVariantId === item.id ? (
+                                    <span
+                                      className="spinner-border spinner-border-sm"
+                                      role="status"
+                                      aria-hidden="true"
+                                    />
+                                  ) : (
+                                    "Thêm vào giỏ"
+                                  )}
                                 </button>
                               )}
                             </div>
@@ -1030,7 +1070,19 @@ const Home = () => {
                                           >
                                             -
                                           </div>
-                                          <div>{item.cart.quantity}</div>
+                                          <div>
+                                            {isPendingUpdateCart &&
+                                            updatingCartItemId ===
+                                              item.cart.id ? (
+                                              <span
+                                                className="spinner-border spinner-border-sm text-primary"
+                                                role="status"
+                                                aria-hidden="true"
+                                              />
+                                            ) : (
+                                              item.cart.quantity
+                                            )}
+                                          </div>
                                           <div
                                             className="increase-btn"
                                             onClick={(e) => {
@@ -1063,7 +1115,19 @@ const Home = () => {
                                           >
                                             -
                                           </div>
-                                          <div>{item.cart.quantity}</div>
+                                          <div>
+                                            {isPendingUpdateCart &&
+                                            updatingCartItemId ===
+                                              item.cart.id ? (
+                                              <span
+                                                className="spinner-border spinner-border-sm text-primary"
+                                                role="status"
+                                                aria-hidden="true"
+                                              />
+                                            ) : (
+                                              item.cart.quantity
+                                            )}
+                                          </div>
                                           <div
                                             className="increase-btn"
                                             onClick={(e) => {
@@ -1095,9 +1159,18 @@ const Home = () => {
                                           type="button"
                                           data-mdb-button-init
                                           data-mdb-ripple-init
+                                          disabled={addingVariantId === item.id}
                                           className="btn btn-primary btn-sm w-100 home-btn-pill"
                                         >
-                                          Thêm vào giỏ
+                                          {addingVariantId === item.id ? (
+                                            <span
+                                              className="spinner-border spinner-border-sm"
+                                              role="status"
+                                              aria-hidden="true"
+                                            />
+                                          ) : (
+                                            "Thêm vào giỏ"
+                                          )}
                                         </button>
                                       )}
                                     </div>
@@ -1260,7 +1333,18 @@ const Home = () => {
                                 >
                                   -
                                 </div>
-                                <div>{item.cart.quantity}</div>
+                                <div>
+                                  {isPendingUpdateCart &&
+                                  updatingCartItemId === item.cart.id ? (
+                                    <span
+                                      className="spinner-border spinner-border-sm text-primary"
+                                      role="status"
+                                      aria-hidden="true"
+                                    />
+                                  ) : (
+                                    item.cart.quantity
+                                  )}
+                                </div>
                                 <div
                                   className="increase-btn"
                                   onClick={(e) => {
@@ -1292,9 +1376,18 @@ const Home = () => {
                                 type="button"
                                 data-mdb-button-init
                                 data-mdb-ripple-init
+                                disabled={addingVariantId === item.id}
                                 className="btn btn-primary btn-sm w-100 home-btn-pill"
                               >
-                                Thêm vào giỏ
+                                {addingVariantId === item.id ? (
+                                  <span
+                                    className="spinner-border spinner-border-sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  "Thêm vào giỏ"
+                                )}
                               </button>
                             )}
                           </div>

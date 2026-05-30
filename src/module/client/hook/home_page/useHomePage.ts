@@ -5,7 +5,7 @@ import type { RootState, AppDispatch } from "../../../../store/store";
 import { productVariantQuery } from "../../query/productVariant";
 import type { Cart } from "../../../../type/Cart";
 import { addToCartAsync } from "../../../../reducers/cartReducer";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { updateCartItemQuantity } from "../../service/cart";
 
 export const useHomePage = (
@@ -35,9 +35,11 @@ export const useHomePage = (
     productVariantQuery.list({ category: "pc---may-tinh-ban" }),
   );
   const loading = useSelector((state: RootState) => state.cart.loading);
+  const [addingVariantId, setAddingVariantId] = useState<number | null>(null);
 
   const addToCartForAuthenticatedUser = useCallback(
     async (cart: Cart) => {
+      setAddingVariantId(cart.variant_id);
       try {
         const result = await dispatch(addToCartAsync(cart)).unwrap();
 
@@ -53,6 +55,8 @@ export const useHomePage = (
         // Handles rejection from the thunk
         alert(typeof err === "string" ? err : "Không thể thêm sản phẩm");
         return { success: false, error: err };
+      } finally {
+        setAddingVariantId(null);
       }
     },
     [dispatch, queryClient, user_id],
@@ -61,6 +65,9 @@ export const useHomePage = (
     id: number;
     quantity: number;
   }
+  const [updatingCartItemId, setUpdatingCartItemId] = useState<number | null>(
+    null,
+  );
   const {
     isPending: isPendingUpdateCart,
 
@@ -68,6 +75,9 @@ export const useHomePage = (
   } = useMutation({
     mutationFn: ({ id, quantity }: MutateProp) =>
       updateCartItemQuantity(id, quantity),
+    onMutate: ({ id }) => {
+      setUpdatingCartItemId(id);
+    },
     onSuccess: (data) => {
       console.log(data);
       queryClient.invalidateQueries({ queryKey: ["cart", user_id] });
@@ -76,6 +86,9 @@ export const useHomePage = (
     },
     onError: (error) => {
       alert("Lỗi cập nhật giỏ hàng: " + error.message);
+    },
+    onSettled: () => {
+      setUpdatingCartItemId(null);
     },
   });
   const handleClickChange = (id: number, quantity: number) => {
@@ -89,6 +102,8 @@ export const useHomePage = (
     isPending,
     handleClickChange,
     isPendingUpdateCart,
+    updatingCartItemId,
+    addingVariantId,
     isPendingList,
     data,
     pcVariants,
