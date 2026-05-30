@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { productVariantQuery } from "../../module/client/query/productVariant";
 import { productContentQuery } from "../../module/client/query/productContent";
 import { useParams } from "react-router-dom";
 import { getImageUrl } from "../../utils/imageHelper";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store/store";
+import type { Cart } from "../../type/Cart";
+import { addToCartAsync } from "../../reducers/cartReducer";
+import cartQuery from "../../module/client/query/cart";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -12,6 +17,17 @@ const ProductDetail = () => {
   const [selectedStorage, setSelectedStorage] = useState("128GB");
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const queryClient = useQueryClient();
+
+  const user = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch {
+      return {};
+    }
+  }, []);
 
   const { data, isLoading } = useQuery(productVariantQuery.detail(Number(id)));
   const product_id = useMemo(() => data?.product_id, [data]);
@@ -22,7 +38,7 @@ const ProductDetail = () => {
   const numericProductId = Number(product_id);
   const hasValidProductId =
     Number.isFinite(numericProductId) && numericProductId > 0;
-  const { data: publishedContent } = useQuery({
+  const { data: publishedContent, isLoading: isContentLoading } = useQuery({
     ...productContentQuery.published(numericProductId),
     enabled: hasValidProductId,
   });
@@ -78,6 +94,35 @@ const ProductDetail = () => {
 
   // Kiểm tra nếu không có hình ảnh
   const hasImages = product.images && product.images.length > 0;
+
+  const handleAddToCart = async () => {
+    const variantId = Number(id);
+    if (!Number.isFinite(variantId) || variantId <= 0) {
+      alert("Không xác định được sản phẩm để thêm giỏ hàng");
+      return;
+    }
+
+    const cartPayload: Cart = {
+      id: 0,
+      user_id: user?.id || 0,
+      variant_id: variantId,
+      quantity,
+      unit_price: Number(currentPrice) || 0,
+    };
+
+    setIsAddingToCart(true);
+    try {
+      await dispatch(addToCartAsync(cartPayload)).unwrap();
+      if (user?.id) {
+        queryClient.invalidateQueries(cartQuery.getByUser(user.id));
+      }
+      alert("Thêm vào giỏ hàng thành công");
+    } catch (error) {
+      alert(typeof error === "string" ? error : "Không thể thêm vào giỏ hàng");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   return (
     <div className="container py-4">
@@ -387,8 +432,13 @@ const ProductDetail = () => {
               {/* Action Buttons */}
               <div className="row g-2 mb-4">
                 <div className="col-12">
-                  <button className="btn btn-primary w-100 fw-semibold py-2">
-                    <i className="bi bi-cart-plus me-2"></i>MUA NGAY
+                  <button
+                    className="btn btn-primary w-100 fw-semibold py-2"
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                  >
+                    <i className="bi bi-cart-plus me-2"></i>
+                    {isAddingToCart ? "ĐANG THÊM..." : "MUA NGAY"}
                   </button>
                 </div>
                 <div className="col-6">
@@ -441,7 +491,43 @@ const ProductDetail = () => {
       <div className="row g-4 mb-5">
         <div className="col-7">
           {/* Description from CMS */}
-          {publishedContent?.html && (
+          {isContentLoading && (
+            <div className="card border-0 shadow-sm mb-4">
+              <div className="card-header bg-white border-bottom">
+                <div
+                  className="skeleton-shimmer"
+                  style={{ width: 180, height: 20, borderRadius: 6 }}
+                />
+              </div>
+              <div className="card-body">
+                <div
+                  className="skeleton-shimmer mb-3"
+                  style={{ width: "100%", height: 16, borderRadius: 6 }}
+                />
+                <div
+                  className="skeleton-shimmer mb-3"
+                  style={{ width: "95%", height: 16, borderRadius: 6 }}
+                />
+                <div
+                  className="skeleton-shimmer mb-3"
+                  style={{ width: "90%", height: 16, borderRadius: 6 }}
+                />
+                <div
+                  className="skeleton-shimmer mb-3"
+                  style={{ width: "100%", height: 220, borderRadius: 8 }}
+                />
+                <div
+                  className="skeleton-shimmer mb-3"
+                  style={{ width: "92%", height: 16, borderRadius: 6 }}
+                />
+                <div
+                  className="skeleton-shimmer"
+                  style={{ width: "88%", height: 16, borderRadius: 6 }}
+                />
+              </div>
+            </div>
+          )}
+          {!isContentLoading && publishedContent?.html && (
             <div className="card border-0 shadow-sm mb-4">
               <div className="card-header bg-white border-bottom">
                 <h5 className="card-title fw-bold mb-0">Chi tiết sản phẩm</h5>
