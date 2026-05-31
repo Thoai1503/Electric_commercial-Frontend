@@ -24,6 +24,7 @@ const GeneralInfoSection = ({ id }: Prop) => {
     brands,
     categories,
     data,
+    productName,
     selectedBrand,
     selectedCategory,
     handleProductNameChange,
@@ -61,29 +62,71 @@ const GeneralInfoSection = ({ id }: Prop) => {
   const handleTemporarySave = async () => {
     try {
       const htmlContent = editorRef.current?.getContent?.() ?? "";
+      const name = productName?.trim() || data?.name || "";
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/product/${id}/content`,
-        {
+      if (!name) {
+        throw new Error("Product name is required");
+      }
+
+      if (!selectedBrand.id || !selectedCategory.id) {
+        throw new Error("Brand and category are required");
+      }
+
+      const token = localStorage.getItem("accessToken") || "";
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const [contentResponse, productResponse] = await Promise.all([
+        fetch(`${import.meta.env.VITE_API_URL}/api/product/${id}/content`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers,
           body: JSON.stringify({
             html: htmlContent,
             locale: "vi",
             change_note: "Save from admin editor",
           }),
-        },
-      );
+        }),
+        fetch(`${import.meta.env.VITE_API_URL}/api/product/${id}`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            name,
+            brand_id: selectedBrand.id,
+            category_id: selectedCategory.id,
+          }),
+        }),
+      ]).catch((error) => {
+        throw new Error(
+          "Failed to save content or update product: " + error.message,
+        );
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to save content");
+      if (!contentResponse.ok || !productResponse.ok) {
+        const messages: string[] = [];
+        if (!contentResponse.ok) {
+          messages.push("Failed to save content");
+        }
+        if (!productResponse.ok) {
+          messages.push("Failed to update product");
+        }
+        throw new Error(messages.join(". "));
       }
 
-      const result = await response.json();
+      const result = await contentResponse.json();
+      if (!result.is_new_version_created) {
+        alert(
+          "Saved product info. Content is unchanged from published version, so no new content version was created.",
+        );
+        return;
+      }
+
       alert(
-        `Saved successfully. Version: ${result.version_number}, Draft ID: ${result.draft_version_id}`,
+        `Saved successfully. Content version: ${result.version_number}, Draft ID: ${result.draft_version_id}`,
       );
     } catch (error: any) {
       alert(error?.message || "Unable to save content");
@@ -105,7 +148,7 @@ const GeneralInfoSection = ({ id }: Prop) => {
           <input
             type="text"
             className="form-control form-control-lg"
-            value={data?.name}
+            value={productName || data?.name || ""}
             onChange={handleProductNameChange}
             placeholder="Nhap ten san pham"
           />

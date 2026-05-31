@@ -6,17 +6,17 @@ import { useEffect, useRef, useState } from "react";
 
 export const useGeneralSection = (
   data: Product | undefined,
-  nextTab: () => void
+  nextTab: () => void,
 ) => {
   const [productName, setProductName] = useState("");
   const [slug, setSlug] = useState("iphone-15-pro");
   const [content, setContent] = useState("");
   const [selectedBrand, setSelectedBrand] = useState({
-    name: data?.brand.name.toString(),
+    name: data?.brand?.name?.toString() || "",
     id: data?.brand.id,
   });
   const [selectedCategory, setSelectedCategory] = useState({
-    name: data?.category.name.toString(),
+    name: data?.category?.name?.toString() || "",
     id: data?.category.id,
   });
   const editorRef = useRef(null) as any;
@@ -26,18 +26,19 @@ export const useGeneralSection = (
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
 
   useEffect(() => {
+    setProductName(data?.name || "");
     setSelectedBrand({
-      name: data?.brand.name.toString(),
+      name: data?.brand?.name?.toString() || "",
       id: data?.brand.id,
     });
     setSelectedCategory({
-      name: data?.category.name.toString(),
+      name: data?.category?.name?.toString() || "",
       id: data?.category.id,
     });
   }, [data]);
 
   const handleProductNameChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const generateSlug = (name: any) => {
       return name

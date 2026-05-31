@@ -9,10 +9,15 @@ import { categoryTreeMapping } from "../../../utils/categoryTreeMapping";
 //import CategoryTree from "../../../components/admin/addCategoryPage/CateNodeTree";
 
 export const addCategoryService = async (
-  category: Partial<Category>
+  category: Partial<Category>,
 ): Promise<Partial<Category>> => {
   try {
-    const res = await catalogRequest.post<Category>("/category", category);
+    const res = await catalogRequest.post<Category>("/category", category, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
 
     return res.data;
   } catch (error) {
@@ -28,7 +33,7 @@ export const getCategoryTree = async (): Promise<NodeModel[]> => {
 };
 export const updateCategory = async (
   id: number,
-  cate: UpdatedCategory | null
+  cate: UpdatedCategory | null,
 ): Promise<boolean> => {
   if (!cate) {
     alert("");

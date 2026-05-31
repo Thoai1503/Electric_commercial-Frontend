@@ -12,7 +12,12 @@ export const getAllProduct = async (): Promise<Partial<Product>[]> => {
 
 export const getProductById = async (id: number): Promise<Product> => {
   return await catalogRequest
-    .get<Product>(`/product/${id}`)
+    .get<Product>(`/product/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+      },
+    })
     .then((res) => res.data)
     .catch((error) => {
       throw error;
@@ -20,10 +25,15 @@ export const getProductById = async (id: number): Promise<Product> => {
 };
 
 export const createProduct = async (
-  product: Partial<Product>
+  product: Partial<Product>,
 ): Promise<Partial<Product>> => {
   return await catalogRequest
-    .post<Partial<Product>>("/product", product)
+    .post<Partial<Product>>("/product", product, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    })
     .then((res) => res.data)
     .catch((error) => {
       throw error;

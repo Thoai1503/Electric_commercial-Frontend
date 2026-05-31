@@ -14,7 +14,7 @@ export const getAllAttribute = async (): Promise<Attribute[]> => {
 };
 
 export const getAllAndSelectedByCategoryId = async (
-  categoryId: number
+  categoryId: number,
 ): Promise<Attribute[]> => {
   return catalogRequest
     .get(`/attribute/GetByCategoryId/${categoryId}`)
@@ -28,10 +28,15 @@ export const getAllAndSelectedByCategoryId = async (
 };
 
 export const createAttributeService = async (
-  attr: Partial<Attribute>
+  attr: Partial<Attribute>,
 ): Promise<boolean> => {
   return catalogRequest
-    .post(`/attribute`, attr)
+    .post(`/attribute`, attr, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    })
     .then((res) => {
       return res.data;
     })

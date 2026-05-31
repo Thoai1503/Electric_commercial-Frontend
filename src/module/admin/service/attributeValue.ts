@@ -2,10 +2,15 @@ import { catalogRequest } from "../../../api/http";
 import type { AttributeValue } from "../../../type/AttributeValue";
 
 export const getByAttributeId = async (
-  categoryId: number
+  categoryId: number,
 ): Promise<AttributeValue[]> => {
   return catalogRequest
-    .get(`/attributevalue/attribute/${categoryId}`)
+    .get(`/attributevalue/attribute/${categoryId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    })
     .then((res) => {
       return res.data;
     })

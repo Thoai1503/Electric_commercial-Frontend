@@ -112,6 +112,7 @@ const Home = () => {
         .home-shell {
           background: linear-gradient(180deg, #f8fafc 0%, #ffffff 45%, #f8fafc 100%);
           min-height: 100vh;
+          overflow-x: clip;
         }
         .home-hero {
           background: linear-gradient(135deg, #0f172a 0%, #111827 50%, #0d6efd 135%);
@@ -140,7 +141,6 @@ const Home = () => {
           font-weight: 700;
         }
         .home-section-badge {
-                                </Link>
           display: inline-flex;
           align-items: center;
           padding: 0.35rem 0.75rem;
@@ -217,8 +217,13 @@ const Home = () => {
         }
         .product-filter-grid {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-columns: repeat(1, minmax(0, 1fr));
           gap: 1rem;
+        }
+        @media (min-width: 576px) {
+          .product-filter-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
         @media (min-width: 768px) {
           .product-filter-grid {
@@ -232,6 +237,32 @@ const Home = () => {
         }
         .home-btn-pill {
           border-radius: 999px;
+        }
+        .home-filter-bar {
+          display: flex;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        .home-filter-btn {
+          min-width: 98px;
+        }
+        .home-qty-control {
+          gap: 0.75rem;
+          align-items: center;
+        }
+        .home-qty-control .decrease-btn,
+        .home-qty-control .increase-btn {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #cbd5e1;
+          line-height: 1;
+          font-weight: 600;
+          background: #f8fafc;
         }
         .home-browse-more {
           display: inline-flex;
@@ -260,20 +291,44 @@ const Home = () => {
             flex-direction: column;
             align-items: flex-start;
           }
+          .home-filter-bar {
+            justify-content: flex-start;
+          }
         }
         @media (max-width: 767.98px) {
           .home-hero {
             border-radius: 18px;
           }
+          .home-section-shell {
+            border-radius: 16px;
+          }
           .home-product-title {
             font-size: 1rem;
+          }
+          .home-product-body {
+            padding: 0 0.75rem;
           }
           .home-browse-more {
             width: 100%;
           }
+          .home-filter-btn {
+            flex: 1 1 calc(50% - 0.5rem);
+            min-width: 0;
+          }
+          .home-feature-wrap {
+            min-height: 56vh !important;
+          }
           .swiper-button-next,
           .swiper-button-prev {
             display: none;
+          }
+        }
+        @media (max-width: 575.98px) {
+          .home-filter-btn {
+            flex: 1 1 100%;
+          }
+          .home-qty-control {
+            gap: 0.5rem;
           }
         }
       `}</style>
@@ -292,7 +347,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="row mt-2">
+        <div className="mt-2 px-2 px-md-0">
           <section>
             <div
               className="container py-4 py-lg-5 home-section-shell home-feature-wrap"
@@ -483,7 +538,7 @@ const Home = () => {
                                     <div className="d-flex justify-content-center align-items-center">
                                       {item.inCart && user ? (
                                         <button
-                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill"
+                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill home-qty-control"
                                           onClick={(e) => e.preventDefault()}
                                         >
                                           <div
@@ -528,7 +583,7 @@ const Home = () => {
                                         </button>
                                       ) : item.inCart ? (
                                         <button
-                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill"
+                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill home-qty-control"
                                           onClick={(e) => e.preventDefault()}
                                         >
                                           <div
@@ -626,12 +681,12 @@ const Home = () => {
 
             <div
               id="filters"
-              className="button-group text-end font-size-16 mb-0"
+              className="button-group text-end font-size-16 mb-0 home-filter-bar"
             >
               {filters.map((filter) => (
                 <button
                   key={filter}
-                  className={`btn home-btn-pill ${activeFilter === filter ? "btn-primary" : "btn-outline-primary"}`}
+                  className={`btn home-btn-pill home-filter-btn ${activeFilter === filter ? "btn-primary" : "btn-outline-primary"}`}
                   onClick={() => setActiveFilter(filter)}
                 >
                   {filter === "*" ? "All Brand" : filter}
@@ -780,7 +835,7 @@ const Home = () => {
                             <div className="d-flex justify-content-center align-items-center">
                               {item.inCart && user ? (
                                 <button
-                                  className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill"
+                                  className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill home-qty-control"
                                   onClick={(e) => e.preventDefault()}
                                 >
                                   <div
@@ -863,10 +918,10 @@ const Home = () => {
           </div>
         </section>
 
-        <div className="row mt-2">
+        <div className="mt-2 px-2 px-md-0">
           <section>
             <div
-              className="container py-4 py-lg-5 home-section-shell"
+              className="container py-4 py-lg-5 home-section-shell home-feature-wrap"
               style={{
                 backgroundImage:
                   "url('/images/7510236c-c858-4cab-a779-c3aaf12a5643.png')",
@@ -1054,7 +1109,7 @@ const Home = () => {
                                     <div className="d-flex justify-content-center align-items-center">
                                       {item.inCart && user ? (
                                         <button
-                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill"
+                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill home-qty-control"
                                           onClick={(e) => e.preventDefault()}
                                         >
                                           <div
@@ -1099,7 +1154,7 @@ const Home = () => {
                                         </button>
                                       ) : item.inCart ? (
                                         <button
-                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm"
+                                          className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill home-qty-control"
                                           onClick={(e) => e.preventDefault()}
                                         >
                                           <div
@@ -1200,7 +1255,7 @@ const Home = () => {
                 ? Array.from({ length: 8 }).map((_, index) => (
                     <div
                       key={`pc-skeleton-${index}`}
-                      className="col-6 col-sm-4 col-md-3 col-lg-3 py-3"
+                      className="col-12 col-sm-6 col-md-4 col-lg-3 py-3"
                     >
                       <div className="home-product-card">
                         <div
@@ -1252,7 +1307,7 @@ const Home = () => {
                 : pcProduct?.slice(0, 8).map((item: any) => (
                     <div
                       key={item.id}
-                      className="col-6 col-sm-4 col-md-3 col-lg-3 py-3"
+                      className="col-12 col-sm-6 col-md-4 col-lg-3 py-3"
                     >
                       <div className="home-product-card">
                         <Link
@@ -1317,7 +1372,7 @@ const Home = () => {
                           <div className="d-flex justify-content-center align-items-center">
                             {item.inCart && user ? (
                               <button
-                                className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill"
+                                className="w-100 d-flex justify-content-between btn btn-outline-primary btn-sm home-btn-pill home-qty-control"
                                 onClick={(e) => e.preventDefault()}
                               >
                                 <div

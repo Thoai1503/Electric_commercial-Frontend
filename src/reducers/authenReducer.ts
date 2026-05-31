@@ -81,6 +81,8 @@ const authenSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
+      localStorage.setItem("accessToken", action.payload.accessToken);
+      localStorage.setItem("refreshToken", action.payload.refreshToken || "");
       state.refreshToken = action.payload.refreshToken;
       state.user = action.payload;
     });
@@ -89,9 +91,11 @@ const authenSlice = createSlice({
     });
     builder.addCase(refreshToken.rejected, (state, action) => {
       state.accessToken = null;
+      state.refreshToken = null;
       state.loading = false;
       state.isAuthenticated = false;
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       state.error = action.payload || "Refresh failed";
     });
   },

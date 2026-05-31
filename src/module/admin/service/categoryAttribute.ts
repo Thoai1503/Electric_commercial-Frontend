@@ -15,7 +15,7 @@ export const getCategoryAttributes = async (): Promise<CategoryAttribute[]> => {
 
 export const updateCategoryAttributeService = async (
   id: number,
-  data: Partial<CategoryAttribute>
+  data: Partial<CategoryAttribute>,
 ): Promise<Partial<CategoryAttribute>> => {
   console.log(JSON.stringify(data));
   console.log("Updating category attribute with data:", data);
@@ -27,18 +27,27 @@ export const updateCategoryAttributeService = async (
       is_filterable: data.is_filterable,
       is_required: data.is_required,
       is_variant_level: data.is_variant_level,
-    })
+    }),
   );
   return await catalogRequest
 
-    .put(`/categoryattribute/${id}`, {
-      id: data.id,
-      category_id: data.category_id,
-      attribute_id: data.attribute_id,
-      is_filterable: data.is_filterable,
-      is_required: data.is_required,
-      is_variant_level: data.is_variant_level,
-    })
+    .put(
+      `/categoryattribute/${id}`,
+      {
+        id: data.id,
+        category_id: data.category_id,
+        attribute_id: data.attribute_id,
+        is_filterable: data.is_filterable,
+        is_required: data.is_required,
+        is_variant_level: data.is_variant_level,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      },
+    )
     .then((res) => {
       return res.data;
     })
@@ -49,7 +58,7 @@ export const updateCategoryAttributeService = async (
 };
 
 export const deleteCategoryAttributeService = async (
-  id: number
+  id: number,
 ): Promise<boolean> => {
   return await catalogRequest
     .delete(`/categoryattribute/${id}`)
@@ -65,7 +74,7 @@ export const deleteCategoryAttributeService = async (
 
 export const createAttributeForCategory = async (
   id: number,
-  idList: number[]
+  idList: number[],
 ): Promise<boolean> => {
   return await catalogRequest
     .post(`/categoryattribute/category/${id}`, idList)
@@ -80,7 +89,7 @@ export const createAttributeForCategory = async (
 };
 
 export const getCategoryAttributesByCategory = async (
-  category_id: string
+  category_id: string,
 ): Promise<CategoryAttribute[]> => {
   return await catalogRequest
     .get(`/categoryattribute/category/${category_id}`)
