@@ -8,3 +8,11 @@ export const getOrderByUserId = async (user_id: number): Promise<Order[]> => {
       throw error;
     });
 };
+
+export const getOrderById = async (id: number): Promise<Order> => {
+  return await Request.get(`/api/v1/order/${id}`)
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};

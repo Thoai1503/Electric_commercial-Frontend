@@ -1,11 +1,12 @@
 ﻿import { CBadge, CContainer } from "@coreui/react";
 import { useQuery } from "@tanstack/react-query";
 import { CreditCard, MapPin, PackageSearch, UserRound } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { orderDetailQuery } from "../../module/admin/query/orderDetail";
 import { productVariantQuery } from "../../module/client/query/productVariant";
 import { getImageUrl } from "../../utils/imageHelper";
+import { orderQuery } from "../../module/client/query/order";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("vi-VN", {
@@ -20,6 +21,7 @@ const OrderDetailPage = () => {
   const { data: list } = useQuery(
     orderDetailQuery.get_by_order_id(Number(id!)),
   );
+  const { data: order } = useQuery(orderQuery.get_by_id(Number(id!)));
 
   const orderDetails = useMemo(
     () =>
@@ -42,6 +44,12 @@ const OrderDetailPage = () => {
       final: subtotal,
     };
   }, [orderDetails]);
+
+  useEffect(() => {
+    if (order) {
+      console.log("Order info:", order);
+    }
+  }, [order]);
 
   return (
     <CContainer fluid className="px-0">
@@ -184,18 +192,38 @@ const OrderDetailPage = () => {
                   <UserRound size={18} className="text-primary" />
                   Thông tin người mua
                 </h5>
-                <p className="mb-2">
-                  <strong>Tên:</strong> Chưa có dữ liệu
-                </p>
-                <p className="mb-2">
-                  <strong>Email:</strong> Chưa có dữ liệu
-                </p>
-                <p className="mb-2">
-                  <strong>Số điện thoại:</strong> Chưa có dữ liệu
-                </p>
-                <p className="mb-0">
-                  <strong>Địa chỉ:</strong> Chưa có dữ liệu
-                </p>
+                {!order ? (
+                  <>
+                    {" "}
+                    <p className="mb-2">
+                      <strong>Tên:</strong> Chưa có dữ liệu
+                    </p>
+                    <p className="mb-2">
+                      <strong>Email:</strong> Chưa có dữ liệu
+                    </p>
+                    <p className="mb-2">
+                      <strong>Số điện thoại:</strong> Chưa có dữ liệu
+                    </p>
+                    <p className="mb-0">
+                      <strong>Địa chỉ:</strong> Chưa có dữ liệu
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="mb-2">
+                      <strong>Tên:</strong> {order.user?.name}
+                    </p>
+                    <p className="mb-2">
+                      <strong>Email:</strong> {order.user?.email}
+                    </p>
+                    <p className="mb-2">
+                      <strong>Số điện thoại:</strong> {order.user?.email}
+                    </p>
+                    <p className="mb-0">
+                      <strong>Địa chỉ:</strong> Chưa có dữ liệu
+                    </p>
+                  </>
+                )}
               </div>
             </div>
 
