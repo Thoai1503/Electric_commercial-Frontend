@@ -332,10 +332,7 @@ const Home = () => {
           }
         }
       `}</style>
-      <div
-        style={{ opacity: isPending && isPendingList ? 0.3 : 1 }}
-        className="home-shell mt-2"
-      >
+      <div className="home-shell mt-2">
         <div className="container py-3 py-lg-4 mt-3">
           <div className="row justify-content-center g-3 align-items-start ">
             <div className="col-12 col-lg-3">
