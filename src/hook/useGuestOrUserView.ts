@@ -8,10 +8,10 @@ import { useMemo } from "react";
 
 export const useGuestOrUserView = (
   user_id: number,
-  list: ProductVariant[] | undefined
+  list: ProductVariant[] | undefined,
 ) => {
   const { data: userCart, isPending } = useQuery(
-    cartQuery.getByUser(user_id || 0)
+    cartQuery.getByUser(user_id || 0),
   );
   const user = ((): Partial<UserDataRespone> => {
     try {
@@ -43,7 +43,7 @@ export const useGuestOrUserView = (
           cart: { id: cartItem.id, quantity: cartItem.quantity },
         };
       }),
-    [effectiveCart, list]
+    [effectiveCart, list],
   );
   return {
     product,
